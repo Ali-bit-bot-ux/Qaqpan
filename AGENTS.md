@@ -142,3 +142,4 @@ git pull --rebase origin main && git push origin main
 
 - План: `ROADMAP.md`
 - Архитектура и роли: `README.md`
+
