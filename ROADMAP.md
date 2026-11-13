@@ -38,7 +38,7 @@
 | 1.1 | Каркас FastAPI: структура папок, `main.py`, CORS, подключение роутеров | done (сервер стартует, CORS настроен) |
 | 1.2 | Pydantic-модели в `models/schemas.py`: Transfer, Answer, TrustedDecision, AnalystCard, BenchmarkResult | done (строгая Pydantic v2 валидация) |
 | 1.3 | Мок-роуты: `POST /api/v1/transfers`, `POST /transfers/{id}/answer`, `POST /transfers/{id}/trusted-decision`, `GET /events/stream` — возвращают фейковые данные | done (все эндпоинты отвечают валидным JSON) |
-| 1.4 | SQLite / in-memory хранилище для транзакций | done (SQLAlchemy модели + qaqpan.db) |
+| 1.4 | PostgreSQL хранилище для транзакций | done (SQLAlchemy + psycopg2 + PostgreSQL 18, база `qaqpan_db`) |
 
 ### Backend 2 (AI, Rules & Robot):
 
