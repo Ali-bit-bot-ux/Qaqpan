@@ -140,20 +140,23 @@ async def submit_client_answer(
         "безопасн", "сотрудник", "банк", "полици", "кнб", "срочно", "қауіпсіз", "шұғыл"
     ])
 
-    if is_suspicious:
-        new_status = TransferStateMachine.transition(current_status, TransferStatus.TRUSTED_PENDING)
-        rec.status = new_status.value
-        rec.risk_tier = RiskTier.HIGH.value
-        rec.risk_score = 94
-        rec.detected_signals = ["safe_account_keyword", "bank_impersonation", "psychological_pressure"]
-        rec.alert_reason_ru = "Клиент сообщает о звонке из службы безопасности и переводе на «безопасный счет»"
-        rec.alert_reason_kz = "Клиент қауіпсіздік қызметінен қоңырау түскенін және «қауіпсіз шотқа» аударуды хабарлайды"
-        rec.timeout_seconds = 30
-    else:
-        new_status = TransferStateMachine.transition(current_status, TransferStatus.COMPLETED)
-        rec.status = new_status.value
-        rec.risk_tier = RiskTier.LOW.value
-        rec.risk_score = 20
+    try:
+        if is_suspicious:
+            new_status = TransferStateMachine.transition(current_status, TransferStatus.TRUSTED_PENDING)
+            rec.status = new_status.value
+            rec.risk_tier = RiskTier.HIGH.value
+            rec.risk_score = 94
+            rec.detected_signals = ["safe_account_keyword", "bank_impersonation", "psychological_pressure"]
+            rec.alert_reason_ru = "Клиент сообщает о звонке из службы безопасности и переводе на «безопасный счет»"
+            rec.alert_reason_kz = "Клиент қауіпсіздік қызметінен қоңырау түскенін және «қауіпсіз шотқа» аударуды хабарлайды"
+            rec.timeout_seconds = 30
+        else:
+            new_status = TransferStateMachine.transition(current_status, TransferStatus.COMPLETED)
+            rec.status = new_status.value
+            rec.risk_tier = RiskTier.LOW.value
+            rec.risk_score = 20
+    except InvalidStateTransitionError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
     db.commit()
     db.refresh(rec)

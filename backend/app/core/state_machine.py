@@ -33,6 +33,9 @@ class TransferStateMachine:
         },
         TransferStatus.AWAITING_ANSWER: {
             TransferStatus.EVALUATING,        # Re-evaluating after client provides text
+            TransferStatus.COMPLETED,         # Answer is clean — approved directly
+            TransferStatus.TRUSTED_PENDING,   # Answer triggers escalation to trusted person
+            TransferStatus.BLOCKED,           # Answer triggers immediate block (extreme risk)
             TransferStatus.CANCELLED          # Client cancels at any point
         },
         TransferStatus.TRUSTED_PENDING: {
