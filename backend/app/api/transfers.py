@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from sse_starlette.sse import EventSourceResponse
 
-from ..db import get_db, TransferRecord
+from ..db import get_db, SessionLocal, TransferRecord
 from ..models.schemas import (
     TransferCreate,
     TransferResponse,
@@ -20,6 +20,35 @@ from ..core.state_machine import TransferStateMachine, InvalidStateTransitionErr
 from ..core.events import event_bus
 
 router = APIRouter(prefix="/transfers", tags=["Transfers (Client)"])
+_timeout_tasks: set[asyncio.Task] = set()
+
+
+def _track_timeout_task(task: asyncio.Task) -> None:
+    _timeout_tasks.add(task)
+    task.add_done_callback(_timeout_tasks.discard)
+
+
+async def _timeout_after(transfer_id: str, timeout_seconds: int) -> None:
+    await asyncio.sleep(timeout_seconds)
+    db = SessionLocal()
+    try:
+        rec = db.query(TransferRecord).filter(TransferRecord.transfer_id == transfer_id).first()
+        if not rec or rec.status != TransferStatus.TRUSTED_PENDING.value:
+            return
+        rec.status = TransferStateMachine.transition(
+            TransferStatus.TRUSTED_PENDING,
+            TransferStatus.COOLING_OFF,
+        ).value
+        db.commit()
+        db.refresh(rec)
+        await event_bus.publish("trusted_timeout", record_to_response(rec).model_dump(mode="json"))
+    finally:
+        db.close()
+
+
+def _schedule_timeout(transfer_id: str, timeout_seconds: int | None) -> None:
+    if timeout_seconds and timeout_seconds > 0:
+        _track_timeout_task(asyncio.create_task(_timeout_after(transfer_id, timeout_seconds)))
 
 
 def record_to_response(rec: TransferRecord) -> TransferResponse:
@@ -101,6 +130,8 @@ async def create_transfer(
     db.refresh(rec)
 
     resp = record_to_response(rec)
+    if current_status == TransferStatus.TRUSTED_PENDING:
+        _schedule_timeout(transfer_id, rec.timeout_seconds)
     await event_bus.publish("transfer_created", resp.model_dump(mode="json"))
     return resp
 
@@ -150,6 +181,7 @@ async def submit_client_answer(
             rec.alert_reason_ru = "Клиент сообщает о звонке из службы безопасности и переводе на «безопасный счет»"
             rec.alert_reason_kz = "Клиент қауіпсіздік қызметінен қоңырау түскенін және «қауіпсіз шотқа» аударуды хабарлайды"
             rec.timeout_seconds = 30
+            _schedule_timeout(transfer_id, rec.timeout_seconds)
         else:
             new_status = TransferStateMachine.transition(current_status, TransferStatus.COMPLETED)
             rec.status = new_status.value
