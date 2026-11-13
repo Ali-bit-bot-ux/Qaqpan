@@ -1,4 +1,4 @@
-# 🛡️ ҚАЛҚАН (Qalqan) — Smart Anti-Fraud Guardian
+# 🛡️ ҚАҚПАН (Qaqpan) — Smart Anti-Fraud Guardian
 
 > **Проект для хакатона Банка ЦентрКредит (BCC)**  
 > Адаптивная многоуровневая система защиты транзакций от социальной инженерии и телефонного мошенничества с сохранением автономии клиента.
@@ -14,10 +14,10 @@
 
 | Участник | Роль | Файлы, которые разрешено редактировать |
 | :--- | :--- | :--- |
-| **Backend 1** | FSM & API Lead | `backend/app/main.py`<br>`backend/app/db.py`<br>`backend/app/api/transfers.py`<br>`backend/app/api/trusted.py`<br>`backend/app/core/state_machine.py` |
-| **Backend 2** | AI & Rules Engine | `backend/app/core/rules_engine.py`<br>`backend/app/core/ai_parser.py`<br>`backend/app/core/fallback_rules.py`<br>`backend/app/prompts/` |
-| **Backend 3** | Robot & Benchmark | `backend/app/benchmark/adversarial_robot.py`<br>`backend/app/benchmark/dataset_generator.py`<br>`backend/app/benchmark/evaluator.py`<br>`backend/app/api/benchmark.py` |
-| **Frontend Lead** | Frontend SPA | Папка `frontend/` целиком (экраны бабушки, дочери, аналитика и стили) |
+| **Backend 1** | FSM, API, DB & SSE Lead | `backend/app/main.py`<br>`backend/app/db.py`<br>`backend/app/api/transfers.py`<br>`backend/app/api/trusted.py`<br>`backend/app/api/analyst.py`<br>`backend/app/core/state_machine.py`<br>`backend/app/models/schemas.py` |
+| **Backend 2** | AI, Rules Engine & Robot | `backend/app/core/rules_engine.py`<br>`backend/app/core/ai_parser.py`<br>`backend/app/core/fallback_rules.py`<br>`backend/app/benchmark/`<br>`backend/app/api/benchmark.py` |
+| **Frontend Lead** | Frontend SPA | Папка `frontend/` целиком (экраны бабушки, дочери, аналитика и симулятор) |
+| **Backend 3** | QA, Code Review & Polish *(подключается позже)* | `backend/tests/`, аудит граничных случаев, устранение багов, оптимизация правил |
 
 ### 🚀 Единая команда для отправки кода:
 Каждый работает в своем файле и перед отправкой пишет:
@@ -36,8 +36,8 @@ git pull --rebase origin main && git push origin main
 [День 3] Связка Клиент ↔ Доверенное лицо ───────► Real-time push и Explainable AI
 [День 4] Кабинет Аналитика & Охлаждение ────────► Cooling-off и отмена клиентом
 [День 5] Симулятор «Мошенник-робот» в UI ──────► Интерактивный стресс-тест 500 атак
-[День 6] Тестирование на отказ & Репетиции ─────► Прогон без интернета, тайминг питча
-[День 7] Финал & Победная Защита ───────────────► 3-минутное демо перед жюри
+[День 6] Тестирование на отказ & Репетиции ─────► Подключение Backend 3: багфикс и стабилизация
+[День 7] Финал & Победная Защита ───────────────► Защита решения перед жюри
 ```
 
 ---
@@ -49,23 +49,23 @@ Qaqpan/
 ├── backend/                  # FastAPI сервис
 │   ├── app/
 │   │   ├── main.py           # Запуск FastAPI, CORS, подключение роутеров (Backend 1)
-│   │   ├── db.py             # SQLite/хранилище сессий (Backend 1)
+│   │   ├── db.py             # Хранилище сессий и состояние транзакций (Backend 1)
 │   │   ├── models/
-│   │   │   └── schemas.py    # Pydantic модели запросов/ответов
+│   │   │   └── schemas.py    # Pydantic модели запросов/ответов (Backend 1)
 │   │   ├── api/
 │   │   │   ├── transfers.py  # Эндпоинты бабушки (Backend 1)
 │   │   │   ├── trusted.py    # Эндпоинты дочери (Backend 1)
 │   │   │   ├── analyst.py    # Эндпоинты аналитика (Backend 1)
-│   │   │   └── benchmark.py  # Эндпоинт запуска симулятора (Backend 3)
+│   │   │   └── benchmark.py  # Эндпоинт запуска симулятора (Backend 2)
 │   │   ├── core/
 │   │   │   ├── state_machine.py # Автомат состояний (Backend 1)
 │   │   │   ├── rules_engine.py  # Скоринг по порогам (Backend 2)
 │   │   │   ├── ai_parser.py     # LLM парсер на RU/KZ (Backend 2)
 │   │   │   └── fallback_rules.py# Локальный regex-парсер (Backend 2)
 │   │   └── benchmark/
-│   │       ├── adversarial_robot.py # Генератор атак (Backend 3)
-│   │       ├── dataset_generator.py # Базовые датасеты (Backend 3)
-│   │       └── evaluator.py         # Расчет Confusion Matrix (Backend 3)
+│   │       ├── adversarial_robot.py # Генератор атак (Backend 2)
+│   │       ├── dataset_generator.py # Базовые датасеты (Backend 2)
+│   │       └── evaluator.py         # Расчет Confusion Matrix (Backend 2)
 │   ├── requirements.txt
 │   └── tests/
 ├── frontend/                 # React (Vite + Tailwind) SPA
@@ -78,14 +78,3 @@ Qaqpan/
 │   └── package.json
 └── README.md
 ```
-
----
-
-## 🎬 3-Минутный Сценарий Демонстрации перед Жюри
-
-1. **0:00 - 0:30:** Обычный перевод внуку 15 000 ₸. Проходит мгновенно без вопросов.
-2. **0:30 - 1:15:** Звонок мошенника, перевод 400 000 ₸ на «безопасный счет». Система задает вопрос: «Для чего перевод?». Бабушка отвечает.
-3. **1:15 - 1:45:** Уведомление мгновенно прилетает дочери. Дочь отклоняет перевод, операция блокируется, аналитик видит карточку инцидента.
-4. **1:45 - 2:15:** Сценарий «Дочь не отвечает»: истекает таймер, включается период охлаждения (Cooling-off), бабушка нажимает «Отменить перевод». Финансовая автономия сохранена.
-5. **2:15 - 2:45:** Запуск в один клик «Мошенника-робота» на 500 атак. Жюри видит матрицу ошибок и рост точности до 96.8% после адаптации правил.
-6. **2:45 - 3:00:** Законный перевод снова проходит гладко. Финал: система защищает от мошенников, не блокируя жизнь.
