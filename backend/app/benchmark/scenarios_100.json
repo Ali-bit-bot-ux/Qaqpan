@@ -1,0 +1,1002 @@
+[
+  {
+    "id": 1,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 506639,
+    "is_new_recipient": true,
+    "answer_text": "Звонили из финмониторинга, сказали временно перекинуть на безопасную ячейку.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 2,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 464144,
+    "is_new_recipient": true,
+    "answer_text": "Заң орындарынан қоңырау шалып, шоттарыңызды бұғаттаймыз деп қысым көрсетті.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 3,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 549348,
+    "is_new_recipient": true,
+    "answer_text": "Звонили из финмониторинга, сказали временно перекинуть на безопасную ячейку.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 4,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 606952,
+    "is_new_recipient": true,
+    "answer_text": "Банктің қауіпсіздік қызметі ақшаны сақтап қалу үшін резервтік шотқа салуды тапсырды.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 5,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 379328,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник нацбанка диктует реквизиты специального страхового счета.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 6,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 398031,
+    "is_new_recipient": true,
+    "answer_text": "Криптовалютадан пайда түсіру үшін брокер мына шотқа депозит салуды сұрады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 7,
+    "is_scam": true,
+    "category": "masking",
+    "language": "ru",
+    "amount": 362493,
+    "is_new_recipient": true,
+    "answer_text": "Звонивший велел соврать что родственникам, а на самом деле спасаю счет.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 8,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 685425,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 9,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 450753,
+    "is_new_recipient": true,
+    "answer_text": "Звонил прокурор, сказал если не переведу деньги, арестуют все счета сегодня.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 10,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 695189,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 11,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 897059,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник КНБ ведет секретную операцию и требует отправить средства.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 12,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 81338,
+    "is_new_recipient": true,
+    "answer_text": "Қауіпсіздік қызметкері ақшаны бөліп-бөліп 81,338 мыңнан жібер деп нұсқау берді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 13,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 507541,
+    "is_new_recipient": true,
+    "answer_text": "Племянник задержан с наркотиками, полицейский просит выкуп прямо сейчас.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 14,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 115142,
+    "is_new_recipient": true,
+    "answer_text": "Банк тексерісінен өту үшін бөліп 115,142 теңгеден резервке аударамын.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 15,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 529807,
+    "is_new_recipient": true,
+    "answer_text": "Звонили из финмониторинга, сказали временно перекинуть на безопасную ячейку.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 16,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 622837,
+    "is_new_recipient": true,
+    "answer_text": "Інім адам қағып кетті, қылмыстық істі жабу үшін мына кісіге ақша беру керек.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 17,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 921174,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник КНБ ведет секретную операцию и требует отправить средства.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 18,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 473965,
+    "is_new_recipient": true,
+    "answer_text": "Заң орындарынан қоңырау шалып, шоттарыңызды бұғаттаймыз деп қысым көрсетті.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 19,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 380256,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник нацбанка диктует реквизиты специального страхового счета.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 20,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 714714,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 21,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 495659,
+    "is_new_recipient": true,
+    "answer_text": "Племянник задержан с наркотиками, полицейский просит выкуп прямо сейчас.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 22,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 578920,
+    "is_new_recipient": true,
+    "answer_text": "Полиция капитаны қазір ақша аудармасаң үйіңіз тәркіленеді деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 23,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 630994,
+    "is_new_recipient": true,
+    "answer_text": "Сын сбил человека на переходе, следователь требует деньги, чтобы не посадить.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 24,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 432784,
+    "is_new_recipient": true,
+    "answer_text": "Криптовалютадан пайда түсіру үшін брокер мына шотқа депозит салуды сұрады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 25,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 265708,
+    "is_new_recipient": true,
+    "answer_text": "Служба безопасности банка звонит по видеосвязи и требует подтвердить перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 26,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 726943,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 27,
+    "is_scam": true,
+    "category": "masking",
+    "language": "ru",
+    "amount": 349392,
+    "is_new_recipient": true,
+    "answer_text": "Звонивший велел соврать что родственникам, а на самом деле спасаю счет.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 28,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 457103,
+    "is_new_recipient": true,
+    "answer_text": "Заң орындарынан қоңырау шалып, шоттарыңызды бұғаттаймыз деп қысым көрсетті.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 29,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 761290,
+    "is_new_recipient": true,
+    "answer_text": "Дочь в реанимации после аварии, неизвестный мужчина требует срочный перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 30,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 572170,
+    "is_new_recipient": true,
+    "answer_text": "Полиция капитаны қазір ақша аудармасаң үйіңіз тәркіленеді деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 31,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 748934,
+    "is_new_recipient": true,
+    "answer_text": "Дочь в реанимации после аварии, неизвестный мужчина требует срочный перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 32,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 89363,
+    "is_new_recipient": true,
+    "answer_text": "Банк тексерісінен өту үшін бөліп 89,363 теңгеден резервке аударамын.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 33,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 594150,
+    "is_new_recipient": true,
+    "answer_text": "Сын сбил человека на переходе, следователь требует деньги, чтобы не посадить.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 34,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 108242,
+    "is_new_recipient": true,
+    "answer_text": "Тергеуші банкті алдау үшін 100 мыңнан аз қылып 108,242 теңгеден аудар деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 35,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 103723,
+    "is_new_recipient": true,
+    "answer_text": "Следователь велел переводить частями по 103,723 тенге, чтобы система банка не заблокировала.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 36,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 337343,
+    "is_new_recipient": true,
+    "answer_text": "Инвестициялық менеджер жеке картаға ақша салсаңыз жоғары пайыз болады деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 37,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 414530,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник нацбанка диктует реквизиты специального страхового счета.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 38,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 926120,
+    "is_new_recipient": true,
+    "answer_text": "ҰҚК қызметкері жедел операция өтіп жатыр деп ақшаны аударуға бұйрық берді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 39,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 449596,
+    "is_new_recipient": true,
+    "answer_text": "Звонил прокурор, сказал если не переведу деньги, арестуют все счета сегодня.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 40,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 100009,
+    "is_new_recipient": true,
+    "answer_text": "Қауіпсіздік қызметкері ақшаны бөліп-бөліп 100,009 мыңнан жібер деп нұсқау берді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 41,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "ru",
+    "amount": 265674,
+    "is_new_recipient": true,
+    "answer_text": "Криптоброкер обещал утроить вклад к вечеру, перевожу стартовый депозит.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 42,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 739676,
+    "is_new_recipient": true,
+    "answer_text": "Тергеуші шұғыл сақтау шотына аударыңыз деді, әйтпесе ақша жоғалады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 43,
+    "is_scam": true,
+    "category": "masking",
+    "language": "ru",
+    "amount": 384209,
+    "is_new_recipient": true,
+    "answer_text": "Звонивший велел соврать что родственникам, а на самом деле спасаю счет.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 44,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 714234,
+    "is_new_recipient": true,
+    "answer_text": "Тергеуші шұғыл сақтау шотына аударыңыз деді, әйтпесе ақша жоғалады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 45,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 80365,
+    "is_new_recipient": true,
+    "answer_text": "Майор сказал разбить сумму на переводы по 80,365 тенге на разные карты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 46,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 717806,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 47,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 438271,
+    "is_new_recipient": true,
+    "answer_text": "Звонил прокурор, сказал если не переведу деньги, арестуют все счета сегодня.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 48,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 344909,
+    "is_new_recipient": true,
+    "answer_text": "Инвестициялық менеджер жеке картаға ақша салсаңыз жоғары пайыз болады деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 49,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 885016,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник КНБ ведет секретную операцию и требует отправить средства.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 50,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 419757,
+    "is_new_recipient": true,
+    "answer_text": "Криптовалютадан пайда түсіру үшін брокер мына шотқа депозит салуды сұрады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 51,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 474252,
+    "is_new_recipient": true,
+    "answer_text": "Следователь лейтенант сказал срочно перевести 474,252 на безопасный счет.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 52,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 492331,
+    "is_new_recipient": true,
+    "answer_text": "Маған полициядан қоңырау шалды, шұғыл қауіпсіз шотқа 492,331 теңге аудару керек дейді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 53,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 505153,
+    "is_new_recipient": true,
+    "answer_text": "Племянник задержан с наркотиками, полицейский просит выкуп прямо сейчас.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 54,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 492182,
+    "is_new_recipient": true,
+    "answer_text": "Заң орындарынан қоңырау шалып, шоттарыңызды бұғаттаймыз деп қысым көрсетті.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 55,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 370613,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник нацбанка диктует реквизиты специального страхового счета.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 56,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 393241,
+    "is_new_recipient": true,
+    "answer_text": "Криптовалютадан пайда түсіру үшін брокер мына шотқа депозит салуды сұрады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 57,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 328237,
+    "is_new_recipient": true,
+    "answer_text": "Капитан полиции Ахметов приказал выполнить перевод, иначе уголовное дело.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 58,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 719581,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 59,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "ru",
+    "amount": 262730,
+    "is_new_recipient": true,
+    "answer_text": "Криптоброкер обещал утроить вклад к вечеру, перевожу стартовый депозит.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 60,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 361148,
+    "is_new_recipient": true,
+    "answer_text": "Немерем жылап қоңырау соқты, ауруханаға шұғыл дәрігерге төлеу керек екен.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 61,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 513711,
+    "is_new_recipient": true,
+    "answer_text": "Племянник задержан с наркотиками, полицейский просит выкуп прямо сейчас.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 62,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 469725,
+    "is_new_recipient": true,
+    "answer_text": "Заң орындарынан қоңырау шалып, шоттарыңызды бұғаттаймыз деп қысым көрсетті.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 63,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 387156,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник нацбанка диктует реквизиты специального страхового счета.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 64,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 455471,
+    "is_new_recipient": true,
+    "answer_text": "Заң орындарынан қоңырау шалып, шоттарыңызды бұғаттаймыз деп қысым көрсетті.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 65,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 411389,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник нацбанка диктует реквизиты специального страхового счета.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 66,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 417058,
+    "is_new_recipient": true,
+    "answer_text": "Ұлттық банктен хабарласып, арнайы қорғалған шотқа қаражатты аударыңыз деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 67,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 739643,
+    "is_new_recipient": true,
+    "answer_text": "Дочь в реанимации после аварии, неизвестный мужчина требует срочный перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 68,
+    "is_scam": true,
+    "category": "masking",
+    "language": "kz",
+    "amount": 449040,
+    "is_new_recipient": true,
+    "answer_text": "Телефондағы адам банк сұраса туысыма деп айт деді, негізі шотымды сақтау үшін.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 69,
+    "is_scam": true,
+    "category": "masking",
+    "language": "ru",
+    "amount": 343671,
+    "is_new_recipient": true,
+    "answer_text": "Звонивший велел соврать что родственникам, а на самом деле спасаю счет.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 70,
+    "is_scam": true,
+    "category": "masking",
+    "language": "kz",
+    "amount": 461677,
+    "is_new_recipient": true,
+    "answer_text": "Телефондағы адам банк сұраса туысыма деп айт деді, негізі шотымды сақтау үшін.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 71,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 881181,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник КНБ ведет секретную операцию и требует отправить средства.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 72,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 612759,
+    "is_new_recipient": true,
+    "answer_text": "Інім адам қағып кетті, қылмыстық істі жабу үшін мына кісіге ақша беру керек.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 73,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 100606,
+    "is_new_recipient": true,
+    "answer_text": "Майор сказал разбить сумму на переводы по 100,606 тенге на разные карты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 74,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 631386,
+    "is_new_recipient": true,
+    "answer_text": "Банктің қауіпсіздік қызметі ақшаны сақтап қалу үшін резервтік шотқа салуды тапсырды.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 75,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 742161,
+    "is_new_recipient": true,
+    "answer_text": "Дочь в реанимации после аварии, неизвестный мужчина требует срочный перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 76,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 570146,
+    "is_new_recipient": true,
+    "answer_text": "Полиция капитаны қазір ақша аудармасаң үйіңіз тәркіленеді деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 77,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 84186,
+    "is_new_recipient": true,
+    "answer_text": "Перевожу третью часть по 84,186 на резервный счет по инструкции оператора.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 78,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 715318,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 79,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 259940,
+    "is_new_recipient": true,
+    "answer_text": "Служба безопасности банка звонит по видеосвязи и требует подтвердить перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 80,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 647738,
+    "is_new_recipient": true,
+    "answer_text": "Банктің қауіпсіздік қызметі ақшаны сақтап қалу үшін резервтік шотқа салуды тапсырды.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 81,
+    "is_scam": true,
+    "category": "masking",
+    "language": "ru",
+    "amount": 335967,
+    "is_new_recipient": true,
+    "answer_text": "Звонивший велел соврать что родственникам, а на самом деле спасаю счет.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 82,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 391634,
+    "is_new_recipient": true,
+    "answer_text": "Қаржы полициясы қылмыстық іс қозғалды деп шұғыл төлем жасауды талап етті.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 83,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 115546,
+    "is_new_recipient": true,
+    "answer_text": "Сказали слать до 100 тысяч чтобы обойти проверку безопасности банка.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 84,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 615789,
+    "is_new_recipient": true,
+    "answer_text": "Банктің қауіпсіздік қызметі ақшаны сақтап қалу үшін резервтік шотқа салуды тапсырды.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 85,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 80141,
+    "is_new_recipient": true,
+    "answer_text": "Следователь велел переводить частями по 80,141 тенге, чтобы система банка не заблокировала.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 86,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 98694,
+    "is_new_recipient": true,
+    "answer_text": "Банк тексерісінен өту үшін бөліп 98,694 теңгеден резервке аударамын.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 87,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 115651,
+    "is_new_recipient": true,
+    "answer_text": "Майор сказал разбить сумму на переводы по 115,651 тенге на разные карты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 88,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 554445,
+    "is_new_recipient": true,
+    "answer_text": "Полиция капитаны қазір ақша аудармасаң үйіңіз тәркіленеді деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 89,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 878832,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник КНБ ведет секретную операцию и требует отправить средства.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 90,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 608286,
+    "is_new_recipient": true,
+    "answer_text": "Банктің қауіпсіздік қызметі ақшаны сақтап қалу үшін резервтік шотқа салуды тапсырды.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 91,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "ru",
+    "amount": 466246,
+    "is_new_recipient": true,
+    "answer_text": "Аналитик платформы ГазпромИнвест велел пополнить брокерский счет через эту карту.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 92,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 310250,
+    "is_new_recipient": true,
+    "answer_text": "Инвестициялық менеджер жеке картаға ақша салсаңыз жоғары пайыз болады деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 93,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 409490,
+    "is_new_recipient": true,
+    "answer_text": "Звонил прокурор, сказал если не переведу деньги, арестуют все счета сегодня.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 94,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 82856,
+    "is_new_recipient": true,
+    "answer_text": "Қауіпсіздік қызметкері ақшаны бөліп-бөліп 82,856 мыңнан жібер деп нұсқау берді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 95,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "ru",
+    "amount": 451135,
+    "is_new_recipient": true,
+    "answer_text": "Аналитик платформы ГазпромИнвест велел пополнить брокерский счет через эту карту.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 96,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 113081,
+    "is_new_recipient": true,
+    "answer_text": "Тергеуші банкті алдау үшін 100 мыңнан аз қылып 113,081 теңгеден аудар деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 97,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "ru",
+    "amount": 472042,
+    "is_new_recipient": true,
+    "answer_text": "Аналитик платформы ГазпромИнвест велел пополнить брокерский счет через эту карту.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 98,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 578891,
+    "is_new_recipient": true,
+    "answer_text": "Полиция капитаны қазір ақша аудармасаң үйіңіз тәркіленеді деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 99,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 750642,
+    "is_new_recipient": true,
+    "answer_text": "Дочь в реанимации после аварии, неизвестный мужчина требует срочный перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 100,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 929019,
+    "is_new_recipient": true,
+    "answer_text": "ҰҚК қызметкері жедел операция өтіп жатыр деп ақшаны аударуға бұйрық берді.",
+    "expected_risk": "HIGH"
+  }
+]

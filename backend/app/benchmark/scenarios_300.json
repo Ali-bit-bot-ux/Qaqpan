@@ -1,0 +1,3202 @@
+[
+  {
+    "id": 1,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 506639,
+    "is_new_recipient": true,
+    "answer_text": "Звонили из финмониторинга, сказали временно перекинуть на безопасную ячейку.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 2,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 464144,
+    "is_new_recipient": true,
+    "answer_text": "Заң орындарынан қоңырау шалып, шоттарыңызды бұғаттаймыз деп қысым көрсетті.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 3,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 549348,
+    "is_new_recipient": true,
+    "answer_text": "Звонили из финмониторинга, сказали временно перекинуть на безопасную ячейку.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 4,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 606952,
+    "is_new_recipient": true,
+    "answer_text": "Банктің қауіпсіздік қызметі ақшаны сақтап қалу үшін резервтік шотқа салуды тапсырды.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 5,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 379328,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник нацбанка диктует реквизиты специального страхового счета.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 6,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 398031,
+    "is_new_recipient": true,
+    "answer_text": "Криптовалютадан пайда түсіру үшін брокер мына шотқа депозит салуды сұрады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 7,
+    "is_scam": true,
+    "category": "masking",
+    "language": "ru",
+    "amount": 362493,
+    "is_new_recipient": true,
+    "answer_text": "Звонивший велел соврать что родственникам, а на самом деле спасаю счет.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 8,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 685425,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 9,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 450753,
+    "is_new_recipient": true,
+    "answer_text": "Звонил прокурор, сказал если не переведу деньги, арестуют все счета сегодня.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 10,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 695189,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 11,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 897059,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник КНБ ведет секретную операцию и требует отправить средства.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 12,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 81338,
+    "is_new_recipient": true,
+    "answer_text": "Қауіпсіздік қызметкері ақшаны бөліп-бөліп 81,338 мыңнан жібер деп нұсқау берді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 13,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 507541,
+    "is_new_recipient": true,
+    "answer_text": "Племянник задержан с наркотиками, полицейский просит выкуп прямо сейчас.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 14,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 115142,
+    "is_new_recipient": true,
+    "answer_text": "Банк тексерісінен өту үшін бөліп 115,142 теңгеден резервке аударамын.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 15,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 529807,
+    "is_new_recipient": true,
+    "answer_text": "Звонили из финмониторинга, сказали временно перекинуть на безопасную ячейку.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 16,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 622837,
+    "is_new_recipient": true,
+    "answer_text": "Інім адам қағып кетті, қылмыстық істі жабу үшін мына кісіге ақша беру керек.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 17,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 921174,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник КНБ ведет секретную операцию и требует отправить средства.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 18,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 473965,
+    "is_new_recipient": true,
+    "answer_text": "Заң орындарынан қоңырау шалып, шоттарыңызды бұғаттаймыз деп қысым көрсетті.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 19,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 380256,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник нацбанка диктует реквизиты специального страхового счета.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 20,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 714714,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 21,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 495659,
+    "is_new_recipient": true,
+    "answer_text": "Племянник задержан с наркотиками, полицейский просит выкуп прямо сейчас.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 22,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 578920,
+    "is_new_recipient": true,
+    "answer_text": "Полиция капитаны қазір ақша аудармасаң үйіңіз тәркіленеді деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 23,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 630994,
+    "is_new_recipient": true,
+    "answer_text": "Сын сбил человека на переходе, следователь требует деньги, чтобы не посадить.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 24,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 432784,
+    "is_new_recipient": true,
+    "answer_text": "Криптовалютадан пайда түсіру үшін брокер мына шотқа депозит салуды сұрады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 25,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 265708,
+    "is_new_recipient": true,
+    "answer_text": "Служба безопасности банка звонит по видеосвязи и требует подтвердить перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 26,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 726943,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 27,
+    "is_scam": true,
+    "category": "masking",
+    "language": "ru",
+    "amount": 349392,
+    "is_new_recipient": true,
+    "answer_text": "Звонивший велел соврать что родственникам, а на самом деле спасаю счет.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 28,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 457103,
+    "is_new_recipient": true,
+    "answer_text": "Заң орындарынан қоңырау шалып, шоттарыңызды бұғаттаймыз деп қысым көрсетті.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 29,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 761290,
+    "is_new_recipient": true,
+    "answer_text": "Дочь в реанимации после аварии, неизвестный мужчина требует срочный перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 30,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 572170,
+    "is_new_recipient": true,
+    "answer_text": "Полиция капитаны қазір ақша аудармасаң үйіңіз тәркіленеді деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 31,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 748934,
+    "is_new_recipient": true,
+    "answer_text": "Дочь в реанимации после аварии, неизвестный мужчина требует срочный перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 32,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 89363,
+    "is_new_recipient": true,
+    "answer_text": "Банк тексерісінен өту үшін бөліп 89,363 теңгеден резервке аударамын.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 33,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 594150,
+    "is_new_recipient": true,
+    "answer_text": "Сын сбил человека на переходе, следователь требует деньги, чтобы не посадить.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 34,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 108242,
+    "is_new_recipient": true,
+    "answer_text": "Тергеуші банкті алдау үшін 100 мыңнан аз қылып 108,242 теңгеден аудар деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 35,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 103723,
+    "is_new_recipient": true,
+    "answer_text": "Следователь велел переводить частями по 103,723 тенге, чтобы система банка не заблокировала.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 36,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 337343,
+    "is_new_recipient": true,
+    "answer_text": "Инвестициялық менеджер жеке картаға ақша салсаңыз жоғары пайыз болады деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 37,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 414530,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник нацбанка диктует реквизиты специального страхового счета.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 38,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 926120,
+    "is_new_recipient": true,
+    "answer_text": "ҰҚК қызметкері жедел операция өтіп жатыр деп ақшаны аударуға бұйрық берді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 39,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 449596,
+    "is_new_recipient": true,
+    "answer_text": "Звонил прокурор, сказал если не переведу деньги, арестуют все счета сегодня.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 40,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 100009,
+    "is_new_recipient": true,
+    "answer_text": "Қауіпсіздік қызметкері ақшаны бөліп-бөліп 100,009 мыңнан жібер деп нұсқау берді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 41,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "ru",
+    "amount": 265674,
+    "is_new_recipient": true,
+    "answer_text": "Криптоброкер обещал утроить вклад к вечеру, перевожу стартовый депозит.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 42,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 739676,
+    "is_new_recipient": true,
+    "answer_text": "Тергеуші шұғыл сақтау шотына аударыңыз деді, әйтпесе ақша жоғалады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 43,
+    "is_scam": true,
+    "category": "masking",
+    "language": "ru",
+    "amount": 384209,
+    "is_new_recipient": true,
+    "answer_text": "Звонивший велел соврать что родственникам, а на самом деле спасаю счет.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 44,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 714234,
+    "is_new_recipient": true,
+    "answer_text": "Тергеуші шұғыл сақтау шотына аударыңыз деді, әйтпесе ақша жоғалады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 45,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 80365,
+    "is_new_recipient": true,
+    "answer_text": "Майор сказал разбить сумму на переводы по 80,365 тенге на разные карты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 46,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 717806,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 47,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 438271,
+    "is_new_recipient": true,
+    "answer_text": "Звонил прокурор, сказал если не переведу деньги, арестуют все счета сегодня.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 48,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 344909,
+    "is_new_recipient": true,
+    "answer_text": "Инвестициялық менеджер жеке картаға ақша салсаңыз жоғары пайыз болады деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 49,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 885016,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник КНБ ведет секретную операцию и требует отправить средства.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 50,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 419757,
+    "is_new_recipient": true,
+    "answer_text": "Криптовалютадан пайда түсіру үшін брокер мына шотқа депозит салуды сұрады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 51,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 474252,
+    "is_new_recipient": true,
+    "answer_text": "Следователь лейтенант сказал срочно перевести 474,252 на безопасный счет.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 52,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 492331,
+    "is_new_recipient": true,
+    "answer_text": "Маған полициядан қоңырау шалды, шұғыл қауіпсіз шотқа 492,331 теңге аудару керек дейді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 53,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 505153,
+    "is_new_recipient": true,
+    "answer_text": "Племянник задержан с наркотиками, полицейский просит выкуп прямо сейчас.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 54,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 492182,
+    "is_new_recipient": true,
+    "answer_text": "Заң орындарынан қоңырау шалып, шоттарыңызды бұғаттаймыз деп қысым көрсетті.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 55,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 370613,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник нацбанка диктует реквизиты специального страхового счета.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 56,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 393241,
+    "is_new_recipient": true,
+    "answer_text": "Криптовалютадан пайда түсіру үшін брокер мына шотқа депозит салуды сұрады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 57,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 328237,
+    "is_new_recipient": true,
+    "answer_text": "Капитан полиции Ахметов приказал выполнить перевод, иначе уголовное дело.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 58,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 719581,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 59,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "ru",
+    "amount": 262730,
+    "is_new_recipient": true,
+    "answer_text": "Криптоброкер обещал утроить вклад к вечеру, перевожу стартовый депозит.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 60,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 361148,
+    "is_new_recipient": true,
+    "answer_text": "Немерем жылап қоңырау соқты, ауруханаға шұғыл дәрігерге төлеу керек екен.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 61,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 513711,
+    "is_new_recipient": true,
+    "answer_text": "Племянник задержан с наркотиками, полицейский просит выкуп прямо сейчас.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 62,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 469725,
+    "is_new_recipient": true,
+    "answer_text": "Заң орындарынан қоңырау шалып, шоттарыңызды бұғаттаймыз деп қысым көрсетті.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 63,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 387156,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник нацбанка диктует реквизиты специального страхового счета.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 64,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 455471,
+    "is_new_recipient": true,
+    "answer_text": "Заң орындарынан қоңырау шалып, шоттарыңызды бұғаттаймыз деп қысым көрсетті.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 65,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 411389,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник нацбанка диктует реквизиты специального страхового счета.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 66,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 417058,
+    "is_new_recipient": true,
+    "answer_text": "Ұлттық банктен хабарласып, арнайы қорғалған шотқа қаражатты аударыңыз деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 67,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 739643,
+    "is_new_recipient": true,
+    "answer_text": "Дочь в реанимации после аварии, неизвестный мужчина требует срочный перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 68,
+    "is_scam": true,
+    "category": "masking",
+    "language": "kz",
+    "amount": 449040,
+    "is_new_recipient": true,
+    "answer_text": "Телефондағы адам банк сұраса туысыма деп айт деді, негізі шотымды сақтау үшін.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 69,
+    "is_scam": true,
+    "category": "masking",
+    "language": "ru",
+    "amount": 343671,
+    "is_new_recipient": true,
+    "answer_text": "Звонивший велел соврать что родственникам, а на самом деле спасаю счет.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 70,
+    "is_scam": true,
+    "category": "masking",
+    "language": "kz",
+    "amount": 461677,
+    "is_new_recipient": true,
+    "answer_text": "Телефондағы адам банк сұраса туысыма деп айт деді, негізі шотымды сақтау үшін.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 71,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 881181,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник КНБ ведет секретную операцию и требует отправить средства.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 72,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 612759,
+    "is_new_recipient": true,
+    "answer_text": "Інім адам қағып кетті, қылмыстық істі жабу үшін мына кісіге ақша беру керек.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 73,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 100606,
+    "is_new_recipient": true,
+    "answer_text": "Майор сказал разбить сумму на переводы по 100,606 тенге на разные карты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 74,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 631386,
+    "is_new_recipient": true,
+    "answer_text": "Банктің қауіпсіздік қызметі ақшаны сақтап қалу үшін резервтік шотқа салуды тапсырды.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 75,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 742161,
+    "is_new_recipient": true,
+    "answer_text": "Дочь в реанимации после аварии, неизвестный мужчина требует срочный перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 76,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 570146,
+    "is_new_recipient": true,
+    "answer_text": "Полиция капитаны қазір ақша аудармасаң үйіңіз тәркіленеді деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 77,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 84186,
+    "is_new_recipient": true,
+    "answer_text": "Перевожу третью часть по 84,186 на резервный счет по инструкции оператора.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 78,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 715318,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 79,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 259940,
+    "is_new_recipient": true,
+    "answer_text": "Служба безопасности банка звонит по видеосвязи и требует подтвердить перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 80,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 647738,
+    "is_new_recipient": true,
+    "answer_text": "Банктің қауіпсіздік қызметі ақшаны сақтап қалу үшін резервтік шотқа салуды тапсырды.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 81,
+    "is_scam": true,
+    "category": "masking",
+    "language": "ru",
+    "amount": 335967,
+    "is_new_recipient": true,
+    "answer_text": "Звонивший велел соврать что родственникам, а на самом деле спасаю счет.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 82,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 391634,
+    "is_new_recipient": true,
+    "answer_text": "Қаржы полициясы қылмыстық іс қозғалды деп шұғыл төлем жасауды талап етті.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 83,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 115546,
+    "is_new_recipient": true,
+    "answer_text": "Сказали слать до 100 тысяч чтобы обойти проверку безопасности банка.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 84,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 615789,
+    "is_new_recipient": true,
+    "answer_text": "Банктің қауіпсіздік қызметі ақшаны сақтап қалу үшін резервтік шотқа салуды тапсырды.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 85,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 80141,
+    "is_new_recipient": true,
+    "answer_text": "Следователь велел переводить частями по 80,141 тенге, чтобы система банка не заблокировала.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 86,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 98694,
+    "is_new_recipient": true,
+    "answer_text": "Банк тексерісінен өту үшін бөліп 98,694 теңгеден резервке аударамын.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 87,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 115651,
+    "is_new_recipient": true,
+    "answer_text": "Майор сказал разбить сумму на переводы по 115,651 тенге на разные карты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 88,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 554445,
+    "is_new_recipient": true,
+    "answer_text": "Полиция капитаны қазір ақша аудармасаң үйіңіз тәркіленеді деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 89,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 878832,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник КНБ ведет секретную операцию и требует отправить средства.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 90,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 608286,
+    "is_new_recipient": true,
+    "answer_text": "Банктің қауіпсіздік қызметі ақшаны сақтап қалу үшін резервтік шотқа салуды тапсырды.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 91,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "ru",
+    "amount": 466246,
+    "is_new_recipient": true,
+    "answer_text": "Аналитик платформы ГазпромИнвест велел пополнить брокерский счет через эту карту.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 92,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 310250,
+    "is_new_recipient": true,
+    "answer_text": "Инвестициялық менеджер жеке картаға ақша салсаңыз жоғары пайыз болады деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 93,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 409490,
+    "is_new_recipient": true,
+    "answer_text": "Звонил прокурор, сказал если не переведу деньги, арестуют все счета сегодня.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 94,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 82856,
+    "is_new_recipient": true,
+    "answer_text": "Қауіпсіздік қызметкері ақшаны бөліп-бөліп 82,856 мыңнан жібер деп нұсқау берді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 95,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "ru",
+    "amount": 451135,
+    "is_new_recipient": true,
+    "answer_text": "Аналитик платформы ГазпромИнвест велел пополнить брокерский счет через эту карту.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 96,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 113081,
+    "is_new_recipient": true,
+    "answer_text": "Тергеуші банкті алдау үшін 100 мыңнан аз қылып 113,081 теңгеден аудар деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 97,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "ru",
+    "amount": 472042,
+    "is_new_recipient": true,
+    "answer_text": "Аналитик платформы ГазпромИнвест велел пополнить брокерский счет через эту карту.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 98,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 578891,
+    "is_new_recipient": true,
+    "answer_text": "Полиция капитаны қазір ақша аудармасаң үйіңіз тәркіленеді деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 99,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 750642,
+    "is_new_recipient": true,
+    "answer_text": "Дочь в реанимации после аварии, неизвестный мужчина требует срочный перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 100,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 929019,
+    "is_new_recipient": true,
+    "answer_text": "ҰҚК қызметкері жедел операция өтіп жатыр деп ақшаны аударуға бұйрық берді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 101,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 464964,
+    "is_new_recipient": true,
+    "answer_text": "Внук позвонил в слезах, сказал попал в ДТП, срочно нужны деньги врачу.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 102,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 515034,
+    "is_new_recipient": true,
+    "answer_text": "Маған полициядан қоңырау шалды, шұғыл қауіпсіз шотқа 515,034 теңге аудару керек дейді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 103,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "ru",
+    "amount": 271896,
+    "is_new_recipient": true,
+    "answer_text": "Криптоброкер обещал утроить вклад к вечеру, перевожу стартовый депозит.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 104,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 398969,
+    "is_new_recipient": true,
+    "answer_text": "Криптовалютадан пайда түсіру үшін брокер мына шотқа депозит салуды сұрады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 105,
+    "is_scam": true,
+    "category": "masking",
+    "language": "ru",
+    "amount": 402380,
+    "is_new_recipient": true,
+    "answer_text": "Мне сказали в банке говорить что это на ремонт, а сам перевожу по указке следователя.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 106,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 431009,
+    "is_new_recipient": true,
+    "answer_text": "Ұлттық банктен хабарласып, арнайы қорғалған шотқа қаражатты аударыңыз деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 107,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 503676,
+    "is_new_recipient": true,
+    "answer_text": "Племянник задержан с наркотиками, полицейский просит выкуп прямо сейчас.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 108,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 431107,
+    "is_new_recipient": true,
+    "answer_text": "Криптовалютадан пайда түсіру үшін брокер мына шотқа депозит салуды сұрады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 109,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 475086,
+    "is_new_recipient": true,
+    "answer_text": "Внук позвонил в слезах, сказал попал в ДТП, срочно нужны деньги врачу.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 110,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 703800,
+    "is_new_recipient": true,
+    "answer_text": "Тергеуші шұғыл сақтау шотына аударыңыз деді, әйтпесе ақша жоғалады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 111,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 592564,
+    "is_new_recipient": true,
+    "answer_text": "Сын сбил человека на переходе, следователь требует деньги, чтобы не посадить.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 112,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 703465,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 113,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "ru",
+    "amount": 248803,
+    "is_new_recipient": true,
+    "answer_text": "Криптоброкер обещал утроить вклад к вечеру, перевожу стартовый депозит.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 114,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 718122,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 115,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 100457,
+    "is_new_recipient": true,
+    "answer_text": "Сказали слать до 100 тысяч чтобы обойти проверку безопасности банка.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 116,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 88132,
+    "is_new_recipient": true,
+    "answer_text": "Тергеуші банкті алдау үшін 100 мыңнан аз қылып 88,132 теңгеден аудар деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 117,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 635232,
+    "is_new_recipient": true,
+    "answer_text": "Служба безопасности ЦентрКредит велела отправить деньги на резервный счет для защиты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 118,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 695589,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 119,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 111154,
+    "is_new_recipient": true,
+    "answer_text": "Перевожу третью часть по 111,154 на резервный счет по инструкции оператора.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 120,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 699931,
+    "is_new_recipient": true,
+    "answer_text": "Тергеуші шұғыл сақтау шотына аударыңыз деді, әйтпесе ақша жоғалады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 121,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 320755,
+    "is_new_recipient": true,
+    "answer_text": "Капитан полиции Смагулов приказал выполнить перевод, иначе уголовное дело.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 122,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 394705,
+    "is_new_recipient": true,
+    "answer_text": "Криптовалютадан пайда түсіру үшін брокер мына шотқа депозит салуды сұрады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 123,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 78352,
+    "is_new_recipient": true,
+    "answer_text": "Майор сказал разбить сумму на переводы по 78,352 тенге на разные карты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 124,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 587614,
+    "is_new_recipient": true,
+    "answer_text": "Інім адам қағып кетті, қылмыстық істі жабу үшін мына кісіге ақша беру керек.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 125,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 498767,
+    "is_new_recipient": true,
+    "answer_text": "Племянник задержан с наркотиками, полицейский просит выкуп прямо сейчас.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 126,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 621692,
+    "is_new_recipient": true,
+    "answer_text": "Інім адам қағып кетті, қылмыстық істі жабу үшін мына кісіге ақша беру керек.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 127,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 110675,
+    "is_new_recipient": true,
+    "answer_text": "Майор сказал разбить сумму на переводы по 110,675 тенге на разные карты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 128,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 376603,
+    "is_new_recipient": true,
+    "answer_text": "Қаржы полициясы қылмыстық іс қозғалды деп шұғыл төлем жасауды талап етті.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 129,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 71624,
+    "is_new_recipient": true,
+    "answer_text": "Майор сказал разбить сумму на переводы по 71,624 тенге на разные карты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 130,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 113903,
+    "is_new_recipient": true,
+    "answer_text": "Тергеуші банкті алдау үшін 100 мыңнан аз қылып 113,903 теңгеден аудар деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 131,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 272485,
+    "is_new_recipient": true,
+    "answer_text": "Служба безопасности банка звонит по видеосвязи и требует подтвердить перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 132,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 77537,
+    "is_new_recipient": true,
+    "answer_text": "Қауіпсіздік қызметкері ақшаны бөліп-бөліп 77,537 мыңнан жібер деп нұсқау берді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 133,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 98577,
+    "is_new_recipient": true,
+    "answer_text": "Сказали слать до 100 тысяч чтобы обойти проверку безопасности банка.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 134,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 605000,
+    "is_new_recipient": true,
+    "answer_text": "Інім адам қағып кетті, қылмыстық істі жабу үшін мына кісіге ақша беру керек.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 135,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 269609,
+    "is_new_recipient": true,
+    "answer_text": "Служба безопасности банка звонит по видеосвязи и требует подтвердить перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 136,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 96512,
+    "is_new_recipient": true,
+    "answer_text": "Қауіпсіздік қызметкері ақшаны бөліп-бөліп 96,512 мыңнан жібер деп нұсқау берді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 137,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 589549,
+    "is_new_recipient": true,
+    "answer_text": "Сын сбил человека на переходе, следователь требует деньги, чтобы не посадить.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 138,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 331193,
+    "is_new_recipient": true,
+    "answer_text": "Инвестициялық менеджер жеке картаға ақша салсаңыз жоғары пайыз болады деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 139,
+    "is_scam": true,
+    "category": "masking",
+    "language": "ru",
+    "amount": 356702,
+    "is_new_recipient": true,
+    "answer_text": "Звонивший велел соврать что родственникам, а на самом деле спасаю счет.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 140,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 696702,
+    "is_new_recipient": true,
+    "answer_text": "Балам жол апатына түсті, тергеуші ақшаны қазір жібермесеңіз қамалады деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 141,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "ru",
+    "amount": 452397,
+    "is_new_recipient": true,
+    "answer_text": "Аналитик платформы ГазпромИнвест велел пополнить брокерский счет через эту карту.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 142,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 92654,
+    "is_new_recipient": true,
+    "answer_text": "Тергеуші банкті алдау үшін 100 мыңнан аз қылып 92,654 теңгеден аудар деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 143,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 763599,
+    "is_new_recipient": true,
+    "answer_text": "Дочь в реанимации после аварии, неизвестный мужчина требует срочный перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 144,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 551693,
+    "is_new_recipient": true,
+    "answer_text": "Полиция капитаны қазір ақша аудармасаң үйіңіз тәркіленеді деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 145,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "ru",
+    "amount": 681450,
+    "is_new_recipient": true,
+    "answer_text": "Служба безопасности ЦентрКредит велела отправить деньги на резервный счет для защиты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 146,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 340287,
+    "is_new_recipient": true,
+    "answer_text": "Инвестициялық менеджер жеке картаға ақша салсаңыз жоғары пайыз болады деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 147,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 898869,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник КНБ ведет секретную операцию и требует отправить средства.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 148,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 505839,
+    "is_new_recipient": true,
+    "answer_text": "Қызым полиция бөлімінде отыр, ешкімге айтпай тез арада мына шотқа ақша сал деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 149,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "ru",
+    "amount": 778475,
+    "is_new_recipient": true,
+    "answer_text": "Дочь в реанимации после аварии, неизвестный мужчина требует срочный перевод.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 150,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 325269,
+    "is_new_recipient": true,
+    "answer_text": "Инвестициялық менеджер жеке картаға ақша салсаңыз жоғары пайыз болады деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 151,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "ru",
+    "amount": 91376,
+    "is_new_recipient": true,
+    "answer_text": "Майор сказал разбить сумму на переводы по 91,376 тенге на разные карты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 152,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "kz",
+    "amount": 393341,
+    "is_new_recipient": true,
+    "answer_text": "Криптовалютадан пайда түсіру үшін брокер мына шотқа депозит салуды сұрады.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 153,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 902554,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник КНБ ведет секретную операцию и требует отправить средства.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 154,
+    "is_scam": true,
+    "category": "family_accident",
+    "language": "kz",
+    "amount": 361612,
+    "is_new_recipient": true,
+    "answer_text": "Немерем жылап қоңырау соқты, ауруханаға шұғыл дәрігерге төлеу керек екен.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 155,
+    "is_scam": true,
+    "category": "masking",
+    "language": "ru",
+    "amount": 335026,
+    "is_new_recipient": true,
+    "answer_text": "Звонивший велел соврать что родственникам, а на самом деле спасаю счет.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 156,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "kz",
+    "amount": 563173,
+    "is_new_recipient": true,
+    "answer_text": "Полиция капитаны қазір ақша аудармасаң үйіңіз тәркіленеді деп қорқытты.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 157,
+    "is_scam": true,
+    "category": "fake_investment",
+    "language": "ru",
+    "amount": 474758,
+    "is_new_recipient": true,
+    "answer_text": "Аналитик платформы ГазпромИнвест велел пополнить брокерский счет через эту карту.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 158,
+    "is_scam": true,
+    "category": "smurfing",
+    "language": "kz",
+    "amount": 108977,
+    "is_new_recipient": true,
+    "answer_text": "Банк тексерісінен өту үшін бөліп 108,977 теңгеден резервке аударамын.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 159,
+    "is_scam": true,
+    "category": "authority_pressure",
+    "language": "ru",
+    "amount": 908500,
+    "is_new_recipient": true,
+    "answer_text": "Сотрудник КНБ ведет секретную операцию и требует отправить средства.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 160,
+    "is_scam": true,
+    "category": "safe_account",
+    "language": "kz",
+    "amount": 433598,
+    "is_new_recipient": true,
+    "answer_text": "Ұлттық банктен хабарласып, арнайы қорғалған шотқа қаражатты аударыңыз деді.",
+    "expected_risk": "HIGH"
+  },
+  {
+    "id": 161,
+    "is_scam": false,
+    "category": "groceries",
+    "language": "ru",
+    "amount": 13876,
+    "is_new_recipient": false,
+    "answer_text": "Скинулись с коллегами на пиццу и обед в офисе.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 162,
+    "is_scam": false,
+    "category": "education",
+    "language": "kz",
+    "amount": 45145,
+    "is_new_recipient": false,
+    "answer_text": "Ағылшын тілі үйірмесіне кезекті төлемақы.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 163,
+    "is_scam": false,
+    "category": "education",
+    "language": "ru",
+    "amount": 56530,
+    "is_new_recipient": false,
+    "answer_text": "Оплата курсов английского языка за второй модуль.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 164,
+    "is_scam": false,
+    "category": "car_service",
+    "language": "kz",
+    "amount": 42306,
+    "is_new_recipient": true,
+    "answer_text": "СТО-да көліктің майы мен тежегішін ауыстырғанға.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 165,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "ru",
+    "amount": 51023,
+    "is_new_recipient": true,
+    "answer_text": "Покупка детской коляски на OLX, продавец отправит таксистом.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 166,
+    "is_scam": false,
+    "category": "rent_utilities",
+    "language": "kz",
+    "amount": 188680,
+    "is_new_recipient": false,
+    "answer_text": "Пәтерақы қараша айына, пәтер иесі Айнұрға төлеу.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 167,
+    "is_scam": false,
+    "category": "rent_utilities",
+    "language": "ru",
+    "amount": 22414,
+    "is_new_recipient": false,
+    "answer_text": "Аренда парковочного места в подземном паркинге.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 168,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 25757,
+    "is_new_recipient": false,
+    "answer_text": "Немереме туған күніне сыйлыққа, құттықтап жіберіп жатырмын.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 169,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "ru",
+    "amount": 47784,
+    "is_new_recipient": true,
+    "answer_text": "Покупка детской коляски на OLX, продавец отправит таксистом.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 170,
+    "is_scam": false,
+    "category": "education",
+    "language": "kz",
+    "amount": 43922,
+    "is_new_recipient": false,
+    "answer_text": "Баланың мектепке дейінгі дайындық курсына айлық төлем.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 171,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "ru",
+    "amount": 52461,
+    "is_new_recipient": false,
+    "answer_text": "Сестре на свадьбу подарок от всей нашей семьи.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 172,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 54518,
+    "is_new_recipient": true,
+    "answer_text": "OLX-тан пайдаланылған балалар арбасын сатып алдым.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 173,
+    "is_scam": false,
+    "category": "rent_utilities",
+    "language": "ru",
+    "amount": 31769,
+    "is_new_recipient": false,
+    "answer_text": "Аренда парковочного места в подземном паркинге.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 174,
+    "is_scam": false,
+    "category": "medical",
+    "language": "kz",
+    "amount": 31291,
+    "is_new_recipient": false,
+    "answer_text": "Тіс емханасына тіс емдеткені үшін каспи арқылы төлеу.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 175,
+    "is_scam": false,
+    "category": "debt_repayment",
+    "language": "ru",
+    "amount": 41547,
+    "is_new_recipient": false,
+    "answer_text": "Возврат долга коллеге за совместную покупку билетов.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 176,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 22417,
+    "is_new_recipient": false,
+    "answer_text": "Анамның дәрі-дәрмегіне және азық-түлігіне жәрдем.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 177,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "ru",
+    "amount": 39625,
+    "is_new_recipient": false,
+    "answer_text": "Внуку на день рождения на подарок, обещал отправить сегодня.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 178,
+    "is_scam": false,
+    "category": "repair",
+    "language": "kz",
+    "amount": 34097,
+    "is_new_recipient": true,
+    "answer_text": "Үйдің су құбырын жөндеген шебер Қайратқа төлем.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 179,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "ru",
+    "amount": 32753,
+    "is_new_recipient": false,
+    "answer_text": "Маме на покупку лекарств и продуктов на неделю.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 180,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 43585,
+    "is_new_recipient": true,
+    "answer_text": "OLX-тан пайдаланылған балалар арбасын сатып алдым.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 181,
+    "is_scam": false,
+    "category": "rent_utilities",
+    "language": "ru",
+    "amount": 43174,
+    "is_new_recipient": false,
+    "answer_text": "Коммунальные услуги и отопление за двухкомнатную квартиру.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 182,
+    "is_scam": false,
+    "category": "medical",
+    "language": "kz",
+    "amount": 33486,
+    "is_new_recipient": false,
+    "answer_text": "Тіс емханасына тіс емдеткені үшін каспи арқылы төлеу.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 183,
+    "is_scam": false,
+    "category": "car_service",
+    "language": "ru",
+    "amount": 20822,
+    "is_new_recipient": true,
+    "answer_text": "Замена моторного масла и фильтров на СТО у мастера.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 184,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 19082,
+    "is_new_recipient": true,
+    "answer_text": "Инстаграм арқылы мерекелік тортқа тапсырыс бергенге.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 185,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "ru",
+    "amount": 27478,
+    "is_new_recipient": false,
+    "answer_text": "Маме на покупку лекарств и продуктов на неделю.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 186,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 58130,
+    "is_new_recipient": false,
+    "answer_text": "Қарындасымның ұзату тойына туыстар атынан шашу.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 187,
+    "is_scam": false,
+    "category": "car_service",
+    "language": "ru",
+    "amount": 30937,
+    "is_new_recipient": true,
+    "answer_text": "Замена моторного масла и фильтров на СТО у мастера.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 188,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 24157,
+    "is_new_recipient": true,
+    "answer_text": "Инстаграм арқылы мерекелік тортқа тапсырыс бергенге.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 189,
+    "is_scam": false,
+    "category": "education",
+    "language": "ru",
+    "amount": 67374,
+    "is_new_recipient": false,
+    "answer_text": "Оплата курсов английского языка за второй модуль.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 190,
+    "is_scam": false,
+    "category": "debt_repayment",
+    "language": "kz",
+    "amount": 17251,
+    "is_new_recipient": false,
+    "answer_text": "Әріптесіме түскі асқа берген қарызымды қайтарып жатырмын.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 191,
+    "is_scam": false,
+    "category": "groceries",
+    "language": "ru",
+    "amount": 9991,
+    "is_new_recipient": false,
+    "answer_text": "Скинулись с коллегами на пиццу и обед в офисе.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 192,
+    "is_scam": false,
+    "category": "car_service",
+    "language": "kz",
+    "amount": 44857,
+    "is_new_recipient": true,
+    "answer_text": "СТО-да көліктің майы мен тежегішін ауыстырғанға.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 193,
+    "is_scam": false,
+    "category": "car_service",
+    "language": "ru",
+    "amount": 34699,
+    "is_new_recipient": true,
+    "answer_text": "Замена моторного масла и фильтров на СТО у мастера.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 194,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 57184,
+    "is_new_recipient": false,
+    "answer_text": "Қарындасымның ұзату тойына туыстар атынан шашу.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 195,
+    "is_scam": false,
+    "category": "debt_repayment",
+    "language": "ru",
+    "amount": 42373,
+    "is_new_recipient": false,
+    "answer_text": "Возврат долга коллеге за совместную покупку билетов.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 196,
+    "is_scam": false,
+    "category": "rent_utilities",
+    "language": "kz",
+    "amount": 197317,
+    "is_new_recipient": false,
+    "answer_text": "Пәтерақы қараша айына, пәтер иесі Айнұрға төлеу.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 197,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "ru",
+    "amount": 53760,
+    "is_new_recipient": true,
+    "answer_text": "Покупка детской коляски на OLX, продавец отправит таксистом.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 198,
+    "is_scam": false,
+    "category": "education",
+    "language": "kz",
+    "amount": 39543,
+    "is_new_recipient": false,
+    "answer_text": "Ағылшын тілі үйірмесіне кезекті төлемақы.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 199,
+    "is_scam": false,
+    "category": "groceries",
+    "language": "ru",
+    "amount": 10939,
+    "is_new_recipient": false,
+    "answer_text": "Скинулись с коллегами на пиццу и обед в офисе.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 200,
+    "is_scam": false,
+    "category": "education",
+    "language": "kz",
+    "amount": 38919,
+    "is_new_recipient": false,
+    "answer_text": "Ағылшын тілі үйірмесіне кезекті төлемақы.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 201,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "ru",
+    "amount": 72206,
+    "is_new_recipient": true,
+    "answer_text": "Купил зимнюю резину б/у у соседа по гаражному кооперативу.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 202,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 26690,
+    "is_new_recipient": false,
+    "answer_text": "Қызыма колледждегі күнделікті жолақысы мен тамағына.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 203,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "ru",
+    "amount": 16841,
+    "is_new_recipient": true,
+    "answer_text": "Заказ домашней выпечки и торта на юбилей через инстаграм.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 204,
+    "is_scam": false,
+    "category": "rent_utilities",
+    "language": "kz",
+    "amount": 190502,
+    "is_new_recipient": false,
+    "answer_text": "Пәтерақы қараша айына, пәтер иесі Айнұрға төлеу.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 205,
+    "is_scam": false,
+    "category": "education",
+    "language": "ru",
+    "amount": 69631,
+    "is_new_recipient": false,
+    "answer_text": "Оплата курсов английского языка за второй модуль.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 206,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 16320,
+    "is_new_recipient": true,
+    "answer_text": "Инстаграм арқылы мерекелік тортқа тапсырыс бергенге.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 207,
+    "is_scam": false,
+    "category": "rent_utilities",
+    "language": "ru",
+    "amount": 177471,
+    "is_new_recipient": false,
+    "answer_text": "Оплата аренды квартиры за ноябрь месяц хозяйке Гульнаре.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 208,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 26275,
+    "is_new_recipient": false,
+    "answer_text": "Анамның дәрі-дәрмегіне және азық-түлігіне жәрдем.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 209,
+    "is_scam": false,
+    "category": "rent_utilities",
+    "language": "ru",
+    "amount": 186573,
+    "is_new_recipient": false,
+    "answer_text": "Оплата аренды квартиры за ноябрь месяц хозяйке Гульнаре.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 210,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 21052,
+    "is_new_recipient": false,
+    "answer_text": "Анамның дәрі-дәрмегіне және азық-түлігіне жәрдем.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 211,
+    "is_scam": false,
+    "category": "repair",
+    "language": "ru",
+    "amount": 31678,
+    "is_new_recipient": true,
+    "answer_text": "Оплата мастеру Ерлану за замену смесителя и труб в ванной.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 212,
+    "is_scam": false,
+    "category": "rent_utilities",
+    "language": "kz",
+    "amount": 35890,
+    "is_new_recipient": false,
+    "answer_text": "Үйдің коммуналдық қызметтері мен жылу ақысына.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 213,
+    "is_scam": false,
+    "category": "car_service",
+    "language": "ru",
+    "amount": 26812,
+    "is_new_recipient": true,
+    "answer_text": "Замена моторного масла и фильтров на СТО у мастера.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 214,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 28388,
+    "is_new_recipient": false,
+    "answer_text": "Немереме туған күніне сыйлыққа, құттықтап жіберіп жатырмын.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 215,
+    "is_scam": false,
+    "category": "repair",
+    "language": "ru",
+    "amount": 31381,
+    "is_new_recipient": true,
+    "answer_text": "Оплата мастеру Ерлану за замену смесителя и труб в ванной.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 216,
+    "is_scam": false,
+    "category": "debt_repayment",
+    "language": "kz",
+    "amount": 22612,
+    "is_new_recipient": false,
+    "answer_text": "Әріптесіме түскі асқа берген қарызымды қайтарып жатырмын.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 217,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "ru",
+    "amount": 39036,
+    "is_new_recipient": false,
+    "answer_text": "Внуку на день рождения на подарок, обещал отправить сегодня.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 218,
+    "is_scam": false,
+    "category": "debt_repayment",
+    "language": "kz",
+    "amount": 22543,
+    "is_new_recipient": false,
+    "answer_text": "Әріптесіме түскі асқа берген қарызымды қайтарып жатырмын.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 219,
+    "is_scam": false,
+    "category": "medical",
+    "language": "ru",
+    "amount": 37814,
+    "is_new_recipient": false,
+    "answer_text": "Оплата услуг стоматолога за лечение и пломбирование зуба.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 220,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 30763,
+    "is_new_recipient": false,
+    "answer_text": "Немереме туған күніне сыйлыққа, құттықтап жіберіп жатырмын.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 221,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "ru",
+    "amount": 25344,
+    "is_new_recipient": true,
+    "answer_text": "Заказ домашней выпечки и торта на юбилей через инстаграм.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 222,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 53982,
+    "is_new_recipient": true,
+    "answer_text": "OLX-тан пайдаланылған балалар арбасын сатып алдым.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 223,
+    "is_scam": false,
+    "category": "repair",
+    "language": "ru",
+    "amount": 33818,
+    "is_new_recipient": true,
+    "answer_text": "Оплата мастеру Ерлану за замену смесителя и труб в ванной.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 224,
+    "is_scam": false,
+    "category": "medical",
+    "language": "kz",
+    "amount": 37036,
+    "is_new_recipient": false,
+    "answer_text": "Тіс емханасына тіс емдеткені үшін каспи арқылы төлеу.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 225,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "ru",
+    "amount": 47999,
+    "is_new_recipient": true,
+    "answer_text": "Покупка детской коляски на OLX, продавец отправит таксистом.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 226,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 24471,
+    "is_new_recipient": false,
+    "answer_text": "Анамның дәрі-дәрмегіне және азық-түлігіне жәрдем.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 227,
+    "is_scam": false,
+    "category": "repair",
+    "language": "ru",
+    "amount": 32956,
+    "is_new_recipient": true,
+    "answer_text": "Оплата мастеру Ерлану за замену смесителя и труб в ванной.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 228,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 31371,
+    "is_new_recipient": false,
+    "answer_text": "Немереме туған күніне сыйлыққа, құттықтап жіберіп жатырмын.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 229,
+    "is_scam": false,
+    "category": "education",
+    "language": "ru",
+    "amount": 65958,
+    "is_new_recipient": false,
+    "answer_text": "Оплата курсов английского языка за второй модуль.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 230,
+    "is_scam": false,
+    "category": "education",
+    "language": "kz",
+    "amount": 48076,
+    "is_new_recipient": false,
+    "answer_text": "Ағылшын тілі үйірмесіне кезекті төлемақы.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 231,
+    "is_scam": false,
+    "category": "medical",
+    "language": "ru",
+    "amount": 41864,
+    "is_new_recipient": false,
+    "answer_text": "Оплата услуг стоматолога за лечение и пломбирование зуба.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 232,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 58770,
+    "is_new_recipient": false,
+    "answer_text": "Қарындасымның ұзату тойына туыстар атынан шашу.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 233,
+    "is_scam": false,
+    "category": "car_service",
+    "language": "ru",
+    "amount": 22091,
+    "is_new_recipient": true,
+    "answer_text": "Замена моторного масла и фильтров на СТО у мастера.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 234,
+    "is_scam": false,
+    "category": "education",
+    "language": "kz",
+    "amount": 38751,
+    "is_new_recipient": false,
+    "answer_text": "Баланың мектепке дейінгі дайындық курсына айлық төлем.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 235,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "ru",
+    "amount": 39859,
+    "is_new_recipient": false,
+    "answer_text": "Внуку на день рождения на подарок, обещал отправить сегодня.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 236,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 49697,
+    "is_new_recipient": true,
+    "answer_text": "OLX-тан пайдаланылған балалар арбасын сатып алдым.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 237,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "ru",
+    "amount": 26375,
+    "is_new_recipient": false,
+    "answer_text": "Внуку на день рождения на подарок, обещал отправить сегодня.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 238,
+    "is_scam": false,
+    "category": "education",
+    "language": "kz",
+    "amount": 42022,
+    "is_new_recipient": false,
+    "answer_text": "Ағылшын тілі үйірмесіне кезекті төлемақы.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 239,
+    "is_scam": false,
+    "category": "rent_utilities",
+    "language": "ru",
+    "amount": 189202,
+    "is_new_recipient": false,
+    "answer_text": "Оплата аренды квартиры за ноябрь месяц хозяйке Гульнаре.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 240,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 62977,
+    "is_new_recipient": true,
+    "answer_text": "Көршіден көліктің қысқы дөңгелегін сатып алғанға төлем.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 241,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "ru",
+    "amount": 19262,
+    "is_new_recipient": false,
+    "answer_text": "Дочке на карманные расходы во время учебы в университете.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 242,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 45363,
+    "is_new_recipient": true,
+    "answer_text": "OLX-тан пайдаланылған балалар арбасын сатып алдым.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 243,
+    "is_scam": false,
+    "category": "rent_utilities",
+    "language": "ru",
+    "amount": 27449,
+    "is_new_recipient": false,
+    "answer_text": "Аренда парковочного места в подземном паркинге.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 244,
+    "is_scam": false,
+    "category": "rent_utilities",
+    "language": "kz",
+    "amount": 32529,
+    "is_new_recipient": false,
+    "answer_text": "Үйдің коммуналдық қызметтері мен жылу ақысына.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 245,
+    "is_scam": false,
+    "category": "medical",
+    "language": "ru",
+    "amount": 34558,
+    "is_new_recipient": false,
+    "answer_text": "Оплата услуг стоматолога за лечение и пломбирование зуба.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 246,
+    "is_scam": false,
+    "category": "repair",
+    "language": "kz",
+    "amount": 33630,
+    "is_new_recipient": true,
+    "answer_text": "Үйдің су құбырын жөндеген шебер Қайратқа төлем.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 247,
+    "is_scam": false,
+    "category": "repair",
+    "language": "ru",
+    "amount": 29133,
+    "is_new_recipient": true,
+    "answer_text": "Оплата мастеру Ерлану за замену смесителя и труб в ванной.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 248,
+    "is_scam": false,
+    "category": "car_service",
+    "language": "kz",
+    "amount": 31341,
+    "is_new_recipient": true,
+    "answer_text": "СТО-да көліктің майы мен тежегішін ауыстырғанға.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 249,
+    "is_scam": false,
+    "category": "debt_repayment",
+    "language": "ru",
+    "amount": 35317,
+    "is_new_recipient": false,
+    "answer_text": "Возврат долга коллеге за совместную покупку билетов.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 250,
+    "is_scam": false,
+    "category": "medical",
+    "language": "kz",
+    "amount": 33837,
+    "is_new_recipient": false,
+    "answer_text": "Тіс емханасына тіс емдеткені үшін каспи арқылы төлеу.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 251,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "ru",
+    "amount": 20733,
+    "is_new_recipient": false,
+    "answer_text": "Дочке на карманные расходы во время учебы в университете.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 252,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 30651,
+    "is_new_recipient": false,
+    "answer_text": "Анамның дәрі-дәрмегіне және азық-түлігіне жәрдем.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 253,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "ru",
+    "amount": 57799,
+    "is_new_recipient": false,
+    "answer_text": "Сестре на свадьбу подарок от всей нашей семьи.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 254,
+    "is_scam": false,
+    "category": "education",
+    "language": "kz",
+    "amount": 35659,
+    "is_new_recipient": false,
+    "answer_text": "Ағылшын тілі үйірмесіне кезекті төлемақы.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 255,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "ru",
+    "amount": 29051,
+    "is_new_recipient": false,
+    "answer_text": "Внуку на день рождения на подарок, обещал отправить сегодня.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 256,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 33749,
+    "is_new_recipient": false,
+    "answer_text": "Анамның дәрі-дәрмегіне және азық-түлігіне жәрдем.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 257,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "ru",
+    "amount": 35179,
+    "is_new_recipient": false,
+    "answer_text": "Внуку на день рождения на подарок, обещал отправить сегодня.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 258,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 48908,
+    "is_new_recipient": false,
+    "answer_text": "Қарындасымның ұзату тойына туыстар атынан шашу.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 259,
+    "is_scam": false,
+    "category": "rent_utilities",
+    "language": "ru",
+    "amount": 182758,
+    "is_new_recipient": false,
+    "answer_text": "Оплата аренды квартиры за ноябрь месяц хозяйке Гульнаре.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 260,
+    "is_scam": false,
+    "category": "education",
+    "language": "kz",
+    "amount": 36874,
+    "is_new_recipient": false,
+    "answer_text": "Ағылшын тілі үйірмесіне кезекті төлемақы.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 261,
+    "is_scam": false,
+    "category": "rent_utilities",
+    "language": "ru",
+    "amount": 27619,
+    "is_new_recipient": false,
+    "answer_text": "Аренда парковочного места в подземном паркинге.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 262,
+    "is_scam": false,
+    "category": "medical",
+    "language": "kz",
+    "amount": 29198,
+    "is_new_recipient": false,
+    "answer_text": "Тіс емханасына тіс емдеткені үшін каспи арқылы төлеу.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 263,
+    "is_scam": false,
+    "category": "education",
+    "language": "ru",
+    "amount": 37749,
+    "is_new_recipient": false,
+    "answer_text": "Оплата детского сада за ребенка за ноябрь месяц.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 264,
+    "is_scam": false,
+    "category": "education",
+    "language": "kz",
+    "amount": 39949,
+    "is_new_recipient": false,
+    "answer_text": "Баланың мектепке дейінгі дайындық курсына айлық төлем.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 265,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "ru",
+    "amount": 32743,
+    "is_new_recipient": false,
+    "answer_text": "Маме на покупку лекарств и продуктов на неделю.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 266,
+    "is_scam": false,
+    "category": "car_service",
+    "language": "kz",
+    "amount": 32683,
+    "is_new_recipient": true,
+    "answer_text": "СТО-да көліктің майы мен тежегішін ауыстырғанға.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 267,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "ru",
+    "amount": 14771,
+    "is_new_recipient": true,
+    "answer_text": "Заказ домашней выпечки и торта на юбилей через инстаграм.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 268,
+    "is_scam": false,
+    "category": "education",
+    "language": "kz",
+    "amount": 30420,
+    "is_new_recipient": false,
+    "answer_text": "Баланың мектепке дейінгі дайындық курсына айлық төлем.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 269,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "ru",
+    "amount": 22433,
+    "is_new_recipient": true,
+    "answer_text": "Заказ домашней выпечки и торта на юбилей через инстаграм.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 270,
+    "is_scam": false,
+    "category": "education",
+    "language": "kz",
+    "amount": 49877,
+    "is_new_recipient": false,
+    "answer_text": "Ағылшын тілі үйірмесіне кезекті төлемақы.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 271,
+    "is_scam": false,
+    "category": "medical",
+    "language": "ru",
+    "amount": 36498,
+    "is_new_recipient": false,
+    "answer_text": "Оплата услуг стоматолога за лечение и пломбирование зуба.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 272,
+    "is_scam": false,
+    "category": "medical",
+    "language": "kz",
+    "amount": 28249,
+    "is_new_recipient": false,
+    "answer_text": "Тіс емханасына тіс емдеткені үшін каспи арқылы төлеу.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 273,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "ru",
+    "amount": 54700,
+    "is_new_recipient": false,
+    "answer_text": "Сестре на свадьбу подарок от всей нашей семьи.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 274,
+    "is_scam": false,
+    "category": "medical",
+    "language": "kz",
+    "amount": 38608,
+    "is_new_recipient": false,
+    "answer_text": "Тіс емханасына тіс емдеткені үшін каспи арқылы төлеу.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 275,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "ru",
+    "amount": 41669,
+    "is_new_recipient": true,
+    "answer_text": "Покупка детской коляски на OLX, продавец отправит таксистом.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 276,
+    "is_scam": false,
+    "category": "medical",
+    "language": "kz",
+    "amount": 37656,
+    "is_new_recipient": false,
+    "answer_text": "Тіс емханасына тіс емдеткені үшін каспи арқылы төлеу.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 277,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "ru",
+    "amount": 26931,
+    "is_new_recipient": true,
+    "answer_text": "Заказ домашней выпечки и торта на юбилей через инстаграм.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 278,
+    "is_scam": false,
+    "category": "education",
+    "language": "kz",
+    "amount": 44837,
+    "is_new_recipient": false,
+    "answer_text": "Ағылшын тілі үйірмесіне кезекті төлемақы.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 279,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "ru",
+    "amount": 33045,
+    "is_new_recipient": false,
+    "answer_text": "Маме на покупку лекарств и продуктов на неделю.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 280,
+    "is_scam": false,
+    "category": "education",
+    "language": "kz",
+    "amount": 42822,
+    "is_new_recipient": false,
+    "answer_text": "Баланың мектепке дейінгі дайындық курсына айлық төлем.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 281,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "ru",
+    "amount": 20688,
+    "is_new_recipient": false,
+    "answer_text": "Дочке на карманные расходы во время учебы в университете.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 282,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 22018,
+    "is_new_recipient": true,
+    "answer_text": "Инстаграм арқылы мерекелік тортқа тапсырыс бергенге.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 283,
+    "is_scam": false,
+    "category": "education",
+    "language": "ru",
+    "amount": 36129,
+    "is_new_recipient": false,
+    "answer_text": "Оплата детского сада за ребенка за ноябрь месяц.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 284,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 25609,
+    "is_new_recipient": true,
+    "answer_text": "Инстаграм арқылы мерекелік тортқа тапсырыс бергенге.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 285,
+    "is_scam": false,
+    "category": "education",
+    "language": "ru",
+    "amount": 55207,
+    "is_new_recipient": false,
+    "answer_text": "Оплата курсов английского языка за второй модуль.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 286,
+    "is_scam": false,
+    "category": "car_service",
+    "language": "kz",
+    "amount": 36882,
+    "is_new_recipient": true,
+    "answer_text": "СТО-да көліктің майы мен тежегішін ауыстырғанға.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 287,
+    "is_scam": false,
+    "category": "debt_repayment",
+    "language": "ru",
+    "amount": 36729,
+    "is_new_recipient": false,
+    "answer_text": "Возврат долга коллеге за совместную покупку билетов.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 288,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 45934,
+    "is_new_recipient": true,
+    "answer_text": "OLX-тан пайдаланылған балалар арбасын сатып алдым.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 289,
+    "is_scam": false,
+    "category": "car_service",
+    "language": "ru",
+    "amount": 31588,
+    "is_new_recipient": true,
+    "answer_text": "Замена моторного масла и фильтров на СТО у мастера.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 290,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 52135,
+    "is_new_recipient": false,
+    "answer_text": "Қарындасымның ұзату тойына туыстар атынан шашу.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 291,
+    "is_scam": false,
+    "category": "rent_utilities",
+    "language": "ru",
+    "amount": 42022,
+    "is_new_recipient": false,
+    "answer_text": "Коммунальные услуги и отопление за двухкомнатную квартиру.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 292,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 25657,
+    "is_new_recipient": true,
+    "answer_text": "Инстаграм арқылы мерекелік тортқа тапсырыс бергенге.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 293,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "ru",
+    "amount": 75091,
+    "is_new_recipient": true,
+    "answer_text": "Купил зимнюю резину б/у у соседа по гаражному кооперативу.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 294,
+    "is_scam": false,
+    "category": "repair",
+    "language": "kz",
+    "amount": 28817,
+    "is_new_recipient": true,
+    "answer_text": "Үйдің су құбырын жөндеген шебер Қайратқа төлем.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 295,
+    "is_scam": false,
+    "category": "debt_repayment",
+    "language": "ru",
+    "amount": 42616,
+    "is_new_recipient": false,
+    "answer_text": "Возврат долга коллеге за совместную покупку билетов.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 296,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 53528,
+    "is_new_recipient": true,
+    "answer_text": "OLX-тан пайдаланылған балалар арбасын сатып алдым.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 297,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "ru",
+    "amount": 70280,
+    "is_new_recipient": true,
+    "answer_text": "Купил зимнюю резину б/у у соседа по гаражному кооперативу.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 298,
+    "is_scam": false,
+    "category": "car_service",
+    "language": "kz",
+    "amount": 34022,
+    "is_new_recipient": true,
+    "answer_text": "СТО-да көліктің майы мен тежегішін ауыстырғанға.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 299,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "ru",
+    "amount": 49569,
+    "is_new_recipient": false,
+    "answer_text": "Сестре на свадьбу подарок от всей нашей семьи.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 300,
+    "is_scam": false,
+    "category": "debt_repayment",
+    "language": "kz",
+    "amount": 17385,
+    "is_new_recipient": false,
+    "answer_text": "Әріптесіме түскі асқа берген қарызымды қайтарып жатырмын.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 301,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "ru",
+    "amount": 52295,
+    "is_new_recipient": true,
+    "answer_text": "Покупка детской коляски на OLX, продавец отправит таксистом.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 302,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 69336,
+    "is_new_recipient": true,
+    "answer_text": "Көршіден көліктің қысқы дөңгелегін сатып алғанға төлем.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 303,
+    "is_scam": false,
+    "category": "medical",
+    "language": "ru",
+    "amount": 35511,
+    "is_new_recipient": false,
+    "answer_text": "Оплата услуг стоматолога за лечение и пломбирование зуба.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 304,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 33098,
+    "is_new_recipient": false,
+    "answer_text": "Немереме туған күніне сыйлыққа, құттықтап жіберіп жатырмын.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 305,
+    "is_scam": false,
+    "category": "education",
+    "language": "ru",
+    "amount": 57979,
+    "is_new_recipient": false,
+    "answer_text": "Оплата курсов английского языка за второй модуль.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 306,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 63475,
+    "is_new_recipient": true,
+    "answer_text": "Көршіден көліктің қысқы дөңгелегін сатып алғанға төлем.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 307,
+    "is_scam": false,
+    "category": "education",
+    "language": "ru",
+    "amount": 48071,
+    "is_new_recipient": false,
+    "answer_text": "Оплата детского сада за ребенка за ноябрь месяц.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 308,
+    "is_scam": false,
+    "category": "rent_utilities",
+    "language": "kz",
+    "amount": 190576,
+    "is_new_recipient": false,
+    "answer_text": "Пәтерақы қараша айына, пәтер иесі Айнұрға төлеу.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 309,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "ru",
+    "amount": 79423,
+    "is_new_recipient": true,
+    "answer_text": "Купил зимнюю резину б/у у соседа по гаражному кооперативу.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 310,
+    "is_scam": false,
+    "category": "education",
+    "language": "kz",
+    "amount": 41488,
+    "is_new_recipient": false,
+    "answer_text": "Баланың мектепке дейінгі дайындық курсына айлық төлем.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 311,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "ru",
+    "amount": 74106,
+    "is_new_recipient": true,
+    "answer_text": "Купил зимнюю резину б/у у соседа по гаражному кооперативу.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 312,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 33464,
+    "is_new_recipient": false,
+    "answer_text": "Немереме туған күніне сыйлыққа, құттықтап жіберіп жатырмын.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 313,
+    "is_scam": false,
+    "category": "rent_utilities",
+    "language": "ru",
+    "amount": 21402,
+    "is_new_recipient": false,
+    "answer_text": "Аренда парковочного места в подземном паркинге.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 314,
+    "is_scam": false,
+    "category": "gift_family",
+    "language": "kz",
+    "amount": 31797,
+    "is_new_recipient": false,
+    "answer_text": "Анамның дәрі-дәрмегіне және азық-түлігіне жәрдем.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 315,
+    "is_scam": false,
+    "category": "repair",
+    "language": "ru",
+    "amount": 33004,
+    "is_new_recipient": true,
+    "answer_text": "Оплата мастеру Ерлану за замену смесителя и труб в ванной.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 316,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 27421,
+    "is_new_recipient": true,
+    "answer_text": "Инстаграм арқылы мерекелік тортқа тапсырыс бергенге.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 317,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "ru",
+    "amount": 51314,
+    "is_new_recipient": true,
+    "answer_text": "Покупка детской коляски на OLX, продавец отправит таксистом.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 318,
+    "is_scam": false,
+    "category": "marketplace",
+    "language": "kz",
+    "amount": 70582,
+    "is_new_recipient": true,
+    "answer_text": "Көршіден көліктің қысқы дөңгелегін сатып алғанға төлем.",
+    "expected_risk": "MEDIUM"
+  },
+  {
+    "id": 319,
+    "is_scam": false,
+    "category": "debt_repayment",
+    "language": "ru",
+    "amount": 42342,
+    "is_new_recipient": false,
+    "answer_text": "Возврат долга коллеге за совместную покупку билетов.",
+    "expected_risk": "LOW"
+  },
+  {
+    "id": 320,
+    "is_scam": false,
+    "category": "repair",
+    "language": "kz",
+    "amount": 20282,
+    "is_new_recipient": true,
+    "answer_text": "Үйдің су құбырын жөндеген шебер Қайратқа төлем.",
+    "expected_risk": "MEDIUM"
+  }
+]
