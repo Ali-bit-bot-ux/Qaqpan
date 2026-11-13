@@ -35,10 +35,10 @@
 
 | Шаг | Что | Проверка |
 |---|---|---|
-| 1.1 | Каркас FastAPI: структура папок, `main.py`, CORS, подключение роутеров | `uvicorn` стартует без ошибок |
-| 1.2 | Pydantic-модели в `models/schemas.py`: Transfer, Answer, TrustedDecision, AnalystCard, BenchmarkResult | импорт без ошибок, валидация JSON |
-| 1.3 | Мок-роуты: `POST /api/v1/transfers`, `POST /transfers/{id}/answer`, `POST /transfers/{id}/trusted-decision`, `GET /events/stream` — возвращают фейковые данные | curl/Swagger UI отвечает JSON |
-| 1.4 | SQLite / in-memory хранилище для транзакций | данные переживают несколько запросов |
+| 1.1 | Каркас FastAPI: структура папок, `main.py`, CORS, подключение роутеров | done (сервер стартует, CORS настроен) |
+| 1.2 | Pydantic-модели в `models/schemas.py`: Transfer, Answer, TrustedDecision, AnalystCard, BenchmarkResult | done (строгая Pydantic v2 валидация) |
+| 1.3 | Мок-роуты: `POST /api/v1/transfers`, `POST /transfers/{id}/answer`, `POST /transfers/{id}/trusted-decision`, `GET /events/stream` — возвращают фейковые данные | done (все эндпоинты отвечают валидным JSON) |
+| 1.4 | SQLite / in-memory хранилище для транзакций | done (SQLAlchemy модели + qaqpan.db) |
 
 ### Backend 2 (AI, Rules & Robot):
 
@@ -72,7 +72,7 @@
 
 | Шаг | Что | Проверка |
 |---|---|---|
-| 2.1 | `state_machine.py`: enum состояний, whitelist переходов, запрет невалидных | unit-тест: все 5 веток FSM проходят, невалидные переходы выбрасывают ошибку |
+| 2.1 | `state_machine.py`: enum состояний, whitelist переходов, запрет невалидных | done (pytest: 3 passed, запреты работают) |
 | 2.2 | Реальные эндпоинты `transfers.py`: создание перевода → скоринг → возврат статуса | curl: LOW → COMPLETED мгновенно |
 | 2.3 | Эндпоинт ответа клиента `transfers/{id}/answer`: передача текста → пересчёт риска | curl: MEDIUM → AWAITING_ANSWER → ответ → TRUSTED_PENDING или COMPLETED |
 
@@ -240,5 +240,5 @@
 
 - Gate не закрывается «на энтузиазме».
 - Если gate красный — фиксируем, не идём дальше.
-- Каждый вечер — статус в общий чат: что сделано, что блокирует.
+
 
