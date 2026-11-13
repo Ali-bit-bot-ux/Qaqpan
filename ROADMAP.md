@@ -73,8 +73,8 @@
 | Шаг | Что | Проверка |
 |---|---|---|
 | 2.1 | `state_machine.py`: enum состояний, whitelist переходов, запрет невалидных | done (pytest: 3 passed, запреты работают) |
-| 2.2 | Реальные эндпоинты `transfers.py`: создание перевода → скоринг → возврат статуса | curl: LOW → COMPLETED мгновенно |
-| 2.3 | Эндпоинт ответа клиента `transfers/{id}/answer`: передача текста → пересчёт риска | curl: MEDIUM → AWAITING_ANSWER → ответ → TRUSTED_PENDING или COMPLETED |
+| 2.2 | Реальные эндпоинты `transfers.py`: создание перевода → скоринг → возврат статуса | done (LOW → COMPLETED, HIGH → TRUSTED_PENDING работают) |
+| 2.3 | Эндпоинт ответа клиента `transfers/{id}/answer`: передача текста → пересчёт риска | done (AWAITING_ANSWER → COMPLETED / TRUSTED_PENDING, 500 ошибка исправлена) |
 
 ### Backend 2:
 
