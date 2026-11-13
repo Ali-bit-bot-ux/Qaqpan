@@ -37,16 +37,16 @@
 |---|---|---|
 | 1.1 | Каркас FastAPI: структура папок, `main.py`, CORS, подключение роутеров | done (сервер стартует, CORS настроен) |
 | 1.2 | Pydantic-модели в `models/schemas.py`: Transfer, Answer, TrustedDecision, AnalystCard, BenchmarkResult | done (строгая Pydantic v2 валидация) |
-| 1.3 | Мок-роуты: `POST /api/v1/transfers`, `POST /transfers/{id}/answer`, `POST /transfers/{id}/trusted-decision`, `GET /events/stream` — возвращают фейковые данные | done (все эндпоинты отвечают валидным JSON) |
+| 1.3 | Мок-роуты: `POST /api/v1/transfers`, `POST /transfers/{id}/answer`, `POST /transfers/{id}/trusted-decision`, `GET /api/v1/transfers/stream/events` — возвращают фейковые данные | done (все эндпоинты отвечают валидным JSON) |
 | 1.4 | PostgreSQL хранилище для транзакций | done (SQLAlchemy + psycopg2 + PostgreSQL 18, база `qaqpan_db`) |
 
 ### Backend 2 (AI, Rules & Robot):
 
 | Шаг | Что | Проверка |
 |---|---|---|
-| 1.5 | Настройка LLM-клиента (Gemini/OpenAI), `.env`, первый тестовый вызов | ответ от API |
-| 1.6 | Системный промпт для разбора ответов на RU/KZ, JSON Schema на выходе | 5 тестовых фраз → валидный JSON |
-| 1.7 | Первый набор синтетических сценариев: 50 мошеннических + 50 легитимных | файл с датасетом, 100 записей |
+| 1.5 | Настройка LLM-клиента (Gemini/OpenAI), `.env`, первый тестовый вызов | done (живой ответ Gemini получен; ⚠ дефолт `gemini-1.5-flash` снят API — рабочая модель задаётся в `.env`) |
+| 1.6 | Системный промпт для разбора ответов на RU/KZ, JSON Schema на выходе | done (5 фраз → валидный JSON по схеме; ⚠ латентность 1.7–3.9 с, при лимите 1.5 с часто уходит в fallback) |
+| 1.7 | Первый набор синтетических сценариев: 50 мошеннических + 50 легитимных | done (100 записей; ⚠ все 100 мошеннические, без поля `split` — пересобрать) |
 
 ### Frontend Lead:
 
@@ -73,16 +73,16 @@
 | Шаг | Что | Проверка |
 |---|---|---|
 | 2.1 | `state_machine.py`: enum состояний, whitelist переходов, запрет невалидных | done (pytest: 3 passed, запреты работают) |
-| 2.2 | Реальные эндпоинты `transfers.py`: создание перевода → скоринг → возврат статуса | done (LOW → COMPLETED, HIGH → TRUSTED_PENDING работают) |
-| 2.3 | Эндпоинт ответа клиента `transfers/{id}/answer`: передача текста → пересчёт риска | done (AWAITING_ANSWER → COMPLETED / TRUSTED_PENDING, 500 ошибка исправлена) |
+| 2.2 | Реальные эндпоинты `transfers.py`: создание перевода → скоринг → возврат статуса | done (LOW → COMPLETED, HIGH → TRUSTED_PENDING; подключён `RulesEngine.evaluate_initial_transaction` вместо порогов по сумме) |
+| 2.3 | Эндпоинт ответа клиента `transfers/{id}/answer`: передача текста → пересчёт риска | done (AWAITING_ANSWER → COMPLETED / TRUSTED_PENDING; пересчёт через `evaluate_with_answer` в threadpool, LLM не блокирует event loop) |
 
 ### Backend 2:
 
 | Шаг | Что | Проверка |
 |---|---|---|
-| 2.4 | `rules_engine.py`: скоринг по сумме, частоте, времени суток, новизне получателя | unit-тест: 10 сценариев → верные уровни риска |
-| 2.5 | `ai_parser.py`: вызов LLM → разбор ответа → JSON с весами признаков | 10 фраз RU/KZ → правильные метки |
-| 2.6 | `fallback_rules.py`: regex/keyword парсер на RU/KZ для работы без интернета | те же 10 фраз → совпадающие метки при offline |
+| 2.4 | `rules_engine.py`: скоринг по сумме, частоте, времени суток, новизне получателя | done (10/10 self-tests; подключён в `transfers.py`) |
+| 2.5 | `ai_parser.py`: вызов LLM → разбор ответа → JSON с весами признаков | done (LLM-ветка работает с живой моделью; при таймауте/сбое — fallback) |
+| 2.6 | `fallback_rules.py`: regex/keyword парсер на RU/KZ для работы без интернета | done (10 фраз RU/KZ, 0 расхождений, < 5 мс) |
 
 ### Frontend Lead:
 
@@ -108,16 +108,16 @@
 
 | Шаг | Что | Проверка |
 |---|---|---|
-| 3.1 | SSE-шина или polling-эндпоинт: при смене статуса все подписчики получают обновление | два окна браузера синхронизированы |
-| 3.2 | Эндпоинт `trusted-decision`: подтверждение/отклонение доверенным лицом | curl: DECLINE → BLOCKED, APPROVE → COMPLETED |
-| 3.3 | Логика тайм-аута: если доверенное лицо не отвечает → COOLING_OFF | автоматический переход через N секунд |
+| 3.1 | SSE-шина или polling-эндпоинт: при смене статуса все подписчики получают обновление | done (проверено живым потоком: `transfer_created` + `transfer_updated`) |
+| 3.2 | Эндпоинт `trusted-decision`: подтверждение/отклонение доверенным лицом | done (DECLINE → BLOCKED, APPROVE → COMPLETED) |
+| 3.3 | Логика тайм-аута: если доверенное лицо не отвечает → COOLING_OFF | done (фоновый таймаут + `POST /transfers/{id}/timeout`, оба → COOLING_OFF) |
 
 ### Backend 2:
 
 | Шаг | Что | Проверка |
 |---|---|---|
-| 3.4 | Explainable AI: генерация понятной причины тревоги на RU/KZ для близкого | 5 сценариев → понятные объяснения |
-| 3.5 | Расширение датасета до 300+ сценариев: дробление сумм, маскировка ответов | файл датасета, 300+ записей |
+| 3.4 | Explainable AI: генерация понятной причины тревоги на RU/KZ для близкого | done (`generate_trusted_alert`, `alert_reason_ru` / `alert_reason_kz` заполняются) |
+| 3.5 | Расширение датасета до 300+ сценариев: дробление сумм, маскировка ответов | done (320 записей; ⚠ без поля `split` — сплит только в `scenarios_500.json`) |
 
 ### Frontend Lead:
 
@@ -142,17 +142,17 @@
 
 | Шаг | Что | Проверка |
 |---|---|---|
-| 4.1 | Период охлаждения (Cooling-off): ручная отмена клиентом, повторное предупреждение | FSM: COOLING_OFF → CANCELLED или MANUAL_REVIEW |
-| 4.2 | Эндпоинт аналитика `/api/analyst/transactions`: лента всех операций с фильтрами | curl: список с сигналами и статусами |
+| 4.1 | Период охлаждения (Cooling-off): ручная отмена клиентом, повторное предупреждение | частично (COOLING_OFF → CANCELLED работает; переход в MANUAL_BANK_REVIEW есть в FSM, эндпоинта нет) |
+| 4.2 | Эндпоинт аналитика `/api/analyst/transactions`: лента всех операций с фильтрами | done (`GET /api/v1/analyst/feed` — лента с сигналами и статусами; фильтры не реализованы) |
 
 ### Backend 2:
 
 | Шаг | Что | Проверка |
 |---|---|---|
-| 4.3 | `adversarial_robot.py`: генератор атак (дробление, «подарок», «безопасный счет», фразы-обходы) | 500+ сценариев |
-| 4.4 | `evaluator.py`: расчет Stop Rate, False Positive Rate, friction time, сравнение с Baseline | метрики считаются корректно |
-| 4.5 | Train/Test сплит: правила настраиваются на train, проверяются на test | два отдельных набора |
-| 4.6 | Эндпоинт `/api/benchmark/simulate`: запуск симуляции и возврат результатов JSON | curl: матрица метрик |
+| 4.3 | `adversarial_robot.py`: генератор атак (дробление, «подарок», «безопасный счет», фразы-обходы) | done (`scenarios_500.json`, 500 сценариев) |
+| 4.4 | `evaluator.py`: расчет Stop Rate, False Positive Rate, friction time, сравнение с Baseline | done (Stop Rate, FPR, prevented loss, latency; baseline > 500k считается) |
+| 4.5 | Train/Test сплит: правила настраиваются на train, проверяются на test | ⚠ сделано формально: 147 из 150 test-фраз дословно есть в train — пересобрать |
+| 4.6 | Эндпоинт `/api/benchmark/simulate`: запуск симуляции и возврат результатов JSON | done (`/api/v1/benchmark/simulate`; префикс в роутере исправлен) |
 
 ### Frontend Lead:
 
