@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
 from .db import init_db
-from .api.transfers import router as transfers_router
+from .api.transfers import router as transfers_router, recover_pending_timeouts, stop_timeout_tasks
 from .api.trusted import router as trusted_router
 from .api.analyst import router as analyst_router
 from .api.benchmark import router as benchmark_router
@@ -25,8 +25,12 @@ async def lifespan(app: FastAPI):
     logger.info("Initializing Qaqpan Anti-Fraud Guardian Service...")
     init_db()
     logger.info("Database initialized successfully.")
-    yield
-    logger.info("Shutting down Qaqpan Anti-Fraud Guardian Service...")
+    try:
+        recover_pending_timeouts()
+        yield
+    finally:
+        await stop_timeout_tasks()
+        logger.info("Shutting down Qaqpan Anti-Fraud Guardian Service...")
 
 
 app = FastAPI(

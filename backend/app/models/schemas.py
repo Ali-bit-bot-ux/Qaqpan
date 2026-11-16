@@ -69,6 +69,8 @@ class TransferResponse(BaseModel):
     detected_signals: List[str] = Field(default_factory=list)
     alert_reason_ru: Optional[str] = None
     alert_reason_kz: Optional[str] = None
+    cooling_warning_ru: Optional[str] = None
+    cooling_warning_kz: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -114,6 +116,11 @@ class TrustedDecisionRequest(BaseModel):
 
 class CancelRequest(BaseModel):
     reason: Optional[str] = Field(default="Отменено клиентом", description="Client cancellation note")
+
+
+class ManualReviewRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    warning_acknowledged: bool = Field(..., strict=True)
 
 
 # --- Bank Analyst Schemas ---

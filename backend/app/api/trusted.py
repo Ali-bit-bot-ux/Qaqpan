@@ -8,9 +8,8 @@ from ..models.schemas import (
     TrustedDecisionRequest,
     DecisionType
 )
-from ..core.state_machine import TransferStateMachine, InvalidStateTransitionError
 from ..core.events import event_bus
-from .transfers import record_to_response
+from .transfers import commit_transition
 
 router = APIRouter(prefix="/transfers", tags=["Trusted Contact"])
 
@@ -28,7 +27,7 @@ async def submit_trusted_decision(
     current_status = TransferStatus(rec.status)
     if current_status != TransferStatus.TRUSTED_PENDING:
         raise HTTPException(
-            status_code=400,
+            status_code=409,
             detail=f"Transfer is in status {current_status.value}, not waiting for trusted decision"
         )
 
@@ -38,16 +37,9 @@ async def submit_trusted_decision(
         else TransferStatus.BLOCKED
     )
 
-    try:
-        new_status = TransferStateMachine.transition(current_status, target_status)
-    except InvalidStateTransitionError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-    rec.status = new_status.value
-    db.commit()
-    db.refresh(rec)
-
-    resp = record_to_response(rec)
+    resp = commit_transition(db, rec, target_status)
+    if resp is None:
+        raise HTTPException(status_code=409, detail="Transfer state changed")
     event_type = "trusted_approved" if payload.decision == DecisionType.APPROVE else "trusted_declined"
     await event_bus.publish(event_type, resp.model_dump(mode="json"))
     return resp
@@ -65,15 +57,12 @@ async def handle_trusted_timeout(
     current_status = TransferStatus(rec.status)
     if current_status != TransferStatus.TRUSTED_PENDING:
         raise HTTPException(
-            status_code=400,
+            status_code=409,
             detail=f"Cannot trigger timeout for transfer in status {current_status.value}"
         )
 
-    new_status = TransferStateMachine.transition(current_status, TransferStatus.COOLING_OFF)
-    rec.status = new_status.value
-    db.commit()
-    db.refresh(rec)
-
-    resp = record_to_response(rec)
+    resp = commit_transition(db, rec, TransferStatus.COOLING_OFF, timeout=True)
+    if resp is None:
+        raise HTTPException(status_code=409, detail="Deadline has not elapsed or transfer state changed")
     await event_bus.publish("trusted_timeout", resp.model_dump(mode="json"))
     return resp

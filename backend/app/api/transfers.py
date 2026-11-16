@@ -1,6 +1,8 @@
 import uuid
 import json
 import asyncio
+import logging
+from dataclasses import replace
 from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
@@ -15,14 +17,16 @@ from ..models.schemas import (
     RiskTier,
     AnswerRequest,
     CancelRequest,
+    ManualReviewRequest,
     TrustedContactInfo
 )
 from ..core.state_machine import TransferStateMachine, InvalidStateTransitionError
 from ..core.events import event_bus
-from ..core.rules_engine import RulesEngine, TransactionContext, RiskLevel, ScoringResult
+from ..core.rules_engine import RulesEngine, TransactionContext, RiskLevel, NextAction, ScoringResult
 
 router = APIRouter(prefix="/transfers", tags=["Transfers (Client)"])
-_timeout_tasks: set[asyncio.Task] = set()
+_timeout_tasks: dict[str, asyncio.Task[None]] = {}
+logger = logging.getLogger("qaqpan.timers")
 
 CLIENT_TYPICAL_AMOUNT = 50000.0
 TRUSTED_TIMEOUT_SECONDS = 30
@@ -30,6 +34,14 @@ QUESTION_RU = "Для чего вы совершаете данный перев
 QUESTION_KZ = "Бұл аударымды не үшін жасап жатырсыз?"
 TRUSTED_CONTACT_NAME = "Айгерим (Дочь)"
 TRUSTED_CONTACT_PHONE = "+7 701 *** ** 44"
+COOLING_WARNING_RU = (
+    "Близкий не ответил. Перевод не выполнен. Не переводите деньги по указанию незнакомых людей. "
+    "Вы можете отменить перевод или запросить проверку банка. Запрос проверки не выполняет перевод."
+)
+COOLING_WARNING_KZ = (
+    "Жақыныңыз жауап бермеді. Аударым орындалған жоқ. Бейтаныс адамдардың нұсқауымен ақша аудармаңыз. "
+    "Аударымнан бас тартуға немесе банктің тексеруін сұрауға болады. Тексеру сұрауы аударымды орындамайды."
+)
 
 
 def _build_context(
@@ -37,17 +49,16 @@ def _build_context(
     client_id: str,
     amount: float,
     recipient_account: str,
+    current_transfer_id: str | None = None,
 ) -> TransactionContext:
-    """Derive scoring features from stored transfer history."""
     since = datetime.utcnow() - timedelta(hours=1)
-    recent_count = (
-        db.query(TransferRecord)
-        .filter(
-            TransferRecord.client_id == client_id,
-            TransferRecord.created_at >= since,
-        )
-        .count()
+    recent_query = db.query(TransferRecord).filter(
+        TransferRecord.client_id == client_id,
+        TransferRecord.created_at >= since,
     )
+    if current_transfer_id is not None:
+        recent_query = recent_query.filter(TransferRecord.transfer_id != current_transfer_id)
+    recent_count = recent_query.count()
     known_recipient = (
         db.query(TransferRecord)
         .filter(
@@ -68,13 +79,14 @@ def _build_context(
     )
 
 
-def _status_for(result: ScoringResult, *, after_answer: bool) -> TransferStatus:
-    if result.risk_level == RiskLevel.HIGH:
-        return TransferStatus.TRUSTED_PENDING
-    if result.risk_level == RiskLevel.MEDIUM and not after_answer:
+def _status_for(result: ScoringResult) -> TransferStatus:
+    if result.action == NextAction.ALLOW:
+        return TransferStatus.COMPLETED
+    if result.action == NextAction.ASK_QUESTION:
         return TransferStatus.AWAITING_ANSWER
-    # MEDIUM after an answer means the client already paid the friction: let it through.
-    return TransferStatus.COMPLETED
+    if result.action == NextAction.REQUIRE_TRUSTED_APPROVAL:
+        return TransferStatus.TRUSTED_PENDING
+    raise HTTPException(status_code=502, detail="Unsupported scoring action")
 
 
 def _alert_texts(
@@ -83,41 +95,123 @@ def _alert_texts(
 ) -> tuple[str | None, str | None]:
     if result.risk_level != RiskLevel.HIGH:
         return result.explanation, None
+    # The renderer also infers language from signals; override only a copy.
     ru = RulesEngine.generate_trusted_alert(
-        ctx, result.risk_score, result.triggered_rules, result.signals, lang="ru"
+        ctx, result.risk_score, result.triggered_rules,
+        replace(result.signals, language="ru") if result.signals is not None else None,
+        lang="ru",
     )
     kz = RulesEngine.generate_trusted_alert(
-        ctx, result.risk_score, result.triggered_rules, result.signals, lang="kz"
+        ctx, result.risk_score, result.triggered_rules,
+        replace(result.signals, language="kz") if result.signals is not None else None,
+        lang="kz",
     )
-    return f"{ru.title}. {ru.danger_summary}", f"{kz.title}. {kz.danger_summary}"
+    return (
+        "\n".join([
+            f"{ru.title}. {ru.danger_summary}",
+            *(f"- {bullet}" for bullet in ru.evidence_bullets),
+            ru.recommended_action,
+        ]),
+        "\n".join([
+            f"{kz.title}. {kz.danger_summary}",
+            *(f"- {bullet}" for bullet in kz.evidence_bullets),
+            kz.recommended_action,
+        ]),
+    )
 
 
-def _track_timeout_task(task: asyncio.Task) -> None:
-    _timeout_tasks.add(task)
-    task.add_done_callback(_timeout_tasks.discard)
+def trusted_deadline(rec: TransferRecord) -> datetime:
+    # Legacy pending rows without a duration retain the same 30-second policy.
+    seconds = rec.timeout_seconds if rec.timeout_seconds is not None else TRUSTED_TIMEOUT_SECONDS
+    return rec.updated_at + timedelta(seconds=seconds)
 
 
-async def _timeout_after(transfer_id: str, timeout_seconds: int) -> None:
-    await asyncio.sleep(timeout_seconds)
-    db = SessionLocal()
-    try:
-        rec = db.query(TransferRecord).filter(TransferRecord.transfer_id == transfer_id).first()
-        if not rec or rec.status != TransferStatus.TRUSTED_PENDING.value:
-            return
-        rec.status = TransferStateMachine.transition(
-            TransferStatus.TRUSTED_PENDING,
-            TransferStatus.COOLING_OFF,
-        ).value
-        db.commit()
-        db.refresh(rec)
-        await event_bus.publish("trusted_timeout", record_to_response(rec).model_dump(mode="json"))
-    finally:
-        db.close()
+def commit_transition(
+    db: Session,
+    rec: TransferRecord,
+    target: TransferStatus,
+    *,
+    timeout: bool = False,
+) -> TransferResponse | None:
+    """Compare-and-set; snapshot our write before commit so later writes cannot leak into its event."""
+    current = TransferStatus(rec.status)
+    TransferStateMachine.transition(current, target)
+    query = db.query(TransferRecord).filter(
+        TransferRecord.transfer_id == rec.transfer_id,
+        TransferRecord.status == current.value,
+    )
+    if timeout:
+        if trusted_deadline(rec) > datetime.utcnow():
+            return None
+        # Guard the exact persisted deadline checked above, not just the status.
+        query = query.filter(
+            TransferRecord.updated_at == rec.updated_at,
+            TransferRecord.timeout_seconds == rec.timeout_seconds,
+        )
+    updated = query.update({
+        TransferRecord.status: target.value,
+        TransferRecord.timeout_seconds: None,
+        TransferRecord.updated_at: datetime.utcnow(),
+    }, synchronize_session=False)
+    if updated != 1:
+        db.rollback()
+        return None
+    db.refresh(rec)
+    response = record_to_response(rec)
+    db.commit()
+    return response
 
 
-def _schedule_timeout(transfer_id: str, timeout_seconds: int | None) -> None:
-    if timeout_seconds and timeout_seconds > 0:
-        _track_timeout_task(asyncio.create_task(_timeout_after(transfer_id, timeout_seconds)))
+async def _timeout_after(transfer_id: str) -> None:
+    while True:
+        response = None
+        with SessionLocal() as db:
+            rec = db.get(TransferRecord, transfer_id)
+            if rec is None or rec.status != TransferStatus.TRUSTED_PENDING.value:
+                return
+            remaining = (trusted_deadline(rec) - datetime.utcnow()).total_seconds()
+            if remaining <= 0:
+                response = commit_transition(db, rec, TransferStatus.COOLING_OFF, timeout=True)
+        # Never retain a session/transaction while sleeping or publishing.
+        if remaining > 0:
+            await asyncio.sleep(remaining)
+            continue
+        if response is not None:
+            await event_bus.publish("trusted_timeout", response.model_dump(mode="json"))
+        return
+
+
+def _schedule_timeout(transfer_id: str) -> None:
+    existing = _timeout_tasks.get(transfer_id)
+    if existing is not None and not existing.done():
+        return
+    task = asyncio.create_task(_timeout_after(transfer_id))
+    _timeout_tasks[transfer_id] = task
+
+    def finished(done: asyncio.Task[None]) -> None:
+        if _timeout_tasks.get(transfer_id) is done:
+            _timeout_tasks.pop(transfer_id)
+        if not done.cancelled() and done.exception() is not None:
+            logger.error("Trusted timer failed for %s", transfer_id, exc_info=done.exception())
+
+    task.add_done_callback(finished)
+
+
+def recover_pending_timeouts() -> None:
+    with SessionLocal() as db:
+        pending_ids = db.query(TransferRecord.transfer_id).filter(
+            TransferRecord.status == TransferStatus.TRUSTED_PENDING.value,
+        ).all()
+    for (transfer_id,) in pending_ids:
+        _schedule_timeout(transfer_id)
+
+
+async def stop_timeout_tasks() -> None:
+    tasks = list(_timeout_tasks.values())
+    for task in tasks:
+        task.cancel()
+    await asyncio.gather(*tasks, return_exceptions=True)
+    _timeout_tasks.clear()
 
 
 def record_to_response(rec: TransferRecord) -> TransferResponse:
@@ -140,10 +234,12 @@ def record_to_response(rec: TransferRecord) -> TransferResponse:
         challenge_question=rec.challenge_question,
         challenge_question_kz=rec.challenge_question_kz,
         trusted_contact=trusted,
-        timeout_seconds=rec.timeout_seconds,
+        timeout_seconds=rec.timeout_seconds if rec.status == TransferStatus.TRUSTED_PENDING.value else None,
         detected_signals=rec.detected_signals or [],
         alert_reason_ru=rec.alert_reason_ru,
         alert_reason_kz=rec.alert_reason_kz,
+        cooling_warning_ru=COOLING_WARNING_RU if rec.status == TransferStatus.COOLING_OFF.value else None,
+        cooling_warning_kz=COOLING_WARNING_KZ if rec.status == TransferStatus.COOLING_OFF.value else None,
         created_at=rec.created_at,
         updated_at=rec.updated_at
     )
@@ -163,7 +259,7 @@ async def create_transfer(
         recipient_account=payload.recipient_account,
     )
     result = RulesEngine.evaluate_initial_transaction(ctx)
-    current_status = _status_for(result, after_answer=False)
+    current_status = _status_for(result)
     alert_ru, alert_kz = _alert_texts(ctx, result)
 
     rec = TransferRecord(
@@ -191,7 +287,7 @@ async def create_transfer(
 
     resp = record_to_response(rec)
     if current_status == TransferStatus.TRUSTED_PENDING:
-        _schedule_timeout(transfer_id, rec.timeout_seconds)
+        _schedule_timeout(transfer_id)
     await event_bus.publish("transfer_created", resp.model_dump(mode="json"))
     return resp
 
@@ -224,42 +320,92 @@ async def submit_client_answer(
             detail=f"Transfer is in status {current_status.value}, cannot submit answer"
         )
 
-    rec.client_answer = payload.answer_text
-
+    expected_updated_at = rec.updated_at
     ctx = _build_context(
         db,
         client_id=rec.client_id,
         amount=rec.amount,
         recipient_account=rec.recipient_account,
+        current_transfer_id=transfer_id,
     )
+    db.rollback()
     # LLM parsing is blocking network I/O; keep it off the event loop.
     result = await run_in_threadpool(
         RulesEngine.evaluate_with_answer, ctx, payload.answer_text
     )
-    target_status = _status_for(result, after_answer=True)
+    target_status = _status_for(result)
 
-    try:
-        new_status = TransferStateMachine.transition(current_status, target_status)
-    except InvalidStateTransitionError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    new_status = current_status
+    if target_status != current_status:
+        try:
+            new_status = TransferStateMachine.transition(current_status, target_status)
+        except InvalidStateTransitionError as e:
+            raise HTTPException(status_code=400, detail=str(e))
 
-    rec.status = new_status.value
-    rec.risk_tier = RiskTier(result.risk_level.value).value
-    rec.risk_score = int(round(result.risk_score))
-    rec.detected_signals = result.triggered_rules
-    rec.alert_reason_ru, rec.alert_reason_kz = _alert_texts(ctx, result)
-    if new_status == TransferStatus.TRUSTED_PENDING:
-        rec.timeout_seconds = TRUSTED_TIMEOUT_SECONDS
-        _schedule_timeout(transfer_id, rec.timeout_seconds)
-    else:
-        rec.timeout_seconds = None
+    alert_ru, alert_kz = _alert_texts(ctx, result)
+    timeout_seconds = TRUSTED_TIMEOUT_SECONDS if new_status == TransferStatus.TRUSTED_PENDING else None
+    updated = db.query(TransferRecord).filter(
+        TransferRecord.transfer_id == transfer_id,
+        TransferRecord.status == current_status.value,
+        # A repeated question retains status but must still match the scored revision.
+        TransferRecord.updated_at == expected_updated_at,
+    ).update({
+        TransferRecord.status: new_status.value,
+        TransferRecord.client_answer: payload.answer_text,
+        TransferRecord.risk_tier: RiskTier(result.risk_level.value).value,
+        TransferRecord.risk_score: int(round(result.risk_score)),
+        TransferRecord.detected_signals: result.triggered_rules,
+        TransferRecord.alert_reason_ru: alert_ru,
+        TransferRecord.alert_reason_kz: alert_kz,
+        TransferRecord.timeout_seconds: timeout_seconds,
+        # Pending deadline starts at this transition, never at transfer creation.
+        TransferRecord.updated_at: datetime.utcnow(),
+    }, synchronize_session=False)
+    if updated != 1:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Transfer changed while evaluating the answer")
 
-    db.commit()
     db.refresh(rec)
-
     resp = record_to_response(rec)
+    db.commit()
+    if new_status == TransferStatus.TRUSTED_PENDING:
+        _schedule_timeout(transfer_id)
+
     await event_bus.publish("transfer_updated", resp.model_dump(mode="json"))
     return resp
+
+
+@router.post("/{transfer_id}/manual-review", response_model=TransferResponse)
+async def request_manual_review(
+    transfer_id: str,
+    payload: ManualReviewRequest,
+    db: Session = Depends(get_db),
+) -> TransferResponse:
+    if not payload.warning_acknowledged:
+        raise HTTPException(status_code=400, detail="Acknowledge the cooling-off warning first")
+    rec = db.get(TransferRecord, transfer_id)
+    if rec is None:
+        raise HTTPException(status_code=404, detail="Transfer not found")
+    if rec.status != TransferStatus.COOLING_OFF.value:
+        raise HTTPException(status_code=409, detail="Transfer is not in cooling-off")
+    target = TransferStateMachine.transition(
+        TransferStatus.COOLING_OFF, TransferStatus.MANUAL_BANK_REVIEW,
+    )
+    updated = db.query(TransferRecord).filter(
+        TransferRecord.transfer_id == transfer_id,
+        TransferRecord.status == TransferStatus.COOLING_OFF.value,
+    ).update({
+        TransferRecord.status: target.value,
+        TransferRecord.timeout_seconds: None,
+    }, synchronize_session=False)
+    if updated != 1:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Transfer state changed")
+    db.refresh(rec)
+    response = record_to_response(rec)
+    db.commit()
+    await event_bus.publish("transfer_updated", response.model_dump(mode="json"))
+    return response
 
 
 @router.post("/{transfer_id}/cancel", response_model=TransferResponse)
@@ -272,17 +418,13 @@ async def cancel_transfer(
     if not rec:
         raise HTTPException(status_code=404, detail="Transfer not found")
 
-    current_status = TransferStatus(rec.status)
     try:
-        new_status = TransferStateMachine.transition(current_status, TransferStatus.CANCELLED)
+        resp = commit_transition(db, rec, TransferStatus.CANCELLED)
     except InvalidStateTransitionError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=409, detail=str(e))
+    if resp is None:
+        raise HTTPException(status_code=409, detail="Transfer state changed")
 
-    rec.status = new_status.value
-    db.commit()
-    db.refresh(rec)
-
-    resp = record_to_response(rec)
     await event_bus.publish("transfer_cancelled", resp.model_dump(mode="json"))
     return resp
 
