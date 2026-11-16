@@ -12,12 +12,15 @@ router = APIRouter(prefix="/analyst", tags=["Bank Analyst"])
 @router.get("/feed", response_model=AnalystFeedResponse)
 def get_analyst_feed(
     risk_tier: Optional[RiskTier] = Query(None, description="Filter by risk tier"),
+    status: Optional[TransferStatus] = Query(None, description="Filter by transfer status"),
     limit: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db)
 ):
     query = db.query(TransferRecord).order_by(desc(TransferRecord.created_at))
     if risk_tier:
         query = query.filter(TransferRecord.risk_tier == risk_tier.value)
+    if status is not None:
+        query = query.filter(TransferRecord.status == status.value)
 
     records = query.limit(limit).all()
 
