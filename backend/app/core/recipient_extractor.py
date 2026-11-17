@@ -157,6 +157,8 @@ def _candidate_spans(text: str) -> list[tuple[int, int, ExtractedRecipient]]:
             if len(quote) > QUOTE_MAX_CHARS:
                 continue
             value = re.sub(r"[ \t]", "", quote).upper() if rtype == RecipientType.IBAN else re.sub(r"\D", "", quote)
+            if rtype == RecipientType.PHONE and len(value) == 11 and value.startswith("8"):
+                value = "7" + value[1:]
             if rtype == RecipientType.CARD and (len(set(value)) == 1 or not _luhn_ok(value)):
                 continue
             found.append((match.start(), match.end(), ExtractedRecipient(rtype, value, quote)))

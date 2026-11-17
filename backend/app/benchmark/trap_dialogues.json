@@ -1,0 +1,370 @@
+[
+  {
+    "id": 1,
+    "category": "card",
+    "language": "ru",
+    "text": "Здравствуйте, это капитан полиции Смирнов. Срочно переведите деньги на безопасную карту 4400 4301 2345 6789.",
+    "expected_recipients": [{"type": "CARD", "value": "4400430123456789"}]
+  },
+  {
+    "id": 2,
+    "category": "card",
+    "language": "ru",
+    "text": "Переводите остаток на номер карты: 5169-4912-3456-7896, получатель Иванов Сергей.",
+    "expected_recipients": [{"type": "CARD", "value": "5169491234567896"}]
+  },
+  {
+    "id": 3,
+    "category": "card",
+    "language": "ru",
+    "text": "Запишите реквизиты: 4000 0012 3456 7899, на имя доверенного сотрудника банка.",
+    "expected_recipients": [{"type": "CARD", "value": "4000001234567899"}]
+  },
+  {
+    "id": 4,
+    "category": "card",
+    "language": "ru",
+    "text": "Для спасения вклада отправьте 200 000 на карту 5488880123456787, быстрее!",
+    "expected_recipients": [{"type": "CARD", "value": "5488880123456787"}]
+  },
+  {
+    "id": 5,
+    "category": "card",
+    "language": "kz",
+    "text": "Ақшаны сақтап қалу үшін мына картаға шұғыл аударыңыз: 4400 4301 2345 6789, тез болыңыз.",
+    "expected_recipients": [{"type": "CARD", "value": "4400430123456789"}]
+  },
+  {
+    "id": 6,
+    "category": "card",
+    "language": "kz",
+    "text": "Тергеушінің картасы: 5169 4912 3456 7896, соманы толығымен жіберіңіз.",
+    "expected_recipients": [{"type": "CARD", "value": "5169491234567896"}]
+  },
+  {
+    "id": 7,
+    "category": "card",
+    "language": "kz",
+    "text": "Қауіпсіз карта нөмірі: 4000-0012-3456-7899, сақтық шоты ретінде ашылған.",
+    "expected_recipients": [{"type": "CARD", "value": "4000001234567899"}]
+  },
+  {
+    "id": 8,
+    "category": "card",
+    "language": "kz",
+    "text": "Банк қызметкеріне ақшаны жіберіңіз, карта: 5488880123456787, дереу төлеңіз.",
+    "expected_recipients": [{"type": "CARD", "value": "5488880123456787"}]
+  },
+  {
+    "id": 9,
+    "category": "iban",
+    "language": "ru",
+    "text": "Вот специальный резервный счет ЦентрКредит: KZ123456789012345678, отправляйте туда.",
+    "expected_recipients": [{"type": "IBAN", "value": "KZ123456789012345678"}]
+  },
+  {
+    "id": 10,
+    "category": "iban",
+    "language": "ru",
+    "text": "Реквизиты казначейского счета: KZ98 7654 3210 9876 5432, платеж делайте как страховой депозит.",
+    "expected_recipients": [{"type": "IBAN", "value": "KZ987654321098765432"}]
+  },
+  {
+    "id": 11,
+    "category": "iban",
+    "language": "ru",
+    "text": "Диктую счет следователя: KZ551234567890123456, не кладите трубку до окончания перевода.",
+    "expected_recipients": [{"type": "IBAN", "value": "KZ551234567890123456"}]
+  },
+  {
+    "id": 12,
+    "category": "iban",
+    "language": "ru",
+    "text": "Для аннулирования заявки отправьте средства на транзитный IBAN KZ009876543210123456 прямо сейчас.",
+    "expected_recipients": [{"type": "IBAN", "value": "KZ009876543210123456"}]
+  },
+  {
+    "id": 13,
+    "category": "iban",
+    "language": "kz",
+    "text": "Резервтік IBAN шот: KZ123456789012345678, ақшаны сол шотқа қауіпсіздік үшін аударыңыз.",
+    "expected_recipients": [{"type": "IBAN", "value": "KZ123456789012345678"}]
+  },
+  {
+    "id": 14,
+    "category": "iban",
+    "language": "kz",
+    "text": "Ұлттық банктің арнайы шоты: KZ98 7654 3210 9876 5432, дереу төлем жасаңыз.",
+    "expected_recipients": [{"type": "IBAN", "value": "KZ987654321098765432"}]
+  },
+  {
+    "id": 15,
+    "category": "iban",
+    "language": "kz",
+    "text": "Шотты бұғаттаудан құтқару үшін мына IBAN-ға аударыңыз: KZ551234567890123456.",
+    "expected_recipients": [{"type": "IBAN", "value": "KZ551234567890123456"}]
+  },
+  {
+    "id": 16,
+    "category": "iban",
+    "language": "kz",
+    "text": "Қорғалған мемлекеттік шот: KZ009876543210123456, түбіртекті сақтап қойыңыз.",
+    "expected_recipients": [{"type": "IBAN", "value": "KZ009876543210123456"}]
+  },
+  {
+    "id": 17,
+    "category": "phone",
+    "language": "ru",
+    "text": "Сделайте быстрый перевод по номеру телефона: +7 701 555 44 33, получатель Арман Б.",
+    "expected_recipients": [{"type": "PHONE", "value": "77015554433"}]
+  },
+  {
+    "id": 18,
+    "category": "phone",
+    "language": "ru",
+    "text": "Отправьте через приложение на номер 8 (777) 123-45-67, это рабочий телефон куратора.",
+    "expected_recipients": [{"type": "PHONE", "value": "77771234567"}]
+  },
+  {
+    "id": 19,
+    "category": "phone",
+    "language": "ru",
+    "text": "Переводите по Каспи на +77059998877, сумма 150000 тенге, быстрее!",
+    "expected_recipients": [{"type": "PHONE", "value": "77059998877"}]
+  },
+  {
+    "id": 20,
+    "category": "phone",
+    "language": "ru",
+    "text": "Номер доверенного лица службы безопасности: 87023334455, отправляйте туда.",
+    "expected_recipients": [{"type": "PHONE", "value": "77023334455"}]
+  },
+  {
+    "id": 21,
+    "category": "phone",
+    "language": "kz",
+    "text": "Мына телефон нөміріне аударыңыз: +7 701 555 44 33, каспи арқылы тез өтеді.",
+    "expected_recipients": [{"type": "PHONE", "value": "77015554433"}]
+  },
+  {
+    "id": 22,
+    "category": "phone",
+    "language": "kz",
+    "text": "Куратордың телефоны: 8 (777) 123-45-67, қаражатты шұғыл жолдаңыз.",
+    "expected_recipients": [{"type": "PHONE", "value": "77771234567"}]
+  },
+  {
+    "id": 23,
+    "category": "phone",
+    "language": "kz",
+    "text": "Жедел аударым нөмірі: +77059998877, қазір жасаңыз әйтпесе кеш болады.",
+    "expected_recipients": [{"type": "PHONE", "value": "77059998877"}]
+  },
+  {
+    "id": 24,
+    "category": "phone",
+    "language": "kz",
+    "text": "Қауіпсіз байланыс телефонына аударым жасаңыз: 87023334455, тергеуші күтіп отыр.",
+    "expected_recipients": [{"type": "PHONE", "value": "77023334455"}]
+  },
+  {
+    "id": 25,
+    "category": "multi",
+    "language": "ru",
+    "text": "Можете перевести на карту 4400 4301 2345 6789 или по номеру +7 701 555 44 33, как вам удобнее.",
+    "expected_recipients": [
+      {"type": "CARD", "value": "4400430123456789"},
+      {"type": "PHONE", "value": "77015554433"}
+    ]
+  },
+  {
+    "id": 26,
+    "category": "multi",
+    "language": "ru",
+    "text": "Основной счет IBAN KZ123456789012345678, а если банк не принимает — шлите на карту 5169-4912-3456-7896.",
+    "expected_recipients": [
+      {"type": "IBAN", "value": "KZ123456789012345678"},
+      {"type": "CARD", "value": "5169491234567896"}
+    ]
+  },
+  {
+    "id": 27,
+    "category": "multi",
+    "language": "ru",
+    "text": "Резервные реквизиты: счет KZ987654321098765432 и телефон дежурного оператора 8 (777) 123-45-67.",
+    "expected_recipients": [
+      {"type": "IBAN", "value": "KZ987654321098765432"},
+      {"type": "PHONE", "value": "77771234567"}
+    ]
+  },
+  {
+    "id": 28,
+    "category": "multi",
+    "language": "kz",
+    "text": "Ыңғайлы болса мына картаға: 4400 4301 2345 6789, немесе телефонға: +7 701 555 44 33 аударыңыз.",
+    "expected_recipients": [
+      {"type": "CARD", "value": "4400430123456789"},
+      {"type": "PHONE", "value": "77015554433"}
+    ]
+  },
+  {
+    "id": 29,
+    "category": "multi",
+    "language": "kz",
+    "text": "Басты шот KZ123456789012345678, болмаса қосымша картаға 5169 4912 3456 7896 жіберіңіз.",
+    "expected_recipients": [
+      {"type": "IBAN", "value": "KZ123456789012345678"},
+      {"type": "CARD", "value": "5169491234567896"}
+    ]
+  },
+  {
+    "id": 30,
+    "category": "multi",
+    "language": "kz",
+    "text": "Шот нөмірі KZ987654321098765432 және жедел телефон 87771234567, кез келгеніне болады.",
+    "expected_recipients": [
+      {"type": "IBAN", "value": "KZ987654321098765432"},
+      {"type": "PHONE", "value": "77771234567"}
+    ]
+  },
+  {
+    "id": 31,
+    "category": "no_recipient",
+    "language": "ru",
+    "text": "Вы меня слышите? Алло! Вы должны немедленно подойти к ближайшему банкомату, иначе все пропадет!",
+    "expected_recipients": []
+  },
+  {
+    "id": 32,
+    "category": "no_recipient",
+    "language": "ru",
+    "text": "С вами говорит следователь военной прокуратуры. Никому не рассказывайте об этом разговоре, это гостайна.",
+    "expected_recipients": []
+  },
+  {
+    "id": 33,
+    "category": "no_recipient",
+    "language": "ru",
+    "text": "Скажите, сколько у вас денег на вкладе? Нам нужно сверить сумму с центральным реестром.",
+    "expected_recipients": []
+  },
+  {
+    "id": 34,
+    "category": "no_recipient",
+    "language": "ru",
+    "text": "Снимите наличные в кассе и ждите дальнейших инструкций сотрудника финмониторинга.",
+    "expected_recipients": []
+  },
+  {
+    "id": 35,
+    "category": "no_recipient",
+    "language": "kz",
+    "text": "Сіз мені естіп тұрсыз ба? Тез арада жақын маңдағы банкоматқа барыңыз, уақыт жоқ!",
+    "expected_recipients": []
+  },
+  {
+    "id": 36,
+    "category": "no_recipient",
+    "language": "kz",
+    "text": "Сізбен полиция майоры сөйлесіп тұр. Бұл әңгімені ешкімге айтуға болмайды, тергеу құпиясы.",
+    "expected_recipients": []
+  },
+  {
+    "id": 37,
+    "category": "no_recipient",
+    "language": "kz",
+    "text": "Депозитте қанша ақшаңыз бар екенін айтыңыз? Тексеру жұмыстары жүріп жатыр.",
+    "expected_recipients": []
+  },
+  {
+    "id": 38,
+    "category": "no_recipient",
+    "language": "kz",
+    "text": "Ақшаны кассадан қолма-қол шешіп алыңыз да, келесі нұсқаулықты күтіңіз.",
+    "expected_recipients": []
+  },
+  {
+    "id": 39,
+    "category": "secret_attack",
+    "language": "ru",
+    "text": "Скажите ваш пароль от онлайн-банкинга и трехзначный CVV код на обороте карты 4400 4301 2345 6789 для верификации.",
+    "expected_recipients": []
+  },
+  {
+    "id": 40,
+    "category": "secret_attack",
+    "language": "ru",
+    "text": "Вам на телефон пришел смс-код подтверждения операции, срочно продиктуйте эти 4 цифры!",
+    "expected_recipients": []
+  },
+  {
+    "id": 41,
+    "category": "secret_attack",
+    "language": "ru",
+    "text": "Назовите секретный пин-код карты 5169-4912-3456-7890 чтобы мы могли отменить мошеннический кредит.",
+    "expected_recipients": []
+  },
+  {
+    "id": 42,
+    "category": "secret_attack",
+    "language": "ru",
+    "text": "Продиктуйте код из смс и cvc код безопасности вашей карты, не бойтесь, это робот слушает.",
+    "expected_recipients": []
+  },
+  {
+    "id": 43,
+    "category": "secret_attack",
+    "language": "ru",
+    "text": "Срочно введите одноразовый пароль из сообщения для подтверждения входа в личный кабинет.",
+    "expected_recipients": []
+  },
+  {
+    "id": 44,
+    "category": "secret_attack",
+    "language": "kz",
+    "text": "Картаңыздың артындағы құпия сөз бен CVV кодын айтыңыз, 4400 4301 2345 6789 картаңызды тексеру керек.",
+    "expected_recipients": []
+  },
+  {
+    "id": 45,
+    "category": "secret_attack",
+    "language": "kz",
+    "text": "Телефоныңызға келген смс кодты айтыңыз, шұғыл түрде операцияны тоқтату үшін қажет!",
+    "expected_recipients": []
+  },
+  {
+    "id": 46,
+    "category": "secret_attack",
+    "language": "kz",
+    "text": "Картаның құпия пин-кодын айтыңыз, заңсыз несиені жабу үшін қажет болып тұр.",
+    "expected_recipients": []
+  },
+  {
+    "id": 47,
+    "category": "secret_attack",
+    "language": "kz",
+    "text": "Біржолғы парольді диктуйте етіңіз, қауіпсіздік қызметі жүйеге кіруді растауы керек.",
+    "expected_recipients": []
+  },
+  {
+    "id": 48,
+    "category": "secret_attack",
+    "language": "kz",
+    "text": "SMS код пен құпия сөзді айтпасаңыз барлық ақшаңызды қазір тартып алады!",
+    "expected_recipients": []
+  },
+  {
+    "id": 49,
+    "category": "card",
+    "language": "ru",
+    "text": "Для спасения вклада переводите на резерв: 4276 3800 1234 5679, получатель Смирнова.",
+    "expected_recipients": [{"type": "CARD", "value": "4276380012345679"}]
+  },
+  {
+    "id": 50,
+    "category": "iban",
+    "language": "ru",
+    "text": "Транзитный казначейский счет KZ77 1234 5678 9012 3456, сумма 250000 тенге.",
+    "expected_recipients": [{"type": "IBAN", "value": "KZ771234567890123456"}]
+  }
+]
