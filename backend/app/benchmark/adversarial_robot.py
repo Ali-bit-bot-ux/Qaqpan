@@ -154,6 +154,64 @@ class AdversarialRobot:
         ("large_car_buy", "Ініме көлік сатып алуға берген қаржылай көмек.", 800000),
     ]
 
+    # --- NOVEL UNSEEN TEST TEMPLATES (Guarantees zero text overlap with train) ---
+    SCAM_TEMPLATES_RU_TEST = [
+        ("direct_safe_account", "Сотрудник техподдержки eGov сообщил о взломе профиля, приказал перевести на временный депозит.", 480000, 1),
+        ("direct_safe_account", "Звонили из службы безопасности финансового регулятора, велели спасать сбережения на защищенной ячейке.", 710000, 1),
+        ("direct_safe_account", "Инспектор по банковскому надзору требует отправить деньги на транзитный счет для проверки подлинности.", 390000, 1),
+        ("law_enforcement_threat", "Следователь антикоррупционной службы {name} ведет тайную проверку и требует перевести сумму немедленно.", 540000, 1),
+        ("law_enforcement_threat", "Капитан юстиции пригрозил конфискацией имущества, если не внесу судебный залог в течение часа.", 630000, 1),
+        ("law_enforcement_threat", "Звонили якобы из генпрокуратуры, сказали что мои деньги спонсируют экстремистов, требуют перевода на спецсчет.", 880000, 1),
+        ("family_accident_urgency", "Неизвестный представился адвокатом, сообщил что зять задержан за драку и нужны деньги на мировую.", 580000, 1),
+        ("family_accident_urgency", "Сестра плачет в трубку, говорит попала в страшную аварию и просит перевести незнакомому человеку за операцию.", 670000, 1),
+        ("smurfing_under_100k", "Куратор велел разбить сумму на транши по 75000 тенге, чтобы антифрод алгоритм не выдал подозрение.", 75000, 4),
+        ("smurfing_under_100k", "Отправляю уже пятый перевод по 92000 тенге на дроп-карту по указке лже-сотрудника банка.", 92000, 5),
+        ("smurfing_under_100k", "Сказали переводить не больше 80 тысяч тенге за раз на разные реквизиты для обхода лимитов.", 80000, 3),
+        ("social_masking_deception", "Мошенник убедил меня сказать оператору что покупаю стройматериалы, а сам спасаю накопления.", 490000, 1),
+        ("social_masking_deception", "По телефону проинструктировали соврать в приложении будто отправляю деньги свахе на юбилей.", 360000, 1),
+        ("fake_investment_broker", "Консультант инвестиционного фонда обещала выплату дивидендов сразу после перевода на этот кошелек.", 430000, 1),
+        ("fake_investment_broker", "Перевод за активацию премиального торгового робота на закрытой финансовой платформе.", 310000, 1),
+    ]
+
+    SCAM_TEMPLATES_KZ_TEST = [
+        ("direct_safe_account", "eGov порталының операторы жеке кабинет бұзылды деп арнайы сақтық депозитіне аударуды тапсырды.", 490000, 1),
+        ("direct_safe_account", "Қаржылық реттеу қызметінің маманы барлық ақшаны қауіпсіз ячейкаға шұғыл аударыңыз деді.", 680000, 1),
+        ("law_enforcement_threat", "Сыбайлас жемқорлыққа қарсы қызметтің тергеушісі құпия операция үшін шотқа ақша салуды бұйырды.", 820000, 1),
+        ("law_enforcement_threat", "Әділет департаментінен қоңырау шалып, сот шешімі шықпас үшін қазір төлем жасаңыз деп қорқытты.", 520000, 1),
+        ("family_accident_urgency", "Бейтаныс заңгер хабарласып күйеу балаңыз адам қағып кетті, соттатпау үшін ақша аударыңыз деді.", 620000, 1),
+        ("family_accident_urgency", "Әпкем жол апатына түсті деп бейтаныс адам шұғыл емханаға ақша сұрап жатыр.", 590000, 1),
+        ("smurfing_under_100k", "Антифрод жүйесі байқамасын деп ақшаны 70000 теңгеден бөліп жіберуді тапсырды.", 70000, 4),
+        ("smurfing_under_100k", "Банк тексеруінен жалтару үшін әр картаға 80 мың теңгеден аударып жатырмын.", 80000, 3),
+        ("social_masking_deception", "Телефон соққан адам банк сұраса құрылысқа деп өтірік айт деді, өзім шотымды құтқарып жатырмын.", 470000, 1),
+        ("fake_investment_broker", "Инвестициялық қор өкілі қосымша табыс түседі деп жеке адамның картасына ақша аудартты.", 360000, 1),
+    ]
+
+    LEGIT_TEMPLATES_RU_TEST = [
+        ("wedding_service", "Оплата услуг свадебного фотографа и видеосъемки за торжество.", 85000),
+        ("cottage_rental", "Аренда загородного дома на выходные дни в Боровом для семьи.", 120000),
+        ("dentistry_braces", "Оплата первого взноса за установку брекет-системы в ортодонтии.", 150000),
+        ("sports_fitness", "Годовой абонемент в бассейн и тренажерный зал спортивного комплекса.", 95000),
+        ("garden_supplies", "Покупка саженцев плодовых деревьев и декоративных кустарников в питомнике.", 45000),
+        ("appliances_repair", "Оплата мастеру за ремонт стиральной машины и замену подшипников.", 35000),
+        ("pet_care", "Ветеринарные услуги и вакцинация собаки в ветклинике.", 22000),
+        ("translation_legal", "Оплата услуг нотариального перевода документов и апостиля.", 28000),
+        ("music_lessons", "Оплата абонемента на индивидуальные уроки игры на домбре и гитаре.", 30000),
+        ("catering", "Заказ выездного кейтеринга и банкетных блюд на семейный праздник.", 75000),
+    ]
+
+    LEGIT_TEMPLATES_KZ_TEST = [
+        ("wedding_service", "Үйлену тойына асаба мен фотографтың қызметіне алдын ала төлем.", 90000),
+        ("cottage_rental", "Бурабайда демалыс күндеріне отбасылық коттедж жалдау ақысы.", 110000),
+        ("dentistry_braces", "Стоматология клиникасында тіске брекет қойдыруға төлем.", 140000),
+        ("sports_fitness", "Спорт кешеніндегі жүзу бассейніне жартыжылдық абонементке төлем.", 70000),
+        ("garden_supplies", "Бау-бақшаға жеміс ағаштарының көшеттерін сатып алуға.", 40000),
+        ("appliances_repair", "Үйдегі тоңазытқышты жөндеген шеберге төленген ақы.", 30000),
+        ("veterinary", "Ветеринарлық клиникада мал дәрігерінің қызметіне төлеу.", 25000),
+        ("traditional_event", "Құдалық дастарханына бауырсақ пен ұлттық тағамдарға тапсырыс бердім.", 45000),
+        ("summer_camp", "Балаларға жазғы сауықтыру лагеріне жолдама сатып алу.", 85000),
+        ("sanatorium", "Шипажайға демалуға және емделуге жолдаманың ақысын төлеу.", 160000),
+    ]
+
     @classmethod
     def generate_benchmark_suite(
         cls,
@@ -163,27 +221,34 @@ class AdversarialRobot:
         """
         Produces 500+ balanced scenarios strictly partitioned into Train and Test.
         Train set (70%): Used to tune thresholds and regex patterns.
-        Test set (30%): Unseen evaluation data for honest benchmark scoring.
+        Test set (30%): Unseen evaluation data for honest benchmark scoring (0 verbatim overlap with train).
         """
         scenarios: List[AdversarialScenario] = []
-        half = total_count // 2  # 250 scam, 250 legit
+        train_count = int(total_count * train_ratio)
+        test_count = total_count - train_count
+
+        train_scam_count = train_count // 2
+        train_legit_count = train_count - train_scam_count
+
+        test_scam_count = test_count // 2
+        test_legit_count = test_count - test_scam_count
+
         ranks = ["майор", "капитан", "подполковник", "следователь"]
         names = ["Иванов", "Ахметов", "Смагулов", "Ким", "Сериков"]
 
-        # 1. Synthesize Scams (250)
-        for i in range(half):
+        current_id = 1
+
+        # 1. Synthesize TRAIN Scams
+        for i in range(train_scam_count):
             is_kz = (i % 2 == 1)
             templates = cls.SCAM_TEMPLATES_KZ if is_kz else cls.SCAM_TEMPLATES_RU
             vector, tmpl, base_amt, freq = random.choice(templates)
-            
             amt = base_amt + random.randint(-15000, 35000)
             text = tmpl.replace("{rank}", random.choice(ranks)).replace("{name}", random.choice(names))
-            
-            # Night transfers occur in 40% of aggressive scams
             hour = random.choice([1, 2, 3, 4, 23]) if (i % 5 < 2) else random.randint(9, 21)
-            
+
             scenarios.append(AdversarialScenario(
-                id=i + 1,
+                id=current_id,
                 is_scam=True,
                 category=vector,
                 language="kz" if is_kz else "ru",
@@ -193,21 +258,21 @@ class AdversarialRobot:
                 frequency_last_hour=freq,
                 answer_text=text,
                 attack_vector=vector,
-                split="train"  # Will be partitioned below
+                split="train"
             ))
+            current_id += 1
 
-        # 2. Synthesize Legit Transactions (250)
-        for i in range(half):
+        # 2. Synthesize TRAIN Legit
+        for i in range(train_legit_count):
             is_kz = (i % 2 == 1)
             templates = cls.LEGIT_TEMPLATES_KZ if is_kz else cls.LEGIT_TEMPLATES_RU
             cat, tmpl, base_amt = random.choice(templates)
-            
             amt = base_amt + random.randint(-5000, 15000)
             is_new = (cat in ("marketplace", "repair", "car_service"))
-            hour = random.randint(8, 22)  # Legit transfers mostly during normal hours
-            
+            hour = random.randint(8, 22)
+
             scenarios.append(AdversarialScenario(
-                id=half + i + 1,
+                id=current_id,
                 is_scam=False,
                 category=cat,
                 language="kz" if is_kz else "ru",
@@ -219,14 +284,55 @@ class AdversarialRobot:
                 attack_vector="benign_normal",
                 split="train"
             ))
+            current_id += 1
 
-        # Shuffle deterministically
-        random.shuffle(scenarios)
+        # 3. Synthesize TEST Scams (strictly using novel unseen test templates)
+        for i in range(test_scam_count):
+            is_kz = (i % 2 == 1)
+            templates = cls.SCAM_TEMPLATES_KZ_TEST if is_kz else cls.SCAM_TEMPLATES_RU_TEST
+            vector, tmpl, base_amt, freq = random.choice(templates)
+            amt = base_amt + random.randint(-15000, 35000)
+            text = tmpl.replace("{rank}", random.choice(ranks)).replace("{name}", random.choice(names))
+            hour = random.choice([1, 2, 3, 4, 23]) if (i % 5 < 2) else random.randint(9, 21)
 
-        # 3. Partition into Train (70%) and Test (30%)
-        split_idx = int(len(scenarios) * train_ratio)
-        for idx, sc in enumerate(scenarios):
-            sc.split = "train" if idx < split_idx else "test"
+            scenarios.append(AdversarialScenario(
+                id=current_id,
+                is_scam=True,
+                category=vector,
+                language="kz" if is_kz else "ru",
+                amount=float(amt),
+                is_new_recipient=True,
+                transfer_hour=hour,
+                frequency_last_hour=freq,
+                answer_text=text,
+                attack_vector=vector,
+                split="test"
+            ))
+            current_id += 1
+
+        # 4. Synthesize TEST Legit (strictly using novel unseen test templates)
+        for i in range(test_legit_count):
+            is_kz = (i % 2 == 1)
+            templates = cls.LEGIT_TEMPLATES_KZ_TEST if is_kz else cls.LEGIT_TEMPLATES_RU_TEST
+            cat, tmpl, base_amt = random.choice(templates)
+            amt = base_amt + random.randint(-5000, 15000)
+            is_new = (cat in ("cottage_rental", "appliances_repair", "catering"))
+            hour = random.randint(8, 22)
+
+            scenarios.append(AdversarialScenario(
+                id=current_id,
+                is_scam=False,
+                category=cat,
+                language="kz" if is_kz else "ru",
+                amount=float(amt),
+                is_new_recipient=is_new,
+                transfer_hour=hour,
+                frequency_last_hour=1,
+                answer_text=tmpl,
+                attack_vector="benign_normal",
+                split="test"
+            ))
+            current_id += 1
 
         return scenarios
 
