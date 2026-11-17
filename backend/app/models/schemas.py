@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Optional
+from typing import List, Literal, Optional
 from datetime import datetime
 from pydantic import BaseModel, Field, ConfigDict
 
@@ -125,24 +125,107 @@ class ManualReviewRequest(BaseModel):
 
 # --- Bank Analyst Schemas ---
 
+class TrapSessionStatus(str, Enum):
+    ACTIVE = "ACTIVE"
+    STOPPED = "STOPPED"
+    TIMEOUT = "TIMEOUT"
+
+
+class TrapRecipientStatus(str, Enum):
+    NEW = "NEW"
+    CONFIRMED = "CONFIRMED"
+    REJECTED = "REJECTED"
+
+
 class AnalystCard(BaseModel):
     transfer_id: str
     client_id: str
     amount: float
     recipient_name: str
     recipient_account: str
-    status: TransferStatus
-    risk_tier: RiskTier
-    risk_score: int
+    status: TransferStatus | TrapSessionStatus
+    risk_tier: Optional[RiskTier]
+    risk_score: int = Field(..., description="Transfer risk score; 0 with null risk_tier means unscored trap")
     signals: List[str] = Field(default_factory=list)
     client_answer: Optional[str] = None
     explanation: Optional[str] = None
     created_at: datetime
+    # Card source: "TRANSFER" (default, backward compatible) or "TRAP".
+    source: Literal["TRANSFER", "TRAP"] = "TRANSFER"
+    # Trap-card payload (None for transfer cards).
+    recipient_value: Optional[str] = None
+    recipient_quote: Optional[str] = None
+    dialogue_excerpt: List[str] = Field(default_factory=list)
+    session_id: Optional[str] = None
 
 
 class AnalystFeedResponse(BaseModel):
     total_count: int
     cards: List[AnalystCard]
+
+
+# --- Scammer Trap Schemas (bot plays a cautious elderly victim) ---
+
+class TrapSessionCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    language: Literal["ru", "kz"] = Field(default="ru", description="Dialogue language")
+
+
+class TrapMessageCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    text: str = Field(..., min_length=1, max_length=2000, pattern=r"\S", description="Scammer message text")
+
+
+class TrapSessionStopRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    reason: Optional[str] = Field(None, max_length=500, description="Optional stop reason (not persisted)")
+
+
+class TrapSessionResponse(BaseModel):
+    session_id: str
+    status: TrapSessionStatus
+    language: Literal["ru", "kz"]
+    message_count: int
+    max_messages: int
+    expires_at: Optional[datetime] = None
+    created_at: datetime
+    updated_at: datetime
+
+
+class TrapMessageOut(BaseModel):
+    id: int
+    sender: Literal["SCAMMER", "BOT"]
+    text: str
+    created_at: datetime
+
+
+class TrapRecipientOut(BaseModel):
+    id: int
+    session_id: str
+    recipient_type: Literal["IBAN", "CARD", "PHONE"]
+    value: str
+    quote: str
+    status: TrapRecipientStatus
+    decision_comment: Optional[str] = None
+    created_at: datetime
+    decided_at: Optional[datetime] = None
+
+
+class TrapSessionDetailResponse(TrapSessionResponse):
+    messages: List[TrapMessageOut] = Field(default_factory=list)
+    recipients: List[TrapRecipientOut] = Field(default_factory=list)
+
+
+class RecipientDecision(str, Enum):
+    CONFIRMED = "CONFIRMED"
+    REJECTED = "REJECTED"
+
+
+class RecipientDecisionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    # Enum membership is validated strictly; JSON strings are accepted.
+    decision: RecipientDecision = Field(..., description="CONFIRMED or REJECTED")
+    comment: Optional[str] = Field(None, max_length=1000, description="Optional analyst note")
 
 
 # --- Benchmark / Adversarial Robot Schemas ---

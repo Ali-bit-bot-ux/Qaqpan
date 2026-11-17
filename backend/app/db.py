@@ -1,7 +1,7 @@
 import os
 from typing import Generator
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, String, Float, Integer, DateTime, Text, JSON
+from sqlalchemy import create_engine, String, Float, Integer, DateTime, Text, JSON, ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker, Session
 from datetime import datetime
 
@@ -56,6 +56,55 @@ class TransferRecord(Base):
     
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class TrapSession(Base):
+    """Scammer-trap dialogue session (bot plays a cautious elderly victim)."""
+    __tablename__ = "trap_sessions"
+
+    session_id: Mapped[str] = mapped_column(String(64), primary_key=True, index=True)
+    # ACTIVE or STOPPED; not a transfer lifecycle.
+    status: Mapped[str] = mapped_column(String(16), default="ACTIVE", index=True)
+    language: Mapped[str] = mapped_column(String(8), default="ru")
+    max_messages: Mapped[int] = mapped_column(Integer, default=20)
+    message_count: Mapped[int] = mapped_column(Integer, default=0)
+    # Absolute UTC deadline; NULL means a legacy session without a limit.
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class TrapMessage(Base):
+    """Single dialogue line inside a trap session."""
+    __tablename__ = "trap_messages"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    session_id: Mapped[str] = mapped_column(
+        String(64), ForeignKey("trap_sessions.session_id"), index=True
+    )
+    # SCAMMER or BOT
+    sender: Mapped[str] = mapped_column(String(16))
+    text: Mapped[str] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
+class TrapRecipient(Base):
+    """Payment recipient extracted from a scammer message, awaiting analyst review."""
+    __tablename__ = "trap_recipients"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    session_id: Mapped[str] = mapped_column(
+        String(64), ForeignKey("trap_sessions.session_id"), index=True
+    )
+    # IBAN, CARD or PHONE
+    recipient_type: Mapped[str] = mapped_column(String(16))
+    value: Mapped[str] = mapped_column(String(128))
+    quote: Mapped[str] = mapped_column(Text)
+    # NEW, CONFIRMED or REJECTED
+    status: Mapped[str] = mapped_column(String(16), default="NEW", index=True)
+    decision_comment: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    decided_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
 
 
 def init_db() -> None:

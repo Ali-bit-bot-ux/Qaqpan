@@ -1,5 +1,6 @@
 import uuid
 import json
+import re
 import asyncio
 import logging
 from dataclasses import replace
@@ -9,7 +10,7 @@ from sqlalchemy.orm import Session
 from sse_starlette.sse import EventSourceResponse
 from starlette.concurrency import run_in_threadpool
 
-from ..db import get_db, SessionLocal, TransferRecord
+from ..db import get_db, SessionLocal, TransferRecord, TrapRecipient
 from ..models.schemas import (
     TransferCreate,
     TransferResponse,
@@ -245,6 +246,37 @@ def record_to_response(rec: TransferRecord) -> TransferResponse:
     )
 
 
+def _normalize_account_candidates(raw: str) -> list[str]:
+    """Generate normalized search candidates for card, phone, or IBAN matching."""
+    candidates = set()
+    cleaned = re.sub(r"[\s-]+", "", raw.strip())
+    if cleaned:
+        candidates.add(cleaned)
+        candidates.add(cleaned.upper())
+    digits_only = re.sub(r"\D", "", raw)
+    if digits_only:
+        candidates.add(digits_only)
+        if len(digits_only) == 11 and digits_only.startswith("8"):
+            candidates.add("7" + digits_only[1:])
+        elif len(digits_only) == 10:
+            candidates.add("7" + digits_only)
+    return list(candidates)
+
+
+def _find_confirmed_trap_recipient(db: Session, recipient_account: str) -> TrapRecipient | None:
+    candidates = _normalize_account_candidates(recipient_account)
+    if not candidates:
+        return None
+    return (
+        db.query(TrapRecipient)
+        .filter(
+            TrapRecipient.status == "CONFIRMED",
+            TrapRecipient.value.in_(candidates),
+        )
+        .first()
+    )
+
+
 @router.post("", response_model=TransferResponse, status_code=status.HTTP_201_CREATED)
 async def create_transfer(
     payload: TransferCreate,
@@ -259,8 +291,37 @@ async def create_transfer(
         recipient_account=payload.recipient_account,
     )
     result = RulesEngine.evaluate_initial_transaction(ctx)
-    current_status = _status_for(result)
-    alert_ru, alert_kz = _alert_texts(ctx, result)
+
+    # Check against verified scammer database collected by trap bot (Step L.6)
+    confirmed_scam = _find_confirmed_trap_recipient(db, payload.recipient_account)
+    if confirmed_scam is not None:
+        current_status = TransferStatus.TRUSTED_PENDING
+        risk_tier = RiskTier.HIGH
+        risk_score = 99
+        timeout_seconds = TRUSTED_TIMEOUT_SECONDS
+        signals = [
+            "CONFIRMED_TRAP_SCAMMER_RECIPIENT",
+            f"trap_session_{confirmed_scam.session_id}",
+            f"recipient_type_{confirmed_scam.recipient_type}",
+            *result.triggered_rules,
+        ]
+        alert_ru = (
+            f"Внимание! Счёт получателя ({confirmed_scam.value}) совпадает с реквизитом мошенника, "
+            f"выявленным ботом-ловушкой и подтверждённым аналитиком банка. "
+            f"Перевод направлен на проверку доверенному лицу."
+        )
+        alert_kz = (
+            f"Назар аударыңыз! Алушының шоты ({confirmed_scam.value}) банк аналитигі растаған "
+            f"тұзақ-боты анықтаған алаяқтың реквизиттерімен сәйкес келеді. "
+            f"Аударым сенімді тұлғаның тексеруіне бағытталды."
+        )
+    else:
+        current_status = _status_for(result)
+        risk_tier = RiskTier(result.risk_level.value)
+        risk_score = int(round(result.risk_score))
+        timeout_seconds = TRUSTED_TIMEOUT_SECONDS if current_status == TransferStatus.TRUSTED_PENDING else None
+        signals = result.triggered_rules
+        alert_ru, alert_kz = _alert_texts(ctx, result)
 
     rec = TransferRecord(
         transfer_id=transfer_id,
@@ -270,14 +331,14 @@ async def create_transfer(
         amount=payload.amount,
         currency=payload.currency,
         status=current_status.value,
-        risk_tier=RiskTier(result.risk_level.value).value,
-        risk_score=int(round(result.risk_score)),
+        risk_tier=risk_tier.value,
+        risk_score=risk_score,
         challenge_question=QUESTION_RU if current_status == TransferStatus.AWAITING_ANSWER else None,
         challenge_question_kz=QUESTION_KZ if current_status == TransferStatus.AWAITING_ANSWER else None,
         trusted_contact_name=TRUSTED_CONTACT_NAME,
         trusted_contact_phone=TRUSTED_CONTACT_PHONE,
-        timeout_seconds=TRUSTED_TIMEOUT_SECONDS if current_status == TransferStatus.TRUSTED_PENDING else None,
-        detected_signals=result.triggered_rules,
+        timeout_seconds=timeout_seconds,
+        detected_signals=signals,
         alert_reason_ru=alert_ru,
         alert_reason_kz=alert_kz,
     )

@@ -10,6 +10,7 @@ from .api.transfers import router as transfers_router, recover_pending_timeouts,
 from .api.trusted import router as trusted_router
 from .api.analyst import router as analyst_router
 from .api.benchmark import router as benchmark_router
+from .api.trap import router as trap_router, recover_trap_sessions, stop_trap_tasks
 
 load_dotenv()
 
@@ -27,9 +28,11 @@ async def lifespan(app: FastAPI):
     logger.info("Database initialized successfully.")
     try:
         recover_pending_timeouts()
+        recover_trap_sessions()
         yield
     finally:
         await stop_timeout_tasks()
+        await stop_trap_tasks()
         logger.info("Shutting down Qaqpan Anti-Fraud Guardian Service...")
 
 
@@ -52,6 +55,7 @@ app.include_router(transfers_router, prefix="/api/v1")
 app.include_router(trusted_router, prefix="/api/v1")
 app.include_router(analyst_router, prefix="/api/v1")
 app.include_router(benchmark_router, prefix="/api/v1")
+app.include_router(trap_router, prefix="/api/v1")
 
 
 @app.get("/", tags=["Health"])

@@ -1,46 +1,112 @@
-from typing import Optional, List
+from typing import List, Literal, Optional
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
 
-from ..db import get_db, TransferRecord
+from ..db import get_db, TransferRecord, TrapSession, TrapMessage, TrapRecipient
 from ..models.schemas import AnalystFeedResponse, AnalystCard, TransferStatus, RiskTier
 
 router = APIRouter(prefix="/analyst", tags=["Bank Analyst"])
 
+# Trap card constants (no risk wiring into rules yet — MVP shows the card only).
+TRAP_SOURCE = "TRAP"
+TRANSFER_SOURCE = "TRANSFER"
+DIALOGUE_EXCERPT_MESSAGES = 4
+
+
+def _transfer_card(r: TransferRecord) -> AnalystCard:
+    return AnalystCard(
+        transfer_id=r.transfer_id,
+        client_id=r.client_id,
+        amount=r.amount,
+        recipient_name=r.recipient_name,
+        recipient_account=r.recipient_account,
+        status=TransferStatus(r.status).value,
+        risk_tier=RiskTier(r.risk_tier),
+        risk_score=r.risk_score,
+        signals=r.detected_signals or [],
+        client_answer=r.client_answer,
+        explanation=r.alert_reason_ru,
+        created_at=r.created_at,
+        source=TRANSFER_SOURCE,
+    )
+
+
+def _trap_card(db: Session, s: TrapSession) -> AnalystCard:
+    # First pending or analyst-confirmed recipient is shown on the card.
+    recipient = (
+        db.query(TrapRecipient)
+        .filter(
+            TrapRecipient.session_id == s.session_id,
+            TrapRecipient.status.in_(["NEW", "CONFIRMED"]),
+        )
+        .order_by(TrapRecipient.id)
+        .first()
+    )
+    messages = (
+        db.query(TrapMessage)
+        .filter(TrapMessage.session_id == s.session_id)
+        .order_by(desc(TrapMessage.id))
+        .limit(DIALOGUE_EXCERPT_MESSAGES)
+        .all()
+    )
+    excerpt = [m.text for m in reversed(messages)]
+    return AnalystCard(
+        transfer_id=s.session_id,  # feed key; trap cards are identified by session_id
+        client_id="trap_simulator",
+        amount=0.0,
+        recipient_name="Подозреваемый (диалог-ловушка)",
+        recipient_account=recipient.value if recipient else "",
+        status=s.status,
+        risk_tier=None,
+        risk_score=0,  # Unscored; not a LOW-risk transfer.
+        signals=["TRAP_DIALOGUE"],
+        client_answer=None,
+        explanation="Кандидаты из тестового диалога: банк, владелец и контрольная сумма IBAN не проверены; риск не оценён. Требуется проверка аналитика.",
+        created_at=s.created_at,
+        source=TRAP_SOURCE,
+        recipient_value=recipient.value if recipient else None,
+        recipient_quote=recipient.quote if recipient else None,
+        dialogue_excerpt=excerpt,
+        session_id=s.session_id,
+    )
+
 
 @router.get("/feed", response_model=AnalystFeedResponse)
 def get_analyst_feed(
-    risk_tier: Optional[RiskTier] = Query(None, description="Filter by risk tier"),
-    status: Optional[TransferStatus] = Query(None, description="Filter by transfer status"),
+    risk_tier: Optional[RiskTier] = Query(None, description="Filter by risk tier (transfer cards only)"),
+    status: Optional[TransferStatus] = Query(None, description="Filter by transfer status (transfer cards only)"),
+    source: Literal["TRANSFER", "TRAP", "ALL"] = Query("ALL", description="Filter by card source"),
     limit: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db)
 ):
-    query = db.query(TransferRecord).order_by(desc(TransferRecord.created_at))
-    if risk_tier:
-        query = query.filter(TransferRecord.risk_tier == risk_tier.value)
-    if status is not None:
-        query = query.filter(TransferRecord.status == status.value)
-
-    records = query.limit(limit).all()
-
     cards: List[AnalystCard] = []
-    for r in records:
-        cards.append(
-            AnalystCard(
-                transfer_id=r.transfer_id,
-                client_id=r.client_id,
-                amount=r.amount,
-                recipient_name=r.recipient_name,
-                recipient_account=r.recipient_account,
-                status=TransferStatus(r.status),
-                risk_tier=RiskTier(r.risk_tier),
-                risk_score=r.risk_score,
-                signals=r.detected_signals or [],
-                client_answer=r.client_answer,
-                explanation=r.alert_reason_ru,
-                created_at=r.created_at
-            )
+
+    if source in (TRANSFER_SOURCE, "ALL"):
+        query = db.query(TransferRecord).order_by(desc(TransferRecord.created_at))
+        if isinstance(risk_tier, (RiskTier, str)):
+            val = risk_tier.value if isinstance(risk_tier, RiskTier) else risk_tier
+            query = query.filter(TransferRecord.risk_tier == val)
+        if isinstance(status, (TransferStatus, str)):
+            val = status.value if isinstance(status, TransferStatus) else status
+            query = query.filter(TransferRecord.status == val)
+        for r in query.limit(limit).all():
+            cards.append(_transfer_card(r))
+
+    # Transfer filters must not be polluted by unrelated, unscored trap cards.
+    has_transfer_filter = isinstance(risk_tier, (RiskTier, str)) or isinstance(status, (TransferStatus, str))
+    if source in (TRAP_SOURCE, "ALL") and not has_transfer_filter:
+        sessions = (
+            db.query(TrapSession)
+            .order_by(desc(TrapSession.created_at))
+            .limit(limit)
+            .all()
         )
+        for s in sessions:
+            cards.append(_trap_card(db, s))
+
+    # Merge newest-first and cut AFTER the merge, not per source.
+    cards.sort(key=lambda c: c.created_at, reverse=True)
+    cards = cards[:limit]
 
     return AnalystFeedResponse(total_count=len(cards), cards=cards)

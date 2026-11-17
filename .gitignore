@@ -8,6 +8,7 @@ venv/
 ENV/
 *.sqlite3
 *.db
+Python/
 
 # Node / Frontend
 node_modules/
