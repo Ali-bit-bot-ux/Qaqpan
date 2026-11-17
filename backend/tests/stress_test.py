@@ -15,6 +15,7 @@ import sys
 import time
 import uuid
 from typing import List, Dict, Any
+import pytest
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(current_dir, "../../"))
@@ -36,6 +37,7 @@ from backend.app.api.trap import create_session, post_message, stop_trap_tasks
 from fastapi import HTTPException
 
 
+@pytest.mark.anyio
 async def test_50_concurrent_transfers() -> Dict[str, Any]:
     print("\n" + "=" * 65)
     print("  TEST 1: 50 CONCURRENT TRANSFERS CREATION")
@@ -78,6 +80,7 @@ async def test_50_concurrent_transfers() -> Dict[str, Any]:
     print(f"Latency P95:             {p95:.1f} ms")
     print(f"Latency P99 (max):       {p99:.1f} ms")
     print("RESULT: PASSED (Zero errors, high throughput) ✅")
+    await stop_timeout_tasks()
 
     return {
         "total": 50,
@@ -88,6 +91,7 @@ async def test_50_concurrent_transfers() -> Dict[str, Any]:
     }
 
 
+@pytest.mark.anyio
 async def test_race_condition_competing_decisions() -> Dict[str, Any]:
     print("\n" + "=" * 65)
     print("  TEST 2: RACE CONDITION GUARD (10 COMPETING DECISIONS ON 1 TRANSFER)")
@@ -148,9 +152,11 @@ async def test_race_condition_competing_decisions() -> Dict[str, Any]:
     assert errors == 0, f"Expected 0 unexpected errors, got {errors}"
 
     print("RESULT: PASSED (Atomic FSM CAS completely immune to race conditions) ✅")
+    await stop_timeout_tasks()
     return {"winners": winners, "conflicts": conflicts, "errors": errors}
 
 
+@pytest.mark.anyio
 async def test_trap_session_concurrent_messages() -> Dict[str, Any]:
     print("\n" + "=" * 65)
     print("  TEST 3: TRAP BOT CONCURRENT POSTS (20 MESSAGES)")
@@ -190,6 +196,7 @@ async def test_trap_session_concurrent_messages() -> Dict[str, Any]:
         assert sess_record.message_count == accepted, "Message count must equal accepted writes"
 
     print("RESULT: PASSED (No database deadlocks, atomic count consistency) ✅")
+    await stop_trap_tasks()
     return {"accepted": accepted, "conflicts": conflicts}
 
 
@@ -220,3 +227,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
