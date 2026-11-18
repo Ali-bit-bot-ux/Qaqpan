@@ -101,8 +101,8 @@ async def test_race_condition_competing_decisions() -> Dict[str, Any]:
         # Create a transfer in TRUSTED_PENDING
         transfer = await create_transfer(
             TransferCreate(
-                client_id="race_client_01",
-                recipient_account="KZ999999999999999999",
+                client_id=f"race_{uuid.uuid4().hex[:8]}",  # fresh client: history cannot change the score
+                recipient_account=f"KZ{uuid.uuid4().int % 10**18:018d}",
                 recipient_name="Large Transfer",
                 amount=700000.0,
                 currency="KZT",

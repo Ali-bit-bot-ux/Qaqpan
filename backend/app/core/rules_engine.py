@@ -336,9 +336,16 @@ class RulesEngine:
                 + (signals.explanation_summary if signals.explanation_summary else "; ".join(rules))
             )
         elif score >= cls.THRESHOLD_MEDIUM:
-            level = RiskLevel.MEDIUM
-            action = NextAction.ASK_QUESTION
-            summary = f"Повышенный риск ({score:.0f}/100): " + "; ".join(rules)
+            # The question was already asked and the answer did not clear suspicion.
+            # Asking again would let a coached client retry until the story sounds clean,
+            # so the ladder moves on to the trusted person.
+            level = RiskLevel.HIGH
+            action = NextAction.REQUIRE_TRUSTED_APPROVAL
+            rules.append("Ответ не снял подозрений: повторный вопрос не задаётся, нужен близкий")
+            summary = (
+                f"Повышенный риск ({score:.0f}/100), ответ не снял подозрений. "
+                "Требуется подтверждение близкого: " + "; ".join(rules)
+            )
         else:
             level = RiskLevel.LOW
             action = NextAction.ALLOW

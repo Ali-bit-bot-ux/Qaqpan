@@ -31,6 +31,12 @@ except ImportError:
     from adversarial_robot import AdversarialScenario
 
 
+# Modelled delay assumptions (synthetic prototype, not measured on real clients).
+QUESTION_ANSWER_SECONDS: float = 15.0  # Client reads and answers one question
+TRUSTED_WAIT_SECONDS: float = 120.0  # Trusted person reviews and decides
+BASELINE_REVIEW_SECONDS: float = 600.0  # Legacy rule: bank holds the transfer for manual review
+
+
 @dataclass
 class ModelPerformance:
     """Performance metrics for an anti-fraud model."""
@@ -42,6 +48,9 @@ class ModelPerformance:
     false_positives: int  # False Positives
     clean_legit: int  # True Negatives
     prevented_loss_kzt: float  # Monetary value of prevented fraud in tenge
+    # Friction on legitimate clients (modelled, see the *_SECONDS assumptions below).
+    legit_questioned_rate: float = 0.0  # Share of legit transfers that were questioned or held
+    avg_delay_seconds: float = 0.0  # Mean modelled delay per legit transfer
 
     def to_dict(self) -> Dict[str, Any]:  # Any: Primitives dictionary
         return asdict(self)
@@ -129,6 +138,9 @@ class BenchmarkEvaluator:
             else:
                 base_tn += 1
 
+        base_questioned = (base_fp / legit_c) if legit_c > 0 else 0.0
+        base_avg_delay = base_questioned * BASELINE_REVIEW_SECONDS
+
         base_stop_rate = (base_tp / scam_c) if scam_c > 0 else 0.0
         base_fpr = (base_fp / legit_c) if legit_c > 0 else 0.0
 
@@ -140,7 +152,9 @@ class BenchmarkEvaluator:
             missed_scams=base_fn,
             false_positives=base_fp,
             clean_legit=base_tn,
-            prevented_loss_kzt=round(base_prevented_kzt, 2)
+            prevented_loss_kzt=round(base_prevented_kzt, 2),
+            legit_questioned_rate=round(base_questioned, 4),
+            avg_delay_seconds=round(base_avg_delay, 2),
         )
 
         # -------------------------------------------------------------
@@ -151,6 +165,8 @@ class BenchmarkEvaluator:
         qaqpan_fp = 0
         qaqpan_tn = 0
         qaqpan_prevented_kzt = 0.0
+        legit_questioned = 0
+        legit_total_delay = 0.0
 
         for sc in scam_scenarios:
             ctx = TransactionContext(
@@ -176,8 +192,14 @@ class BenchmarkEvaluator:
                 frequency_last_hour=sc.get("frequency_last_hour", 1)
             )
             res = RulesEngine.evaluate_with_answer(ctx, sc["answer_text"])
+            # Friction: any initial non-ALLOW means the client was questioned or held.
+            if RulesEngine.evaluate_initial_transaction(ctx).risk_level != RiskLevel.LOW:
+                legit_questioned += 1
+                legit_total_delay += QUESTION_ANSWER_SECONDS
             # False positive if customer was blocked or sent to trusted contact unnecessarily
             stopped = (res.risk_level == RiskLevel.HIGH)
+            if stopped:
+                legit_total_delay += TRUSTED_WAIT_SECONDS
             if stopped:
                 qaqpan_fp += 1
             else:
@@ -194,7 +216,9 @@ class BenchmarkEvaluator:
             missed_scams=qaqpan_fn,
             false_positives=qaqpan_fp,
             clean_legit=qaqpan_tn,
-            prevented_loss_kzt=round(qaqpan_prevented_kzt, 2)
+            prevented_loss_kzt=round(qaqpan_prevented_kzt, 2),
+            legit_questioned_rate=round(legit_questioned / legit_c, 4) if legit_c else 0.0,
+            avg_delay_seconds=round(legit_total_delay / legit_c, 2) if legit_c else 0.0,
         )
 
         elapsed_ms = (time.time() - start_time) * 1000.0

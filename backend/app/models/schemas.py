@@ -123,6 +123,12 @@ class ManualReviewRequest(BaseModel):
     warning_acknowledged: bool = Field(..., strict=True)
 
 
+class ClientConfirmRequest(BaseModel):
+    """Client insists on their own transfer after the repeated cooling-off warning."""
+    model_config = ConfigDict(extra="forbid")
+    warning_acknowledged: bool = Field(..., strict=True)
+
+
 # --- Bank Analyst Schemas ---
 
 class TrapSessionStatus(str, Enum):

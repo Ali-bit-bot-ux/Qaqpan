@@ -30,7 +30,6 @@ class ScamSignalExtraction:
 # Regular expressions for Russian and Kazakh social engineering patterns
 PATTERNS_AUTHORITY: List[str] = [
     r"следовател[ьяеию]",
-    r"полици[яиейю]",
     r"полицейск",
     r"майор",
     r"капитан",
@@ -44,24 +43,44 @@ PATTERNS_AUTHORITY: List[str] = [
     r"egov",
     r"егов",
     r"госуслуг",
-    r"инспектор",
-    r"надзор",
-    r"адвокат",
-    r"заңгер",
     r"антикоррупцион",
     r"сыбайлас\s+жемқорлық",
-    r"әділет",
-    r"юстици",
     r"техподдержк",
     r"служб[аеыу]?\s+безопасност[иея]",
     r"сотрудник[аеу]?\s+(?:службы\s+безопасности\s+)?банк[аеу]",
     r"служб[аеыу]?\s+финмониторинг[аеу]?",
     r"тергеуші",
-    r"полиция",
     r"қауіпсіздік\s+қызмет",
     r"банк\s+қызметкер",
     r"заң\s+орындары",
     r"қаржы\s+полициясы",
+]
+
+# Everyday words that also appear in honest payments (lawyer fee, state duty at the police).
+# They signal authority pressure only together with instruction / urgency / fear in the same text.
+PATTERNS_AUTHORITY_WEAK: List[str] = [
+    r"полици[яиейю]",
+    r"адвокат",
+    r"заңгер",
+    r"әділет",
+    r"юстици",
+    r"инспектор",
+    r"надзор",
+]
+
+# Investment / crypto is a scam marker only next to a lure (guaranteed profit, dividends, wallet...).
+# A bare "investment account" is a normal banking phrase.
+_LURE_RU = (
+    r"(?:гарантир\w*|обещ\w*|дивиденд\w*|удво\w*|пассивн\w*\s+доход|доходност\w*"
+    r"|быстр\w*\s+(?:прибыл|доход)|прибыл\w*|кошел\w*|закрыт\w*\s+платформ\w*)"
+)
+_LURE_KZ = r"(?:кепілдік\w*|уәде\w*|қосымша\s+табыс|табыс\w*|пайда\w*|сендір\w*|дивиденд\w*|әмиян\w*)"
+_INVEST = r"(?:инвест\w*|крипто\w*|брокер\w*)"
+PATTERNS_INVESTMENT_LURE: List[str] = [
+    _INVEST + r".{0,80}" + _LURE_RU,
+    _LURE_RU + r".{0,80}" + _INVEST,
+    _INVEST + r".{0,80}" + _LURE_KZ,
+    _LURE_KZ + r".{0,80}" + _INVEST,
 ]
 
 PATTERNS_SAFE_ACCOUNT: List[str] = [
@@ -75,8 +94,6 @@ PATTERNS_SAFE_ACCOUNT: List[str] = [
     r"ячейк[аеуи]",
     r"дроп[- ]?карт",
     r"торгов\w*\s+робот",
-    r"инвестиц\w*",
-    r"крипто",
     r"қауіпсіз\s+шот",
     r"резервтік\s+шот",
     r"сақтау\s+шоты",
@@ -149,9 +166,14 @@ PATTERNS_EMOTIONAL: List[str] = [
 KZ_MARKERS: List[str] = [r"[әіңғүұқөһ]", r"\b(ақша|шот|керек|үшін|болды|мен|сіз|жоқ)\b"]
 
 
+def _normalize(text: str) -> str:
+    """Lowercase and fold 'ё' into 'е' so one regex covers both spellings."""
+    return text.lower().replace("ё", "е")
+
+
 def detect_language(text: str) -> str:
     """Detects if text contains Kazakh markers or falls back to Russian."""
-    text_lower = text.lower()
+    text_lower = _normalize(text)
     for pattern in KZ_MARKERS:
         if re.search(pattern, text_lower):
             return "kz"
@@ -160,7 +182,7 @@ def detect_language(text: str) -> str:
 
 def match_any(patterns: List[str], text: str) -> bool:
     """Helper checking if any regex pattern matches text."""
-    text_lower = text.lower()
+    text_lower = _normalize(text)
     for pattern in patterns:
         if re.search(pattern, text_lower):
             return True
@@ -175,11 +197,17 @@ def fallback_parse(text: str) -> ScamSignalExtraction:
     start_time = time.time()
     lang = detect_language(text)
 
-    has_authority = match_any(PATTERNS_AUTHORITY, text)
-    has_safe_account = match_any(PATTERNS_SAFE_ACCOUNT, text)
+    has_safe_account = (
+        match_any(PATTERNS_SAFE_ACCOUNT, text) or match_any(PATTERNS_INVESTMENT_LURE, text)
+    )
     has_urgency = match_any(PATTERNS_URGENCY, text)
     has_third_party = match_any(PATTERNS_THIRD_PARTY, text)
     has_emotional = match_any(PATTERNS_EMOTIONAL, text)
+    # Strong titles always count; everyday words count only with pressure in the same text.
+    has_authority = match_any(PATTERNS_AUTHORITY, text) or (
+        match_any(PATTERNS_AUTHORITY_WEAK, text)
+        and (has_third_party or has_urgency or has_emotional)
+    )
 
     # Calculate urgency score
     urgency_points = 0.0

@@ -19,8 +19,10 @@ from ..models.schemas import (
     AnswerRequest,
     CancelRequest,
     ManualReviewRequest,
+    ClientConfirmRequest,
     TrustedContactInfo
 )
+from ..config import CLIENT_TYPICAL_AMOUNT, TRUSTED_TIMEOUT_SECONDS
 from ..core.state_machine import TransferStateMachine, InvalidStateTransitionError
 from ..core.events import event_bus
 from ..core.rules_engine import RulesEngine, TransactionContext, RiskLevel, NextAction, ScoringResult
@@ -29,8 +31,6 @@ router = APIRouter(prefix="/transfers", tags=["Transfers (Client)"])
 _timeout_tasks: dict[str, asyncio.Task[None]] = {}
 logger = logging.getLogger("qaqpan.timers")
 
-CLIENT_TYPICAL_AMOUNT = 50000.0
-TRUSTED_TIMEOUT_SECONDS = 30
 QUESTION_RU = "Для чего вы совершаете данный перевод?"
 QUESTION_KZ = "Бұл аударымды не үшін жасап жатырсыз?"
 TRUSTED_CONTACT_NAME = "Айгерим (Дочь)"
@@ -467,6 +467,27 @@ async def request_manual_review(
     db.commit()
     await event_bus.publish("transfer_updated", response.model_dump(mode="json"))
     return response
+
+
+@router.post("/{transfer_id}/confirm", response_model=TransferResponse)
+async def confirm_transfer_by_client(
+    transfer_id: str,
+    payload: ClientConfirmRequest,
+    db: Session = Depends(get_db),
+) -> TransferResponse:
+    """Cooling-off exit: the trusted person was silent, the client confirms after the warning."""
+    if not payload.warning_acknowledged:
+        raise HTTPException(status_code=400, detail="Acknowledge the cooling-off warning first")
+    rec = db.get(TransferRecord, transfer_id)
+    if rec is None:
+        raise HTTPException(status_code=404, detail="Transfer not found")
+    if rec.status != TransferStatus.COOLING_OFF.value:
+        raise HTTPException(status_code=409, detail="Transfer is not in cooling-off")
+    resp = commit_transition(db, rec, TransferStatus.COMPLETED)
+    if resp is None:
+        raise HTTPException(status_code=409, detail="Transfer state changed")
+    await event_bus.publish("transfer_confirmed_by_client", resp.model_dump(mode="json"))
+    return resp
 
 
 @router.post("/{transfer_id}/cancel", response_model=TransferResponse)
