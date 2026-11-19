@@ -1,10 +1,15 @@
 from typing import List, Literal, Optional
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
 
 from ..db import get_db, TransferRecord, TrapSession, TrapMessage, TrapRecipient
-from ..models.schemas import AnalystFeedResponse, AnalystCard, TransferStatus, RiskTier
+from ..core.events import event_bus
+from ..models.schemas import (
+    AnalystFeedResponse, AnalystCard, TransferStatus, RiskTier,
+    BankReviewDecisionRequest, DecisionType, TransferResponse,
+)
+from .transfers import commit_transition
 
 router = APIRouter(prefix="/analyst", tags=["Bank Analyst"])
 
@@ -110,3 +115,23 @@ def get_analyst_feed(
     cards = cards[:limit]
 
     return AnalystFeedResponse(total_count=len(cards), cards=cards)
+
+
+@router.post("/transfers/{transfer_id}/review", response_model=TransferResponse)
+async def decide_manual_review(
+    transfer_id: str,
+    payload: BankReviewDecisionRequest,
+    db: Session = Depends(get_db),
+) -> TransferResponse:
+    """Resolve MANUAL_BANK_REVIEW: APPROVE -> COMPLETED, DECLINE -> BLOCKED."""
+    rec = db.get(TransferRecord, transfer_id)
+    if rec is None:
+        raise HTTPException(status_code=404, detail="Transfer not found")
+    if rec.status != TransferStatus.MANUAL_BANK_REVIEW.value:
+        raise HTTPException(status_code=409, detail="Transfer is not in manual bank review")
+    target = TransferStatus.COMPLETED if payload.decision == DecisionType.APPROVE else TransferStatus.BLOCKED
+    resp = commit_transition(db, rec, target)
+    if resp is None:
+        raise HTTPException(status_code=409, detail="Transfer state changed")
+    await event_bus.publish("bank_review_decided", resp.model_dump(mode="json"))
+    return resp

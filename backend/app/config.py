@@ -1,4 +1,5 @@
 """Tunable demo settings read from the environment (defaults keep current behaviour)."""
+import json
 import logging
 import os
 
@@ -28,3 +29,21 @@ def env_int(name: str, default: int) -> int:
 TRUSTED_TIMEOUT_SECONDS: int = env_int("TRUSTED_TIMEOUT_SECONDS", 30)
 # Amount treated as "usual" for a client until per-client history is modelled.
 CLIENT_TYPICAL_AMOUNT: float = env_float("CLIENT_TYPICAL_AMOUNT", 50000.0)
+
+
+def parse_cors_origins() -> list[str]:
+    """CORS_ORIGINS as a JSON list or a comma-separated string; '*' when unset or invalid."""
+    raw = os.getenv("CORS_ORIGINS")
+    if not raw or not raw.strip():
+        return ["*"]
+    raw = raw.strip()
+    if raw.startswith("["):
+        try:
+            parsed = json.loads(raw)
+        except ValueError:
+            logger.warning("Ignoring invalid CORS_ORIGINS=%r, allowing all origins", raw)
+            return ["*"]
+        origins = [str(o).strip() for o in parsed if str(o).strip()] if isinstance(parsed, list) else []
+    else:
+        origins = [o.strip() for o in raw.split(",") if o.strip()]
+    return origins or ["*"]
