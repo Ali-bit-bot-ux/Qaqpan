@@ -267,6 +267,24 @@ class AdversarialRobot:
         ("advance_fee", "Желіде танысқан адам келуге билет алу үшін ақша аударуымды өтінді.", 260000, 22, 1, "kz"),
     ]
 
+    # Everyday friction for TRAIN: micro-transfers and plain family requests to new recipients.
+    # These must pass without a question or an escalation. The rules may be tuned against them.
+    # (category, text, amount, is_new_recipient, hour, frequency_last_hour, language)
+    FRICTION_TRAIN = [
+        ("family_request", "Мама попросила", 2500, True, 23, 1, "ru"),
+        ("family_request", "Папа попросил перевести другу на такси", 3000, True, 22, 1, "ru"),
+        ("family_request", "Брат позвонил и попросил, возвращаю ему долг за обед", 15000, True, 20, 1, "ru"),
+        ("family_request", "Сестра сказала, что надо отправить ей на проезд", 4000, True, 0, 1, "ru"),
+        ("micro_transfer", "Ребёнок попросил пополнить телефон", 1500, True, 23, 1, "ru"),
+        ("micro_transfer", "За кофе для подруги", 1200, True, 21, 1, "ru"),
+        ("family_request", "Анам сұрады", 2500, True, 23, 1, "kz"),
+        ("family_request", "Әкем такси ақысына сұрады", 3000, True, 22, 1, "kz"),
+        ("family_request", "Ағам қоңырау шалып, қарызды қайтаруды сұрады", 15000, True, 20, 1, "kz"),
+        ("family_request", "Әпкем жол ақысына ақша керек деді", 4000, True, 0, 1, "kz"),
+        ("micro_transfer", "Баламның телефонына ақша салып беруді сұрады", 1500, True, 23, 1, "kz"),
+        ("micro_transfer", "Құрбыма кофе үшін", 1200, True, 21, 1, "kz"),
+    ]
+
     # Hard legitimate cases for TRAIN (distinct texts): the rules may be tuned against these.
     HARD_LEGIT_TRAIN = [
         ("lawyer_fee", "Гонорар адвокату за подготовку иска в суд по трудовому спору.", 180000, True, 12, 1, "ru"),
@@ -422,6 +440,25 @@ class AdversarialRobot:
                 frequency_last_hour=freq,
                 answer_text=text,
                 attack_vector=cat,
+                split="train",
+            )
+
+        # 4a2. Friction cases: the block right before the hard-legit tail of the train-legit block.
+        fr_rows = cls.FRICTION_TRAIN
+        fr_first = train_count - len(cls.HARD_LEGIT_TRAIN) - len(fr_rows)
+        for offset, (cat, text, amt, is_new, hour, freq, lang) in enumerate(fr_rows):
+            old = scenarios[fr_first + offset]
+            scenarios[fr_first + offset] = AdversarialScenario(
+                id=old.id,
+                is_scam=False,
+                category=cat,
+                language=lang,
+                amount=float(amt),
+                is_new_recipient=is_new,
+                transfer_hour=hour,
+                frequency_last_hour=freq,
+                answer_text=text,
+                attack_vector="benign_friction",
                 split="train",
             )
 

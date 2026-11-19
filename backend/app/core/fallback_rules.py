@@ -161,6 +161,13 @@ PATTERNS_EMOTIONAL: List[str] = [
     r"қама",
     r"қағып\s+кет",
     r"қылмыстық\s+іс",
+    r"сбил\w*",
+    r"попал\w*\s+в\s+(?:авари\w*|больниц\w*|полици\w*)",
+    r"задержан\w*",
+    r"несчастн\w*\s+случа\w*",
+    r"апат\w*",
+    r"полицияда",
+    r"ұсталды",
 ]
 
 # Specific Kazakh alphabet characters and frequent stop-words
@@ -190,13 +197,26 @@ def match_any(patterns: List[str], text: str) -> bool:
     return False
 
 
+# Close relatives. A plain "mom asked me to" is not an instruction from a stranger; the weight of
+# third-party instruction is dropped only when nothing else in the text looks like a scam.
+PATTERNS_FAMILY: List[str] = [
+    r"\b(?:мам\w*|пап\w*|сын\w*|дочь|доч[ке]\w*|брат\w*|сестр\w*|бабушк\w*|дедушк\w*|внук\w*|внучк\w*|родител\w*|ребен\w*|жен[ауые]|муж[ауе]?|тет[яюи]\w*|дяд\w*)\b",
+    r"\b(?:анам\w*|анаме\w*|әке\w*|аға\w*|әпке\w*|қарындас\w*|сіңлі\w*|ұлым\w*|қызым\w*|немере\w*|бала\w*|жеңге\w*)",
+]
+
+
+def mentions_family(text: str) -> bool:
+    """True when the text names a close relative (RU/KZ)."""
+    return match_any(PATTERNS_FAMILY, text)
+
+
 # Advance-fee schemes: the victim is asked to pay a fee, tax, deposit or prepayment to a stranger
 # (customs fee for a parcel, tax on a "prize", entry fee for a "job", deposit before viewing,
 # full prepayment on a one-day site, requisites sent in a chat, "love" met online).
 # Each pattern needs the lure context, so honest payments (state duty, contract prepayment) stay quiet.
 PATTERNS_PAYMENT_LURE: List[str] = [
     r"(?:посылк\w*|груз\w*|курьер\w*).{0,80}(?:таможн\w*|пошлин\w*|застрял\w*|задержан\w*)",
-    r"(?:курьер|жүк|жөнелтім|сәлемдеме).{0,80}(?:кеден\w*|баж|бөгел\w*)",
+    r"(?:курьер|жүк|жөнелтім|сәлемдеме).{0,80}(?:кеден\w*|баж\b|бөгел\w*)",
     r"(?:выигр\w*|лотере\w*|приз\w*|розыгрыш\w*|ұтыс\w*|ұтт\w*).{0,80}(?:налог\w*|комисси\w*|сбор\w*|салық\w*)",
     r"вступительн\w*\s+взнос",
     r"(?:кіру|қабылдау)\s+жарна\w*",

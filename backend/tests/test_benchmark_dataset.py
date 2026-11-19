@@ -66,3 +66,13 @@ def test_train_has_advance_fee_scams_with_distinct_texts():
 
     holdout_texts = {s["answer_text"] for s in build_holdout()}
     assert not ({s["answer_text"] for s in fee} & holdout_texts)
+
+
+def test_train_has_friction_cases_micro_and_family_requests():
+    suite = _suite()
+    fr = [s for s in suite if s["split"] == "train" and s["attack_vector"] == "benign_friction"]
+    assert len(fr) >= 10
+    assert not any(s["is_scam"] for s in fr)
+    assert {s["language"] for s in fr} == {"ru", "kz"}
+    assert any(s["amount"] <= 5000 for s in fr)
+    assert [s["id"] for s in suite] == list(range(1, 501))
