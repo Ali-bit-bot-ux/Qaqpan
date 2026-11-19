@@ -1,12 +1,12 @@
 from typing import List, Literal, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 
 from ..db import get_db, TransferRecord, TrapSession, TrapMessage, TrapRecipient
 from ..core.events import event_bus
 from ..models.schemas import (
-    AnalystFeedResponse, AnalystCard, TransferStatus, RiskTier,
+    AnalystFeedResponse, AnalystCard, AnalystSummary, TransferStatus, RiskTier,
     BankReviewDecisionRequest, DecisionType, TransferResponse,
 )
 from .transfers import commit_transition
@@ -77,6 +77,17 @@ def _trap_card(db: Session, s: TrapSession) -> AnalystCard:
     )
 
 
+def _summary(db: Session) -> AnalystSummary:
+    """Counts over every transfer record, zero-filled so the UI never needs defaults."""
+    by_tier = {t.value: 0 for t in RiskTier}
+    by_status = {s.value: 0 for s in TransferStatus}
+    for tier, count in db.query(TransferRecord.risk_tier, func.count()).group_by(TransferRecord.risk_tier):
+        by_tier[tier] = by_tier.get(tier, 0) + count
+    for status_value, count in db.query(TransferRecord.status, func.count()).group_by(TransferRecord.status):
+        by_status[status_value] = by_status.get(status_value, 0) + count
+    return AnalystSummary(total_transfers=sum(by_status.values()), by_risk_tier=by_tier, by_status=by_status)
+
+
 @router.get("/feed", response_model=AnalystFeedResponse)
 def get_analyst_feed(
     risk_tier: Optional[RiskTier] = Query(None, description="Filter by risk tier (transfer cards only)"),
@@ -114,7 +125,7 @@ def get_analyst_feed(
     cards.sort(key=lambda c: c.created_at, reverse=True)
     cards = cards[:limit]
 
-    return AnalystFeedResponse(total_count=len(cards), cards=cards)
+    return AnalystFeedResponse(total_count=len(cards), cards=cards, summary=_summary(db))
 
 
 @router.post("/transfers/{transfer_id}/review", response_model=TransferResponse)

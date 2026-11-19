@@ -137,6 +137,11 @@ class BankReviewDecisionRequest(BaseModel):
     comment: Optional[str] = Field(None, max_length=500)
 
 
+class TransferListResponse(BaseModel):
+    total_count: int = Field(..., description="All records matching the filters, before the limit")
+    transfers: List["TransferResponse"]
+
+
 class ClientConfirmRequest(BaseModel):
     """Client insists on their own transfer after the repeated cooling-off warning."""
     model_config = ConfigDict(extra="forbid")
@@ -179,9 +184,17 @@ class AnalystCard(BaseModel):
     session_id: Optional[str] = None
 
 
+class AnalystSummary(BaseModel):
+    """Counts over ALL transfer records (ignores feed filters and limit); zero-filled."""
+    total_transfers: int
+    by_risk_tier: dict[str, int]
+    by_status: dict[str, int]
+
+
 class AnalystFeedResponse(BaseModel):
     total_count: int
     cards: List[AnalystCard]
+    summary: Optional[AnalystSummary] = None
 
 
 # --- Scammer Trap Schemas (bot plays a cautious elderly victim) ---

@@ -5,7 +5,7 @@ import asyncio
 import logging
 from dataclasses import replace
 from datetime import datetime, timedelta
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, status, Request
 from sqlalchemy.orm import Session
 from sse_starlette.sse import EventSourceResponse
 from starlette.concurrency import run_in_threadpool
@@ -20,6 +20,7 @@ from ..models.schemas import (
     CancelRequest,
     ManualReviewRequest,
     ClientConfirmRequest,
+    TransferListResponse,
     TrustedContactInfo
 )
 from statistics import median
@@ -386,6 +387,26 @@ async def create_transfer(
         _schedule_timeout(transfer_id)
     await event_bus.publish("transfer_created", resp.model_dump(mode="json"))
     return resp
+
+
+@router.get("", response_model=TransferListResponse)
+def list_transfers(
+    client_id: str | None = Query(None, description="Only this client's transfers (history screen)"),
+    transfer_status: TransferStatus | None = Query(
+        None, alias="status", description="Only this status, e.g. TRUSTED_PENDING for the trusted person's inbox"
+    ),
+    limit: int = Query(50, ge=1, le=200),
+    db: Session = Depends(get_db),
+) -> TransferListResponse:
+    """Newest-first list of transfers; total_count is the full match, not the page size."""
+    query = db.query(TransferRecord)
+    if client_id is not None:
+        query = query.filter(TransferRecord.client_id == client_id)
+    if transfer_status is not None:
+        query = query.filter(TransferRecord.status == transfer_status.value)
+    total = query.count()
+    rows = query.order_by(TransferRecord.created_at.desc()).limit(limit).all()
+    return TransferListResponse(total_count=total, transfers=[record_to_response(r) for r in rows])
 
 
 @router.get("/{transfer_id}", response_model=TransferResponse)
