@@ -99,7 +99,7 @@ class BenchmarkEvaluator:
         start_time = time.time()
 
         # Filter by split if requested
-        if split in ("train", "test"):
+        if split in ("train", "test", "holdout"):
             dataset = [s for s in scenarios if s.get("split", "test") == split]
         else:
             dataset = scenarios

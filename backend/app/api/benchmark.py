@@ -61,7 +61,7 @@ def get_or_create_dataset(filepath: Optional[str] = None) -> List[Dict[str, Any]
 @router.post("/simulate")
 @router.get("/simulate")
 def run_simulation(
-    split: str = Query("test", description="Dataset split to evaluate: 'test', 'train', or 'full'"),
+    split: str = Query("test", description="Dataset split to evaluate: 'test', 'train', 'holdout' (fresh, never tuned on) or 'full'"),
     count: int = Query(500, description="Number of scenarios in simulation pool")
 ) -> Dict[str, Any]:  # Any: Serialized benchmark report payload
     """
@@ -70,8 +70,10 @@ def run_simulation(
     """
     try:
         data = get_or_create_dataset()
+        if split == "holdout":
+            data = get_or_create_dataset(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../benchmark/scenarios_holdout.json"))
         # Filter by split first to ensure target split elements exist
-        if split in ("train", "test"):
+        if split in ("train", "test", "holdout"):
             subset = [s for s in data if s.get("split") == split]
         else:
             subset = data
