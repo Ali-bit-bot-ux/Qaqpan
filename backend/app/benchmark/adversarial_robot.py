@@ -249,6 +249,24 @@ class AdversarialRobot:
         ("big_purchase", "Жаңа тоңазытқыш пен кір жуғыш машина сатып алуға дүкенге төлем.", 620000, True, 13, 1, "kz"),
     ]
 
+    # Advance-fee scams for TRAIN (distinct wording from the holdout): fee, tax, deposit or
+    # prepayment demanded by a stranger. The rules may be tuned against these.
+    # (category, text, amount, hour, frequency_last_hour, language)
+    ADVANCE_FEE_TRAIN = [
+        ("advance_fee", "Мне написали, что мою посылку задержали на таможне, чтобы выпустить, нужно оплатить пошлину по реквизитам из сообщения.", 42000, 13, 1, "ru"),
+        ("advance_fee", "Сообщили, что я выиграла автомобиль в розыгрыше, перед получением нужно оплатить налог организаторам.", 190000, 12, 1, "ru"),
+        ("advance_fee", "Предложили удалённую работу, но сначала просят вступительный взнос, потом будут платить зарплату.", 45000, 10, 1, "ru"),
+        ("advance_fee", "Квартиру ещё не смотрела, но хозяин просит залог до просмотра, иначе сдаст другим.", 160000, 18, 1, "ru"),
+        ("advance_fee", "Магазин на неизвестном сайте требует полную предоплату за технику, на сайте нет отзывов.", 130000, 21, 1, "ru"),
+        ("advance_fee", "Познакомилась в интернете с мужчиной, он просит перевести деньги на билет, чтобы приехать ко мне.", 280000, 22, 1, "ru"),
+        ("advance_fee", "Жүк кеденде тұр деп хабарлама келді, оны шығару үшін баж төлеуді сұрап жатыр.", 39000, 14, 1, "kz"),
+        ("advance_fee", "Лотереядан көлік ұттың деп хабарласты, алу үшін алдымен салық төлеу керек дейді.", 175000, 12, 1, "kz"),
+        ("advance_fee", "Қашықтан жұмыс ұсынды, алдымен кіру жарнасын төлесем ғана қабылдайды екен.", 50000, 11, 1, "kz"),
+        ("advance_fee", "Пәтерді әлі көрген жоқпын, бірақ иесі кепілақыны алдын ала аударуды сұрады.", 150000, 17, 1, "kz"),
+        ("advance_fee", "Белгісіз сайт техникаға толық алдын ала төлем талап етіп отыр, пікірлер жоқ.", 125000, 20, 1, "kz"),
+        ("advance_fee", "Желіде танысқан адам келуге билет алу үшін ақша аударуымды өтінді.", 260000, 22, 1, "kz"),
+    ]
+
     # Hard legitimate cases for TRAIN (distinct texts): the rules may be tuned against these.
     HARD_LEGIT_TRAIN = [
         ("lawyer_fee", "Гонорар адвокату за подготовку иска в суд по трудовому спору.", 180000, True, 12, 1, "ru"),
@@ -386,6 +404,26 @@ class AdversarialRobot:
                 split="test"
             ))
             current_id += 1
+
+        # 4a. Replace the tail of the train-SCAM block (indices train_scam_count-N .. train_scam_count-1)
+        # with advance-fee scams; again ids and the random stream stay untouched.
+        fee = cls.ADVANCE_FEE_TRAIN
+        fee_first = train_scam_count - len(fee)
+        for offset, (cat, text, amt, hour, freq, lang) in enumerate(fee):
+            old = scenarios[fee_first + offset]
+            scenarios[fee_first + offset] = AdversarialScenario(
+                id=old.id,
+                is_scam=True,
+                category=cat,
+                language=lang,
+                amount=float(amt),
+                is_new_recipient=True,
+                transfer_hour=hour,
+                frequency_last_hour=freq,
+                answer_text=text,
+                attack_vector=cat,
+                split="train",
+            )
 
         # 4b. Same trick for TRAIN: replace the tail of the train-legit block (indices
         # train_count-N .. train_count-1) with hard train cases. Ids and the stream stay intact.

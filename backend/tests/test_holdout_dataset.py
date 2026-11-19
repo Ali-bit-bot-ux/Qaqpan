@@ -44,3 +44,16 @@ def test_evaluator_supports_holdout_split():
     assert report.split == "holdout"
     assert report.total_scenarios == 60
     assert report.scam_count == 30 and report.legit_count == 30
+
+
+def test_holdout2_is_fresh_balanced_and_committed():
+    from backend.app.benchmark.holdout2_dataset import build_holdout2
+
+    data = build_holdout2()
+    assert len(data) == 40
+    assert sum(s["is_scam"] for s in data) == 20
+    assert {s["language"] for s in data} == {"ru", "kz"}
+    assert [s["id"] for s in data] == list(range(2001, 2041))
+    seen = {s["answer_text"] for s in _load("scenarios_500.json")} | {s["answer_text"] for s in build_holdout()}
+    assert not ({s["answer_text"] for s in data} & seen)
+    assert _load("scenarios_holdout2.json") == data

@@ -196,6 +196,12 @@ class RulesEngine:
                     if is_kz else
                     "Перевод совершается по прямым инструкциям неизвестных лиц по телефону"
                 )
+            if signals.payment_lure:
+                bullets.append(
+                    "Жақыныңыздан бейтаныс адамға алдын ала төлем, салық немесе кепіл ақша сұралған"
+                    if is_kz else
+                    "Просят заранее заплатить незнакомцу: пошлину, налог, залог или взнос (типичная схема обмана)"
+                )
             if signals.urgency_score >= 0.6:
                 bullets.append(
                     "Жақыныңызды асықтырып, шешім қабылдауға уақыт бермеген"
@@ -301,6 +307,11 @@ class RulesEngine:
             score += 25.0
             rules.append("Клиент действует по указанию неизвестных лиц по телефону")
 
+        # 3b. Advance-fee scheme: fee / tax / deposit / prepayment demanded by a stranger
+        if signals.payment_lure:
+            score += 35.0
+            rules.append("Признаки схемы предоплаты или сбора (пошлина, налог, залог, взнос незнакомцу)")
+
         # 4. Psychological distress / fear
         if signals.emotional_distress:
             score += 20.0
@@ -318,6 +329,7 @@ class RulesEngine:
             signals.authority_pressure or
             signals.third_party_instruction or
             signals.emotional_distress or
+            signals.payment_lure or
             signals.urgency_score >= 0.5
         )
         if not has_any_scam_signal and len(answer_text.strip()) > 3:

@@ -52,3 +52,17 @@ def test_train_split_also_has_hard_legit_with_distinct_texts():
     assert not ({s["answer_text"] for s in train_hard} & {s["answer_text"] for s in test_hard})
     # Total size and ids stay fixed.
     assert [s["id"] for s in suite] == list(range(1, 501))
+
+
+def test_train_has_advance_fee_scams_with_distinct_texts():
+    suite = _suite()
+    fee = [s for s in suite if s["split"] == "train" and s["attack_vector"] == "advance_fee"]
+    assert len(fee) >= 10
+    assert all(s["is_scam"] for s in fee)
+    assert {s["language"] for s in fee} == {"ru", "kz"}
+    assert [s["id"] for s in suite] == list(range(1, 501))
+    holdout_texts = set()
+    from backend.app.benchmark.holdout_dataset import build_holdout
+
+    holdout_texts = {s["answer_text"] for s in build_holdout()}
+    assert not ({s["answer_text"] for s in fee} & holdout_texts)

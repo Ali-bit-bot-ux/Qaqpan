@@ -22,6 +22,7 @@ class ScamSignalExtraction:
     language: str  # 'ru', 'kz', or 'other'
     source: str = "fallback"  # 'llm' or 'fallback'
     latency_ms: float = 0.0
+    payment_lure: bool = False  # Advance-fee lure: customs fee, prize tax, deposit before viewing...
 
     def to_dict(self) -> Dict[str, Any]:  # Any: Primitive values for JSON serialization
         return asdict(self)
@@ -189,6 +190,34 @@ def match_any(patterns: List[str], text: str) -> bool:
     return False
 
 
+# Advance-fee schemes: the victim is asked to pay a fee, tax, deposit or prepayment to a stranger
+# (customs fee for a parcel, tax on a "prize", entry fee for a "job", deposit before viewing,
+# full prepayment on a one-day site, requisites sent in a chat, "love" met online).
+# Each pattern needs the lure context, so honest payments (state duty, contract prepayment) stay quiet.
+PATTERNS_PAYMENT_LURE: List[str] = [
+    r"(?:посылк\w*|груз\w*|курьер\w*).{0,80}(?:таможн\w*|пошлин\w*|застрял\w*|задержан\w*)",
+    r"(?:курьер|жүк|жөнелтім|сәлемдеме).{0,80}(?:кеден\w*|баж|бөгел\w*)",
+    r"(?:выигр\w*|лотере\w*|приз\w*|розыгрыш\w*|ұтыс\w*|ұтт\w*).{0,80}(?:налог\w*|комисси\w*|сбор\w*|салық\w*)",
+    r"вступительн\w*\s+взнос",
+    r"(?:кіру|қабылдау)\s+жарна\w*",
+    r"(?:подработк\w*|работ[ауе]\s+на\s+дому|вакан\w*|жұмысқа\s+ал\w*).{0,80}(?:взнос|оплат\w*\s+обучен\w*|сначала\s+нужн\w*|алдымен)",
+    r"(?:залог|задаток|бронь|кепілақы)\w*.{0,80}(?:до\s+просмотр\w*|не\s+(?:видел\w*|смотрел\w*|была|был|приезжал\w*)|ещ[ее]\s+не\s+(?:была|был|видел\w*))",
+    r"көрген\s+жоқпын",
+    r"полн\w*\s+предоплат\w*",
+    r"толық\s+алдын\s+ала",
+    r"однодневк\w*",
+    r"(?:карт\w*|номер\w*|реквизит\w*|счет\w*).{0,40}(?:скинул\w*|кинул\w*|прислал\w*)\s+(?:мне\s+)?(?:в|через)\s+(?:чат\w*|мессенджер\w*|whatsapp|ватсап\w*|telegram|телеграм\w*|инстаграм\w*)",
+    r"(?:прислал\w*|скинул\w*|кинул\w*)\s+(?:мне\s+)?(?:номер|реквизит)\w*\s+(?:карт\w*\s+)?(?:в|через)\s+(?:чат\w*|мессенджер\w*|whatsapp|ватсап\w*|telegram)",
+    r"(?:познаком\w*|знаком\w*)\s+(?:в|через)\s+(?:интернет\w*|сет[иь]|соцсет\w*|мессенджер\w*|приложен\w*).{0,100}(?:оплат\w*|помощ\w*|перев\w*|билет\w*)",
+    r"(?:интернетте|желіде|әлеуметтік\s+желі\w*)\s+таныс\w*.{0,100}(?:ақша|аудар\w*|төле\w*|көмек)",
+]
+
+
+def detect_payment_lure(text: str) -> bool:
+    """True when the text describes an advance-fee scheme (see PATTERNS_PAYMENT_LURE)."""
+    return match_any(PATTERNS_PAYMENT_LURE, text)
+
+
 def fallback_parse(text: str) -> ScamSignalExtraction:
     """
     Deterministic fast parsing executed in < 5ms.
@@ -200,6 +229,7 @@ def fallback_parse(text: str) -> ScamSignalExtraction:
     has_safe_account = (
         match_any(PATTERNS_SAFE_ACCOUNT, text) or match_any(PATTERNS_INVESTMENT_LURE, text)
     )
+    has_payment_lure = detect_payment_lure(text)
     has_urgency = match_any(PATTERNS_URGENCY, text)
     has_third_party = match_any(PATTERNS_THIRD_PARTY, text)
     has_emotional = match_any(PATTERNS_EMOTIONAL, text)
@@ -227,6 +257,8 @@ def fallback_parse(text: str) -> ScamSignalExtraction:
         reasons.append("упоминание силовых структур или 'службы безопасности'")
     if has_third_party:
         reasons.append("перевод по указанию третьих лиц по телефону")
+    if has_payment_lure:
+        reasons.append("схема предоплаты/сбора (пошлина, налог, залог, взнос незнакомцу)")
     if has_urgency:
         reasons.append("признаки искусственной спешки")
     if has_emotional:
@@ -248,5 +280,6 @@ def fallback_parse(text: str) -> ScamSignalExtraction:
         explanation_summary=explanation,
         language=lang,
         source="fallback",
-        latency_ms=round(elapsed_ms, 2)
+        latency_ms=round(elapsed_ms, 2),
+        payment_lure=has_payment_lure,
     )

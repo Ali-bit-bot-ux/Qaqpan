@@ -12,6 +12,10 @@ import tempfile
 import pytest
 
 _TMP_DIR = tempfile.mkdtemp(prefix="qaqpan_tests_")
+# Tests must be offline and deterministic: blank keys (load_dotenv never overrides a set variable)
+# force the regex fallback instead of real Gemini/Groq calls.
+os.environ["GEMINI_API_KEY"] = ""
+os.environ["GROQ_API_KEY"] = ""
 os.environ["DATABASE_URL"] = f"sqlite:///{_TMP_DIR.replace(os.sep, '/')}/test.db"
 
 
