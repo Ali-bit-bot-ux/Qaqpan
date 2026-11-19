@@ -11,6 +11,7 @@ Metrics:
 """
 
 from dataclasses import dataclass, asdict
+import re
 import json
 import os
 import sys
@@ -30,6 +31,9 @@ except ImportError:
     from rules_engine import RulesEngine, TransactionContext, RiskLevel
     from adversarial_robot import AdversarialScenario
 
+
+# Fresh evaluation sets: holdout, holdout2, holdout3...
+HOLDOUT_SPLIT = re.compile(r"holdout\d*")
 
 # Modelled delay assumptions (synthetic prototype, not measured on real clients).
 QUESTION_ANSWER_SECONDS: float = 15.0  # Client reads and answers one question
@@ -99,7 +103,7 @@ class BenchmarkEvaluator:
         start_time = time.time()
 
         # Filter by split if requested
-        if split in ("train", "test", "holdout", "holdout2"):
+        if split in ("train", "test") or HOLDOUT_SPLIT.fullmatch(split):
             dataset = [s for s in scenarios if s.get("split", "test") == split]
         else:
             dataset = scenarios

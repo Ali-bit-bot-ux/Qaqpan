@@ -57,3 +57,39 @@ def test_holdout2_is_fresh_balanced_and_committed():
     seen = {s["answer_text"] for s in _load("scenarios_500.json")} | {s["answer_text"] for s in build_holdout()}
     assert not ({s["answer_text"] for s in data} & seen)
     assert _load("scenarios_holdout2.json") == data
+
+
+def test_holdout3_is_fresh_realistic_and_committed():
+    from backend.app.benchmark.holdout2_dataset import build_holdout2
+    from backend.app.benchmark.holdout3_dataset import build_holdout3
+
+    data = build_holdout3()
+    assert len(data) == 70
+    assert sum(s["is_scam"] for s in data) == 25            # realistic: most traffic is legitimate
+    assert {s["language"] for s in data} == {"ru", "kz"}
+    assert [s["id"] for s in data] == list(range(3001, 3071))
+    assert any(s["attack_vector"] == "coached_masked" for s in data)
+    seen = ({s["answer_text"] for s in _load("scenarios_500.json")}
+            | {s["answer_text"] for s in build_holdout()}
+            | {s["answer_text"] for s in build_holdout2()})
+    assert not ({s["answer_text"] for s in data} & seen)
+    assert _load("scenarios_holdout3.json") == data
+
+
+def test_api_only_accepts_known_holdout_names(monkeypatch):
+    from backend.app.api.benchmark import run_simulation
+
+    ok = run_simulation(split="holdout3", count=500)
+    assert ok["status"] == "success" and ok["benchmark"]["total_scenarios"] == 70
+    # A path-like split must never be turned into a file name.
+    bad = run_simulation(split="../../etc/passwd", count=500)
+    assert bad["status"] == "success"  # falls back to a normal split, never reads another file
+    assert bad["benchmark"]["split"] == "full"
+
+
+def test_unknown_holdout_name_is_an_error_and_creates_no_file():
+    from backend.app.api.benchmark import run_simulation
+
+    res = run_simulation(split="holdout9", count=500)
+    assert res["status"] == "error"
+    assert not os.path.exists(os.path.join(BENCH, "scenarios_holdout9.json"))
