@@ -27,6 +27,7 @@ from statistics import median
 from ..config import (
     ANSWER_TIMEOUT_SECONDS,
     CLIENT_TYPICAL_AMOUNT,
+    COOLING_PERIOD_SECONDS,
     TRUSTED_TIMEOUT_SECONDS,
     TYPICAL_AMOUNT_HISTORY_LIMIT,
     TYPICAL_AMOUNT_MIN_SAMPLES,
@@ -242,6 +243,12 @@ async def stop_timeout_tasks() -> None:
     _timeout_tasks.clear()
 
 
+def cooling_seconds_left(rec: TransferRecord) -> int:
+    """Seconds until cooling-off ends; it started when the record entered COOLING_OFF (updated_at)."""
+    elapsed = (datetime.utcnow() - rec.updated_at).total_seconds()
+    return max(0, int(COOLING_PERIOD_SECONDS - elapsed + 0.999))
+
+
 def record_to_response(rec: TransferRecord) -> TransferResponse:
     trusted = None
     if rec.trusted_contact_name:
@@ -268,6 +275,7 @@ def record_to_response(rec: TransferRecord) -> TransferResponse:
         alert_reason_kz=rec.alert_reason_kz,
         cooling_warning_ru=COOLING_WARNING_RU if rec.status == TransferStatus.COOLING_OFF.value else None,
         cooling_warning_kz=COOLING_WARNING_KZ if rec.status == TransferStatus.COOLING_OFF.value else None,
+        cooling_seconds_left=cooling_seconds_left(rec) if rec.status == TransferStatus.COOLING_OFF.value else None,
         created_at=rec.created_at,
         updated_at=rec.updated_at
     )
@@ -516,6 +524,12 @@ async def confirm_transfer_by_client(
         raise HTTPException(status_code=404, detail="Transfer not found")
     if rec.status != TransferStatus.COOLING_OFF.value:
         raise HTTPException(status_code=409, detail="Transfer is not in cooling-off")
+    left = cooling_seconds_left(rec)
+    if left > 0:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Cooling-off period not over: {left} seconds left. You can cancel or ask the bank now.",
+        )
     resp = commit_transition(db, rec, TransferStatus.COMPLETED)
     if resp is None:
         raise HTTPException(status_code=409, detail="Transfer state changed")

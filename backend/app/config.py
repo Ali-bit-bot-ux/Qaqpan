@@ -32,6 +32,9 @@ CLIENT_TYPICAL_AMOUNT: float = env_float("CLIENT_TYPICAL_AMOUNT", 50000.0)
 # Typical amount = median of the client's last completed LOW-risk transfers, once there are enough.
 TYPICAL_AMOUNT_MIN_SAMPLES: int = env_int("TYPICAL_AMOUNT_MIN_SAMPLES", 3)
 TYPICAL_AMOUNT_HISTORY_LIMIT: int = env_int("TYPICAL_AMOUNT_HISTORY_LIMIT", 20)
+# Cooling-off delay after the trusted person stays silent: the client may cancel or ask the bank
+# at once, but can only confirm on their own after this many seconds (idea: minutes; demo: 30 s).
+COOLING_PERIOD_SECONDS: int = env_int("COOLING_PERIOD_SECONDS", 30)
 # Seconds the client has to answer the question before the transfer is cancelled.
 ANSWER_TIMEOUT_SECONDS: int = env_int("ANSWER_TIMEOUT_SECONDS", 300)
 

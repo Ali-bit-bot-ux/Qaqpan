@@ -75,6 +75,9 @@ class TransferResponse(BaseModel):
     alert_reason_kz: Optional[str] = None
     cooling_warning_ru: Optional[str] = None
     cooling_warning_kz: Optional[str] = None
+    cooling_seconds_left: Optional[int] = Field(
+        None, description="While COOLING_OFF: seconds until the client may confirm on their own (0 = now)"
+    )
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 

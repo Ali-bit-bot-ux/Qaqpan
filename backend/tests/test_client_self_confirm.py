@@ -1,5 +1,6 @@
 """Cooling-off exit: the client may confirm their own transfer after the repeated warning."""
 import uuid
+from datetime import datetime, timedelta
 
 import pytest
 from fastapi.testclient import TestClient
@@ -29,12 +30,15 @@ def env():
     app.dependency_overrides.clear()
 
 
-def _seed(Session, status: str) -> str:
+def _seed(Session, status: str, age_seconds: float = 3600) -> str:
+    """Seed a transfer that entered its current status age_seconds ago (default: long ago)."""
     tid = f"tr_{uuid.uuid4().hex[:8]}"
+    when = datetime.utcnow() - timedelta(seconds=age_seconds)
     with Session() as db:
         db.add(TransferRecord(
             transfer_id=tid, client_id="c1", recipient_account="KZ1", recipient_name="n",
             amount=700000.0, status=status, risk_tier="HIGH", risk_score=75,
+            created_at=when, updated_at=when,
         ))
         db.commit()
     return tid
@@ -82,3 +86,32 @@ def test_confirm_twice_second_is_409(env):
     tid = _seed(Session, "COOLING_OFF")
     assert client.post(f"/api/v1/transfers/{tid}/confirm", json={"warning_acknowledged": True}).status_code == 200
     assert client.post(f"/api/v1/transfers/{tid}/confirm", json={"warning_acknowledged": True}).status_code == 409
+
+
+# --- cooling period: the client must wait before confirming on their own --------------------
+def test_confirm_blocked_until_cooling_period_ends(env):
+    client, Session = env
+    tid = _seed(Session, "COOLING_OFF", age_seconds=1)
+    r = client.post(f"/api/v1/transfers/{tid}/confirm", json={"warning_acknowledged": True})
+    assert r.status_code == 409
+    assert "seconds left" in r.json()["detail"]
+    assert _status(Session, tid) == "COOLING_OFF"
+
+
+def test_cancel_and_manual_review_are_allowed_during_cooling_period(env):
+    client, Session = env
+    t1 = _seed(Session, "COOLING_OFF", age_seconds=1)
+    t2 = _seed(Session, "COOLING_OFF", age_seconds=1)
+    assert client.post(f"/api/v1/transfers/{t1}/cancel").status_code == 200
+    r = client.post(f"/api/v1/transfers/{t2}/manual-review", json={"warning_acknowledged": True})
+    assert r.status_code == 200
+
+
+def test_countdown_is_exposed_only_while_cooling(env):
+    client, Session = env
+    fresh = client.get(f"/api/v1/transfers/{_seed(Session, 'COOLING_OFF', age_seconds=1)}").json()
+    assert 0 < fresh["cooling_seconds_left"] <= 30
+    done = client.get(f"/api/v1/transfers/{_seed(Session, 'COOLING_OFF')}").json()
+    assert done["cooling_seconds_left"] == 0
+    other = client.get(f"/api/v1/transfers/{_seed(Session, 'TRUSTED_PENDING')}").json()
+    assert other["cooling_seconds_left"] is None
