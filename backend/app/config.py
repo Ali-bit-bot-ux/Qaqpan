@@ -27,8 +27,13 @@ def env_int(name: str, default: int) -> int:
 
 # Seconds the trusted person has to answer (the idea suggests 15 min = 900; demo default is 30).
 TRUSTED_TIMEOUT_SECONDS: int = env_int("TRUSTED_TIMEOUT_SECONDS", 30)
-# Amount treated as "usual" for a client until per-client history is modelled.
+# Amount treated as "usual" for a client with too little history (see TYPICAL_AMOUNT_MIN_SAMPLES).
 CLIENT_TYPICAL_AMOUNT: float = env_float("CLIENT_TYPICAL_AMOUNT", 50000.0)
+# Typical amount = median of the client's last completed LOW-risk transfers, once there are enough.
+TYPICAL_AMOUNT_MIN_SAMPLES: int = env_int("TYPICAL_AMOUNT_MIN_SAMPLES", 3)
+TYPICAL_AMOUNT_HISTORY_LIMIT: int = env_int("TYPICAL_AMOUNT_HISTORY_LIMIT", 20)
+# Seconds the client has to answer the question before the transfer is cancelled.
+ANSWER_TIMEOUT_SECONDS: int = env_int("ANSWER_TIMEOUT_SECONDS", 300)
 
 
 def parse_cors_origins() -> list[str]:

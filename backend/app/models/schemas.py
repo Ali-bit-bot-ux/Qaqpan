@@ -32,6 +32,10 @@ class TransferCreate(BaseModel):
     amount: float = Field(..., gt=0, le=1_000_000_000, description="Amount in KZT, positive, at most 1 billion")
     currency: str = Field(default="KZT", min_length=3, max_length=8, description="Currency code (KZT)")
     language: Literal["ru", "kz"] = Field(default="ru", description="Client language: 'ru' or 'kz'")
+    trusted_contact_name: Optional[str] = Field(None, min_length=1, max_length=128, pattern=r"\S",
+                                                description="Optional trusted person, e.g. Данияр (Сын)")
+    trusted_contact_phone: Optional[str] = Field(None, min_length=1, max_length=32, pattern=r"\S",
+                                                 description="Optional masked phone of the trusted person")
 
     model_config = ConfigDict(
         json_schema_extra={

@@ -22,7 +22,15 @@ from ..models.schemas import (
     ClientConfirmRequest,
     TrustedContactInfo
 )
-from ..config import CLIENT_TYPICAL_AMOUNT, TRUSTED_TIMEOUT_SECONDS
+from statistics import median
+
+from ..config import (
+    ANSWER_TIMEOUT_SECONDS,
+    CLIENT_TYPICAL_AMOUNT,
+    TRUSTED_TIMEOUT_SECONDS,
+    TYPICAL_AMOUNT_HISTORY_LIMIT,
+    TYPICAL_AMOUNT_MIN_SAMPLES,
+)
 from ..core.state_machine import TransferStateMachine, InvalidStateTransitionError
 from ..core.events import event_bus
 from ..core.rules_engine import RulesEngine, TransactionContext, RiskLevel, NextAction, ScoringResult
@@ -43,6 +51,25 @@ COOLING_WARNING_KZ = (
     "Жақыныңыз жауап бермеді. Аударым орындалған жоқ. Бейтаныс адамдардың нұсқауымен ақша аудармаңыз. "
     "Аударымнан бас тартуға немесе банктің тексеруін сұрауға болады. Тексеру сұрауы аударымды орындамайды."
 )
+
+
+def _typical_amount(db: Session, client_id: str, current_transfer_id: str | None) -> float:
+    """Median of the client's recent completed LOW-risk transfers; default when history is thin.
+
+    HIGH/MEDIUM completions (e.g. a scam the trusted person approved) are ignored so
+    they cannot teach the system that large transfers are normal.
+    """
+    query = db.query(TransferRecord.amount).filter(
+        TransferRecord.client_id == client_id,
+        TransferRecord.status == TransferStatus.COMPLETED.value,
+        TransferRecord.risk_tier == RiskTier.LOW.value,
+    )
+    if current_transfer_id is not None:
+        query = query.filter(TransferRecord.transfer_id != current_transfer_id)
+    amounts = [a for (a,) in query.order_by(TransferRecord.created_at.desc()).limit(TYPICAL_AMOUNT_HISTORY_LIMIT)]
+    if len(amounts) < TYPICAL_AMOUNT_MIN_SAMPLES:
+        return CLIENT_TYPICAL_AMOUNT
+    return float(median(amounts))
 
 
 def _build_context(
@@ -74,7 +101,7 @@ def _build_context(
         is_new_recipient=known_recipient is None,
         transfer_hour=datetime.now().hour,
         frequency_last_hour=recent_count + 1,
-        client_typical_amount=CLIENT_TYPICAL_AMOUNT,
+        client_typical_amount=_typical_amount(db, client_id, current_transfer_id),
         recipient_account=recipient_account,
         client_id=client_id,
     )
@@ -335,8 +362,8 @@ async def create_transfer(
         risk_score=risk_score,
         challenge_question=QUESTION_RU if current_status == TransferStatus.AWAITING_ANSWER else None,
         challenge_question_kz=QUESTION_KZ if current_status == TransferStatus.AWAITING_ANSWER else None,
-        trusted_contact_name=TRUSTED_CONTACT_NAME,
-        trusted_contact_phone=TRUSTED_CONTACT_PHONE,
+        trusted_contact_name=payload.trusted_contact_name or TRUSTED_CONTACT_NAME,
+        trusted_contact_phone=payload.trusted_contact_phone or TRUSTED_CONTACT_PHONE,
         timeout_seconds=timeout_seconds,
         detected_signals=signals,
         alert_reason_ru=alert_ru,
@@ -380,6 +407,12 @@ async def submit_client_answer(
             status_code=400,
             detail=f"Transfer is in status {current_status.value}, cannot submit answer"
         )
+
+    if (datetime.utcnow() - rec.updated_at).total_seconds() > ANSWER_TIMEOUT_SECONDS:
+        expired = commit_transition(db, rec, TransferStatus.CANCELLED)
+        if expired is not None:
+            await event_bus.publish("transfer_cancelled", expired.model_dump(mode="json"))
+        raise HTTPException(status_code=409, detail="Answer window expired, transfer cancelled")
 
     expected_updated_at = rec.updated_at
     ctx = _build_context(
