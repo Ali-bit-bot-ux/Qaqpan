@@ -1,3 +1,4 @@
+import { profile } from "../../../lib/profile-data";
 import type { components } from "../../schema";
 export async function GET() {
   const origin = process.env.QAQPAN_API_ORIGIN || "http://127.0.0.1:8000";
@@ -11,7 +12,7 @@ export async function GET() {
       await result.json();
     return Response.json(
       feed.cards
-        .filter((row) => row.client_id === "demo-client")
+        .filter((row) => row.client_id === profile.clientId)
         .map(({ transfer_id, recipient_name, created_at, amount, status }) => ({
           transfer_id,
           recipient_name,
