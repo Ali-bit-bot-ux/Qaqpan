@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { ApiError } from "../lib/api";
 import { useStoredValue } from "../lib/storage";
 import type { components } from "./schema";
 export type Models = components["schemas"];
@@ -16,7 +17,10 @@ export async function api<T>(path: string, body?: unknown): Promise<T> {
     body: JSON.stringify(body),
     cache: "no-store",
   });
-  if (!res.ok) throw new Error(String(res.status));
+  if (!res.ok) {
+    const payload = await res.json().catch(() => null);
+    throw new ApiError(res.status, payload?.detail, path);
+  }
   return res.json();
 }
 export function useData<T>(path: string) {

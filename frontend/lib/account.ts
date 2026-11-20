@@ -1,3 +1,4 @@
+import { profile } from "./profile-data";
 import type { components } from "../app/schema";
 
 export type Entry = Pick<
@@ -22,7 +23,7 @@ const fixtures: ReadonlyArray<
   [6, "Beeline", "Beeline", 3490, "utilities"],
   [8, "Аренда квартиры", "Пәтер жалдау", 85000, "home"],
   [9, "Kaspi QR", "Kaspi QR", 4200, "qr"],
-  [10, "Айгерим", "Айгерім", 20000, "transfer"],
+  [10, ...profile.trustedName, 20000, "transfer"],
   [12, "Kazakhtelecom", "Қазақтелеком", 7400, "utilities"],
   [14, "Magnum", "Magnum", 11460, "groceries"],
   [15, "Small", "Small", 6820, "groceries"],
@@ -33,7 +34,7 @@ const fixtures: ReadonlyArray<
   [24, "Алматы Су", "Алматы Су", 2940, "utilities"],
   [26, "Small", "Small", 12400, "groceries"],
   [28, "Magnum", "Magnum", 15120, "groceries"],
-  [29, "Айгерим", "Айгерім", 10000, "transfer"],
+  [29, ...profile.trustedName, 10000, "transfer"],
   [31, "Kaspi QR", "Kaspi QR", 2800, "qr"],
   [33, "Beeline", "Beeline", 3490, "utilities"],
   [34, "Пенсия", "Зейнетақы", -174500, "income"],
@@ -44,7 +45,7 @@ const fixtures: ReadonlyArray<
   [43, "Арман", "Арман", 5000, "transfer"],
   [45, "Kaspi QR", "Kaspi QR", 4500, "qr"],
   [48, "Magnum", "Magnum", 11050, "groceries"],
-  [50, "Айгерим", "Айгерім", 15000, "transfer"],
+  [50, ...profile.trustedName, 15000, "transfer"],
   [52, "Small", "Small", 6600, "groceries"],
   [55, "Kaspi QR", "Kaspi QR", 3200, "qr"],
   [58, "Magnum", "Magnum", 12460, "groceries"],

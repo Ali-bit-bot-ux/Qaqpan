@@ -2,15 +2,16 @@
 import { useState, useEffect, type ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Fingerprint, Languages } from "lucide-react";
+import { profile } from "../lib/profile-data";
 import { useStoredValue } from "../lib/storage";
 import { Language, Sync } from "./shared";
 const screens = {
   client: [
-    ["Сауле К. · Личный кабинет", "Сәуле К. · Жеке кабинет"],
+    ["Личный кабинет", "Жеке кабинет"],
     ["Мой банк", "Менің банкім"],
   ],
   trusted: [
-    ["Доверенное лицо · Айгерим", "Сенімді тұлға · Айгерім"],
+    ["Доверенное лицо", "Сенімді тұлға"],
     ["Запросы близких", "Жақындардың сұраулары"],
   ],
   analyst: [
@@ -44,19 +45,22 @@ export default function RoleScreen({
               <Fingerprint aria-hidden />
               Қақпан
             </b>
-            <span>{label[lang]}</span>
+            <span>
+              {label[lang]}
+              {role === "trusted" && <> / {profile.trustedName[lang]}</>}
+            </span>
             <button
               className="language"
               onClick={() => {
                 setLanguage(kz ? "ru" : "kz");
               }}
             >
-              <Languages size={17} />
+              <Languages size={17} aria-hidden="true" />
               {kz ? "Русский" : "Қазақша"}
             </button>
           </header>
           <main>
-            <h1>{title[lang]}</h1>
+            {role !== "client" && <h1>{title[lang]}</h1>}
             {children}
           </main>
         </div>

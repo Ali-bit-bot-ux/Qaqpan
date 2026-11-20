@@ -1,0 +1,357 @@
+.portal-client .masthead {
+  padding: 8px max(18px, calc((100% - 1040px) / 2));
+  min-height: 62px;
+}
+.portal-client .masthead span {
+  display: none;
+}
+.portal-client .masthead b {
+  font-size: 24px;
+}
+.portal-client main {
+  max-width: 1080px;
+  padding: 24px 16px 40px;
+}
+.portal-client h1 {
+  font-size: clamp(22px, 4vw, 28px);
+  margin: 0 0 18px;
+}
+.portal-client h2 {
+  font-size: 16px;
+  margin: 0 0 14px;
+  letter-spacing: -0.015em;
+}
+.client-columns {
+  display: grid;
+  gap: 18px;
+  align-items: start;
+}
+.client-primary,
+.client-columns > * {
+  min-width: 0;
+}
+.balance-panel {
+  background: var(--green-900);
+  color: white;
+  border: none;
+  padding: 18px;
+  border-radius: var(--card-radius);
+}
+.balance-top,
+.balance-reserve,
+.balance-card,
+.protection-heading,
+.statement-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.balance-top {
+  font-size: 14px;
+  color: #e2ede7;
+}
+.balance-top svg,
+.protection-heading svg {
+  color: var(--gold);
+  flex: none;
+}
+.balance-amount {
+  display: block;
+  font-size: clamp(28px, 9vw, 40px);
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+  margin-block: 3px 12px;
+  overflow-wrap: anywhere;
+}
+.balance-reserve {
+  font-size: 12px;
+  color: #e2ede7;
+}
+.balance-reserve strong {
+  white-space: nowrap;
+}
+.balance-card {
+  justify-content: start;
+  border-top: 1px solid #517468;
+  padding-top: 6px;
+  margin-top: 13px;
+  font-size: 12px;
+  color: #e2ede7;
+}
+.balance-card b {
+  margin-left: 4px;
+  color: white;
+}
+.balance-card button,
+.bank-back {
+  margin: 0;
+  background: transparent;
+  border: 0;
+}
+.balance-card button {
+  margin-left: auto;
+  color: white;
+}
+.balance-card button:hover:enabled {
+  background: #36594e;
+}
+.client-actions {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  margin: 12px 0 18px;
+}
+.client-actions .bank-chip {
+  display: grid;
+  justify-items: center;
+  padding: 9px 2px;
+  gap: 3px;
+  font-size: 12px;
+  border-radius: 10px;
+  background: transparent;
+}
+.client-actions .bank-chip svg {
+  width: 19px;
+  height: 19px;
+}
+.client-actions .bank-chip[aria-pressed="true"],
+.client-actions .bank-chip:hover {
+  background: #e1e9e4;
+}
+.client-recipients {
+  margin: 0 0 17px;
+}
+.client-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.client-chips .bank-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  min-height: 40px;
+}
+.client-chips span {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #cde1d4;
+  font-size: 12px;
+}
+.client-statement,
+.client-subpanel,
+.protection-summary,
+.client-transfer-panel {
+  border: 1px solid #dde5df;
+  padding: 16px;
+}
+.client-primary section + section {
+  margin-top: 12px;
+}
+.client-subpanel {
+  margin-bottom: 18px;
+}
+.statement-mode {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.statement-toolbar h2,
+.statement-filter {
+  margin: 0;
+}
+.statement-filter {
+  font-size: 14px;
+  max-width: 49%;
+}
+.statement-day h3 {
+  font-size: 12px;
+  font-weight: 550;
+  color: var(--muted);
+  margin: 10px 0 2px;
+}
+.bank-operation {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid #e7ede9;
+}
+.bank-operation summary {
+  min-height: 62px;
+  display: grid;
+  align-items: center;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.bank-operation summary::marker {
+  content: "";
+}
+.operation-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--green-900);
+  background: #e7ede9;
+}
+.operation-label {
+  display: grid;
+  overflow-wrap: anywhere;
+}
+.operation-label small {
+  color: var(--muted);
+  font-size: 12px;
+}
+.operation-label .status {
+  padding: 0;
+  font-size: 12px;
+  background: transparent;
+}
+.operation-credit {
+  color: var(--risk-low);
+}
+.bank-receipt {
+  margin: 0;
+}
+.bank-receipt div,
+.protection-summary dl div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding-block: 8px;
+  border-top: 1px solid #e7ede9;
+  font-size: 14px;
+}
+.bank-receipt dd,
+.protection-summary dd {
+  margin: 0;
+  text-align: end;
+  overflow-wrap: anywhere;
+}
+.bank-receipt dt,
+.protection-summary dt {
+  color: var(--muted);
+}
+.protection-heading {
+  justify-content: flex-start;
+  gap: 8px;
+}
+.protection-heading h2 {
+  margin: 0;
+}
+.protection-heading .bank-badge {
+  margin-left: auto;
+}
+.protection-summary dl {
+  margin: 12px 0 0;
+}
+.bank-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  margin-bottom: 8px;
+}
+.client-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #eaf2ed;
+  padding: 12px;
+  border-radius: 10px;
+  margin-block: 14px;
+}
+.client-status > svg {
+  color: var(--gold);
+  flex: none;
+}
+.client-status p {
+  margin: 4px 0 0;
+  font-size: 14px;
+}
+.client-status .status {
+  background: transparent;
+  padding: 0;
+}
+.client-status[data-status="BLOCKED"] {
+  background: #ffefeb;
+}
+.client-status[data-status="COOLING_OFF"],
+.client-status[data-status="AWAITING_ANSWER"] {
+  background: #fff3de;
+}
+.transfer-total {
+  display: grid;
+  gap: 2px;
+}
+.transfer-total small,
+.transfer-available {
+  color: var(--muted);
+}
+.transfer-amount {
+  font-size: 32px;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+  font-weight: 700;
+  margin: 0;
+}
+.bank-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.client-transfer-panel input[aria-invalid="true"],
+.client-transfer-panel textarea[aria-invalid="true"] {
+  border-color: var(--risk-high);
+}
+.client-transfer-panel .bank-timer {
+  margin-bottom: 8px;
+}
+.client-transfer-panel .bank-error {
+  border: 0;
+}
+.client-cooling {
+  border-top: 1px solid #e7ede9;
+  padding-top: 4px;
+}
+@media (min-width: 740px) {
+  .portal-client main {
+    padding: 32px 22px 56px;
+  }
+  .client-columns {
+    grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+    gap: 22px;
+  }
+  .balance-panel,
+  .client-transfer-panel {
+    padding: 24px;
+  }
+}
+@media (max-width: 739px) {
+  .client-home .client-primary {
+    display: contents;
+  }
+  .client-home .client-columns {
+    gap: 14px;
+  }
+  .client-home .client-actions,
+  .client-home .client-recipients,
+  .client-home .client-subpanel {
+    margin: 0;
+  }
+  .client-home .client-statement {
+    order: 1;
+  }
+}
