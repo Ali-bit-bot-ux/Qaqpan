@@ -148,7 +148,9 @@ function Statement({ entries }: { entries: Entry[] }) {
                     <strong>{name}</strong>
                     <small>
                       {row.fixture ? (
-                        names[row.category ?? "transfer"]
+                        names[row.category ?? "transfer"] +
+                        " / " +
+                        t("Учебные данные", "Оқу деректері")
                       ) : (
                         <Status value={row.status} />
                       )}
@@ -339,9 +341,9 @@ export default function AccountHome({
               </p>
               <div className="client-chips">
                 {[
-                  ["Алматы Су", "TEST-WATER"],
-                  ["Beeline", "TEST-MOBILE"],
-                  ["Kazakhtelecom", "TEST-INTERNET"],
+                  ["Алматы Су", "KZ000000000000000201"],
+                  ["Beeline", "KZ000000000000000202"],
+                  ["Kazakhtelecom", "KZ000000000000000203"],
                 ].map(([name, number]) => (
                   <Chip key={number} onClick={() => onTransfer(name, number)}>
                     {name}

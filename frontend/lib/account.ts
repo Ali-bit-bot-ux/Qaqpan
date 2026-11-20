@@ -84,8 +84,9 @@ export function accountSnapshot(remote: Entry[], active?: Entry) {
     if (!recent || pending.has(recent.status))
       real.set(active.transfer_id, active);
   }
+  const fixturesVisible = real.size < 15;
   const entries = real.size
-    ? [...real.values()].sort(
+    ? [...real.values(), ...(fixturesVisible ? sample : [])].sort(
         (a, b) => +dateValue(b.created_at) - +dateValue(a.created_at),
       )
     : sample;
@@ -109,6 +110,6 @@ export function accountSnapshot(remote: Entry[], active?: Entry) {
     balance,
     reserved: reserved / 100,
     available: balance - reserved / 100,
-    fixture: !real.size,
+    fixture: fixturesVisible,
   };
 }

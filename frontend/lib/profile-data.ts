@@ -6,8 +6,10 @@ export const profile = {
   cardholder: "SAULE K.",
   lastFour: "4821",
   trustedName,
+  motherPhone: "+77000000000",
+  exampleAccount: "KZ000000000000000103",
   contacts: [
-    { account: "TEST-FAMILY-01", name: trustedName },
-    { account: "TEST-FAMILY-02", name: ["Арман", "Арман"] },
+    { account: "KZ000000000000000101", name: trustedName },
+    { account: "KZ000000000000000102", name: ["Арман", "Арман"] },
   ],
 } as const;

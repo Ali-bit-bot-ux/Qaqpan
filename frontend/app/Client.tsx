@@ -5,6 +5,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 import { dateValue } from "../lib/account";
 import { ApiError, capabilities, type Transfer } from "../lib/api";
+import {
+  formatAmount,
+  formatRecipient,
+  parseAmount,
+} from "../lib/transfer-input";
 import { useProfile } from "../lib/profile";
 import { useAccount } from "../lib/useAccount";
 import AccountHome, { Protection } from "./AccountHome";
@@ -75,24 +80,26 @@ export default function Client() {
   const query = useData<Transfer>(id ? "/transfers/" + id : "");
   const action = useAction();
   const transfer = query.data;
-  const { firstName, trustedName, contacts, clientId } = useProfile(
-    transfer?.trusted_contact,
-  );
+  const { lastFour, exampleAccount, trustedName, contacts, clientId } =
+    useProfile(transfer?.trusted_contact);
   const account = useAccount(transfer);
   const [view, setView] = useState<"home" | "transfer" | null>(null);
   const [draft, setDraft] = useState(blank);
   const [step, setStep] = useState(0);
+  const [inputError, setInputError] = useState("");
   const [read, setRead] = useState(false);
   const terminal = Boolean(transfer && terminalStates.has(transfer.status));
   const home = view === "home" || (view === null && !id);
   const setField = (key: keyof typeof draft, value: string) => {
     action.reset();
+    setInputError("");
     setDraft((current) => ({ ...current, [key]: value }));
   };
   const openTransfer = (name = "", number = "") => {
     if (!id || terminal || query.error?.message === "404") {
       save("");
       setStep(name ? 1 : 0);
+      setInputError("");
       setDraft({ ...blank, name, account: number });
       setRead(false);
       action.reset();
@@ -110,6 +117,17 @@ export default function Client() {
   const create = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (step < 2) {
+      const recipient = formatRecipient(draft.account);
+      if (step === 0 && !recipient) {
+        setInputError("account");
+        return;
+      }
+      if (step === 1 && !(parseAmount(draft.amount) > 0)) {
+        setInputError("amount");
+        return;
+      }
+      if (step === 0 && recipient) setDraft({ ...draft, account: recipient });
+      setInputError("");
       setStep(step + 1);
       return;
     }
@@ -117,8 +135,8 @@ export default function Client() {
       const result = await api<Transfer>("/transfers", {
         client_id: clientId,
         recipient_name: draft.name.trim(),
-        recipient_account: draft.account.trim(),
-        amount: Number(draft.amount),
+        recipient_account: draft.account.replace(/\s/g, ""),
+        amount: parseAmount(draft.amount),
         currency: "KZT",
         language: t("ru", "kz"),
       });
@@ -193,6 +211,7 @@ export default function Client() {
                               key={contact.account}
                               onClick={() => {
                                 action.reset();
+                                setInputError("");
                                 setDraft({
                                   ...draft,
                                   name: t(contact.name[0], contact.name[1]),
@@ -223,8 +242,11 @@ export default function Client() {
                           {t("Реквизиты получателя", "Алушының деректемелері")}
                           <input
                             autoComplete="off"
-                            aria-invalid={invalid("recipient_account")}
-                            maxLength={64}
+                            aria-invalid={
+                              inputError === "account" ||
+                              invalid("recipient_account")
+                            }
+                            maxLength={28}
                             required
                             pattern=".*\S.*"
                             name="account"
@@ -233,18 +255,19 @@ export default function Client() {
                               setField("account", event.target.value)
                             }
                             placeholder={t(
-                              "Карта, IBAN или телефон",
-                              "Карта, IBAN немесе телефон",
+                              "+7 7XX XXX XX XX или IBAN KZ…",
+                              "+7 7XX XXX XX XX немесе IBAN KZ…",
                             )}
                           />
                         </label>
                         <Chip
                           onClick={() => {
                             action.reset();
+                            setInputError("");
                             setDraft({
                               name: t("Данияр Садыков", "Данияр Садықов"),
-                              account: "TEST-SADYKOV-01",
-                              amount: "250000",
+                              account: exampleAccount,
+                              amount: formatAmount("250000"),
                             });
                           }}
                         >
@@ -259,14 +282,18 @@ export default function Client() {
                           <input
                             name="amount"
                             inputMode="decimal"
-                            type="number"
-                            min="0.01"
-                            step="0.01"
+                            type="text"
+                            maxLength={24}
                             required
-                            aria-invalid={invalid("amount")}
+                            aria-invalid={
+                              inputError === "amount" || invalid("amount")
+                            }
                             value={draft.amount}
                             onChange={(event) =>
-                              setField("amount", event.target.value)
+                              setField(
+                                "amount",
+                                formatAmount(event.target.value),
+                              )
                             }
                           />
                         </label>
@@ -281,7 +308,7 @@ export default function Client() {
                     {step === 2 && (
                       <>
                         <p className="transfer-amount">
-                          <Money amount={Number(draft.amount)} />
+                          <Money amount={parseAmount(draft.amount)} />
                         </p>
                         <dl className="bank-receipt">
                           <div>
@@ -294,7 +321,17 @@ export default function Client() {
                           </div>
                           <div>
                             <dt>{t("Со счёта", "Қай шоттан")}</dt>
-                            <dd>{firstName} / KZT</dd>
+                            <dd>
+                              {t("Карта", "Карта")} •• {lastFour}
+                              <small>
+                                {t("Доступно", "Қолжетімді")}{" "}
+                                {account.snapshot ? (
+                                  <Money amount={account.snapshot.available} />
+                                ) : (
+                                  "—"
+                                )}
+                              </small>
+                            </dd>
                           </div>
                         </dl>
                         <p>
@@ -304,6 +341,19 @@ export default function Client() {
                           )}
                         </p>
                       </>
+                    )}
+                    {inputError && (
+                      <ErrorState>
+                        {inputError === "account"
+                          ? t(
+                              "Укажите телефон +7 7XX XXX XX XX или IBAN из 20 символов, начиная с KZ.",
+                              "+7 7XX XXX XX XX телефонын немесе KZ-ден басталатын 20 таңбалы IBAN нөмірін енгізіңіз.",
+                            )
+                          : t(
+                              "Введите сумму больше нуля.",
+                              "Нөлден үлкен соманы енгізіңіз.",
+                            )}
+                      </ErrorState>
                     )}
                     <ClientError error={action.error} />
                     {step === 2 &&
@@ -318,7 +368,7 @@ export default function Client() {
                         {step === 2
                           ? t("Перевести", "Аудару") +
                             " " +
-                            money(Number(draft.amount))
+                            money(parseAmount(draft.amount))
                           : t("Продолжить", "Жалғастыру")}
                       </Button>
                       {step > 0 && (
