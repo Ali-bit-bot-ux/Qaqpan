@@ -1,0 +1,147 @@
+:root {
+  --green-900: #14352b;
+  --bg: #f2f4f3;
+  --surface: #fff;
+  --gold: #c9a24b;
+  --risk-high: #c8372d;
+  --risk-med: #b7791f;
+  --risk-low: #2f7d5b;
+  --text: #16211d;
+  --muted: #66736d;
+  --card-radius: 16px;
+  --control-radius: 10px;
+  --action: var(--green-900);
+  --ink: var(--text);
+  background: var(--bg);
+}
+body {
+  font-family: var(--bank-font, system-ui, sans-serif);
+}
+.portal {
+  background: var(--bg);
+}
+.portal .masthead {
+  background: var(--green-900);
+}
+.portal .masthead b svg {
+  color: var(--gold);
+}
+.portal h1 {
+  font-size: 28px;
+  letter-spacing: -0.035em;
+}
+.portal :focus-visible {
+  outline: 2px solid var(--risk-low);
+  outline-offset: 3px;
+}
+.bank-surface {
+  background: var(--surface);
+  border-radius: var(--card-radius);
+}
+.bank-button,
+.bank-chip,
+.bank-badge {
+  min-width: 0;
+  margin: 0;
+}
+.bank-button {
+  border-radius: var(--control-radius);
+  padding: 11px 16px;
+  border: 1px solid var(--green-900);
+  background: var(--green-900);
+  color: white;
+}
+.bank-button:hover:enabled {
+  background: #22483b;
+}
+.bank-button[data-variant="quiet"] {
+  background: transparent;
+  border-color: #a9b7af;
+  color: var(--green-900);
+}
+.bank-button[data-variant="quiet"]:hover:enabled,
+.bank-chip:hover:enabled {
+  background: #e7ede9;
+}
+.bank-chip,
+.bank-badge {
+  border-radius: 999px;
+  background: #e7ede9;
+  border: 0;
+  color: var(--green-900);
+}
+.bank-badge {
+  display: inline-block;
+  padding: 4px 9px;
+  font-size: 12px;
+}
+.bank-money,
+time {
+  font-variant-numeric: tabular-nums;
+}
+.bank-steps {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 6px;
+  padding: 0;
+  margin: 0 0 20px;
+  list-style: none;
+  font-size: 12px;
+}
+.bank-steps li {
+  border-top: 3px solid #cbd6ce;
+  padding-top: 6px;
+  color: var(--muted);
+}
+.bank-steps li[data-reached="true"] {
+  border-color: var(--risk-low);
+  color: var(--text);
+}
+.bank-steps li[aria-current] {
+  font-weight: 700;
+}
+.bank-timer {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 68px;
+  block-size: 68px;
+  position: relative;
+}
+.bank-timer svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  transform: rotate(-90deg);
+  fill: none;
+  stroke: #d6e3da;
+  stroke-width: 4;
+}
+.bank-timer circle:last-child {
+  stroke: var(--risk-low);
+}
+.bank-timer time {
+  font-weight: 650;
+}
+.bank-error {
+  background: #fff1ee;
+  color: #8c2820;
+  border-radius: var(--control-radius);
+  padding: 10px 12px;
+}
+.bank-skeleton {
+  min-height: 52px;
+  padding: 16px;
+  border-radius: var(--control-radius);
+  background: #e5ebe7;
+  color: var(--muted);
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

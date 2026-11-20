@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useStoredValue } from "../lib/storage";
 import type { components } from "./schema";
 export type Models = components["schemas"];
 export const Language = createContext(false);
@@ -58,15 +59,7 @@ export function Sync() {
   return null;
 }
 export function useSaved(key: string) {
-  const [id, set] = useState("");
-  useEffect(() => set(sessionStorage.getItem(key) || ""), [key]);
-  return [
-    id,
-    (value: string) => {
-      sessionStorage.setItem(key, value);
-      set(value);
-    },
-  ] as const;
+  return useStoredValue(key, "sessionStorage");
 }
 const states: Record<string, [string, string]> = {
   COMPLETED: ["Перевод выполнен", "Аударым орындалды"],

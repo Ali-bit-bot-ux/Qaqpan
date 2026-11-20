@@ -2,6 +2,7 @@
 import { useState, useEffect, type ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Fingerprint, Languages } from "lucide-react";
+import { useStoredValue } from "../lib/storage";
 import { Language, Sync } from "./shared";
 const screens = {
   client: [
@@ -25,8 +26,8 @@ export default function RoleScreen({
   children: ReactNode;
 }) {
   const [qc] = useState(() => new QueryClient());
-  const [kz, setKz] = useState(false);
-  useEffect(() => setKz(localStorage.getItem("q-lang") === "kz"), []);
+  const [language, setLanguage] = useStoredValue("q-lang", "localStorage");
+  const kz = language === "kz";
   const [label, title] = screens[role];
   const lang = kz ? 1 : 0;
   useEffect(() => {
@@ -47,8 +48,7 @@ export default function RoleScreen({
             <button
               className="language"
               onClick={() => {
-                localStorage.setItem("q-lang", kz ? "ru" : "kz");
-                setKz(!kz);
+                setLanguage(kz ? "ru" : "kz");
               }}
             >
               <Languages size={17} />
