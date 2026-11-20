@@ -212,6 +212,95 @@ class AdversarialRobot:
         ("sanatorium", "Шипажайға демалуға және емделуге жолдаманың ақысын төлеу.", 160000),
     ]
 
+    # Hard legitimate cases for the TEST split only: big, night-time, repeated, new-recipient
+    # payments and honest answers that contain scary-sounding words (lawyer, police, investment,
+    # "he called and asked"). Written independently of the rules; never used to tune them.
+    # (category, text, amount, is_new_recipient, hour, frequency_last_hour, language)
+    HARD_LEGIT_TEST = [
+        ("big_purchase", "Первый взнос застройщику за квартиру по договору долевого участия.", 1800000, True, 14, 1, "ru"),
+        ("big_purchase", "Предоплата за кухонный гарнитур на заказ по подписанному договору.", 650000, True, 12, 1, "ru"),
+        ("tuition_abroad", "Оплата обучения дочери в университете по инвойсу.", 900000, True, 11, 1, "ru"),
+        ("medical_urgent", "Срочно оплатить операцию маме в клинике, выставлен счет на лечение.", 520000, True, 11, 1, "ru"),
+        ("night_travel", "Оплата отеля и такси в поездке, перевод из аэропорта ночью.", 60000, True, 2, 1, "ru"),
+        ("family_asked", "Дочь позвонила и попросила перевести ей на аренду комнаты в другом городе.", 150000, False, 19, 1, "ru"),
+        ("repeat_supplier", "Третий платеж за сегодня поставщику стройматериалов, разгрузка идет частями.", 90000, False, 15, 3, "ru"),
+        ("mortgage", "Ежемесячный взнос по ипотечному кредиту за квартиру.", 380000, False, 10, 1, "ru"),
+        ("broker_deposit", "Пополнение моего брокерского счета на инвестиционной платформе по договору.", 300000, True, 16, 1, "ru"),
+        ("lawyer_fee", "Оплата услуг адвоката по делу о наследстве после отца.", 200000, True, 13, 1, "ru"),
+        ("state_duty", "Госпошлина за регистрацию автомобиля в органах полиции.", 15000, True, 12, 1, "ru"),
+        ("son_asked", "Сын по телефону сказал, что нужны деньги на учебники, перевожу ему.", 40000, False, 18, 1, "ru"),
+        ("late_payment", "Поздний платеж за коммунальные услуги перед отъездом в командировку.", 45000, False, 23, 1, "ru"),
+        ("equipment", "Покупка станка для мастерской у поставщика по счету-фактуре.", 780000, True, 10, 1, "ru"),
+        ("wedding_hall", "Предоплата за банкетный зал на свадьбу сына по договору.", 560000, True, 15, 1, "ru"),
+        ("big_purchase", "Үй құрылысына арналған кірпіш пен цементті шарт бойынша алдын ала төлеу.", 1200000, True, 12, 1, "kz"),
+        ("tuition_abroad", "Қызымның шетелдегі университетте оқуына инвойс бойынша төлем.", 850000, True, 11, 1, "kz"),
+        ("medical_urgent", "Анама жасалатын ота үшін клиникаға шұғыл төлем жасадым.", 540000, True, 10, 1, "kz"),
+        ("night_travel", "Түнгі рейспен ұшып келіп, қонақүй мен таксиге төлем.", 55000, True, 3, 1, "kz"),
+        ("family_asked", "Қызым қоңырау шалып, пәтер жалдауға ақша сұрады, соны аударып жатырмын.", 140000, False, 18, 1, "kz"),
+        ("repeat_supplier", "Бүгінгі үшінші төлем, құрылыс материалдарын жеткізушіге бөліп төлеп жатырмын.", 85000, False, 14, 3, "kz"),
+        ("mortgage", "Ипотекалық несиенің айлық жарнасын төлеу.", 360000, False, 9, 1, "kz"),
+        ("broker_deposit", "Өзімнің брокерлік шотымды инвестициялық платформада шарт бойынша толтыру.", 280000, True, 15, 1, "kz"),
+        ("lawyer_fee", "Әкемнен қалған мұраға байланысты заңгердің қызметіне төлем.", 190000, True, 12, 1, "kz"),
+        ("state_duty", "Көлікті тіркеу үшін полиция органдарына мемлекеттік баж салығы.", 14000, True, 11, 1, "kz"),
+        ("son_asked", "Ұлым телефонмен оқулықтарға ақша керек деп айтты, соған аударып жатырмын.", 38000, False, 17, 1, "kz"),
+        ("late_payment", "Іссапарға кетер алдында коммуналдық қызметтерге кеш төлем.", 42000, False, 23, 1, "kz"),
+        ("equipment", "Шеберханаға станок сатып алу үшін жеткізушіге шот-фактура бойынша төлем.", 760000, True, 10, 1, "kz"),
+        ("wedding_hall", "Ұлымның тойына мейрамхана залына шарт бойынша алдын ала төлем.", 540000, True, 14, 1, "kz"),
+        ("big_purchase", "Жаңа тоңазытқыш пен кір жуғыш машина сатып алуға дүкенге төлем.", 620000, True, 13, 1, "kz"),
+    ]
+
+    # Advance-fee scams for TRAIN (distinct wording from the holdout): fee, tax, deposit or
+    # prepayment demanded by a stranger. The rules may be tuned against these.
+    # (category, text, amount, hour, frequency_last_hour, language)
+    ADVANCE_FEE_TRAIN = [
+        ("advance_fee", "Мне написали, что мою посылку задержали на таможне, чтобы выпустить, нужно оплатить пошлину по реквизитам из сообщения.", 42000, 13, 1, "ru"),
+        ("advance_fee", "Сообщили, что я выиграла автомобиль в розыгрыше, перед получением нужно оплатить налог организаторам.", 190000, 12, 1, "ru"),
+        ("advance_fee", "Предложили удалённую работу, но сначала просят вступительный взнос, потом будут платить зарплату.", 45000, 10, 1, "ru"),
+        ("advance_fee", "Квартиру ещё не смотрела, но хозяин просит залог до просмотра, иначе сдаст другим.", 160000, 18, 1, "ru"),
+        ("advance_fee", "Магазин на неизвестном сайте требует полную предоплату за технику, на сайте нет отзывов.", 130000, 21, 1, "ru"),
+        ("advance_fee", "Познакомилась в интернете с мужчиной, он просит перевести деньги на билет, чтобы приехать ко мне.", 280000, 22, 1, "ru"),
+        ("advance_fee", "Жүк кеденде тұр деп хабарлама келді, оны шығару үшін баж төлеуді сұрап жатыр.", 39000, 14, 1, "kz"),
+        ("advance_fee", "Лотереядан көлік ұттың деп хабарласты, алу үшін алдымен салық төлеу керек дейді.", 175000, 12, 1, "kz"),
+        ("advance_fee", "Қашықтан жұмыс ұсынды, алдымен кіру жарнасын төлесем ғана қабылдайды екен.", 50000, 11, 1, "kz"),
+        ("advance_fee", "Пәтерді әлі көрген жоқпын, бірақ иесі кепілақыны алдын ала аударуды сұрады.", 150000, 17, 1, "kz"),
+        ("advance_fee", "Белгісіз сайт техникаға толық алдын ала төлем талап етіп отыр, пікірлер жоқ.", 125000, 20, 1, "kz"),
+        ("advance_fee", "Желіде танысқан адам келуге билет алу үшін ақша аударуымды өтінді.", 260000, 22, 1, "kz"),
+    ]
+
+    # Everyday friction for TRAIN: micro-transfers and plain family requests to new recipients.
+    # These must pass without a question or an escalation. The rules may be tuned against them.
+    # (category, text, amount, is_new_recipient, hour, frequency_last_hour, language)
+    FRICTION_TRAIN = [
+        ("family_request", "Мама попросила", 2500, True, 23, 1, "ru"),
+        ("family_request", "Папа попросил перевести другу на такси", 3000, True, 22, 1, "ru"),
+        ("family_request", "Брат позвонил и попросил, возвращаю ему долг за обед", 15000, True, 20, 1, "ru"),
+        ("family_request", "Сестра сказала, что надо отправить ей на проезд", 4000, True, 0, 1, "ru"),
+        ("micro_transfer", "Ребёнок попросил пополнить телефон", 1500, True, 23, 1, "ru"),
+        ("micro_transfer", "За кофе для подруги", 1200, True, 21, 1, "ru"),
+        ("family_request", "Анам сұрады", 2500, True, 23, 1, "kz"),
+        ("family_request", "Әкем такси ақысына сұрады", 3000, True, 22, 1, "kz"),
+        ("family_request", "Ағам қоңырау шалып, қарызды қайтаруды сұрады", 15000, True, 20, 1, "kz"),
+        ("family_request", "Әпкем жол ақысына ақша керек деді", 4000, True, 0, 1, "kz"),
+        ("micro_transfer", "Баламның телефонына ақша салып беруді сұрады", 1500, True, 23, 1, "kz"),
+        ("micro_transfer", "Құрбыма кофе үшін", 1200, True, 21, 1, "kz"),
+    ]
+
+    # Hard legitimate cases for TRAIN (distinct texts): the rules may be tuned against these.
+    HARD_LEGIT_TRAIN = [
+        ("lawyer_fee", "Гонорар адвокату за подготовку иска в суд по трудовому спору.", 180000, True, 12, 1, "ru"),
+        ("state_duty", "Оплата штрафа и пошлины в отделе полиции за замену водительского удостоверения.", 20000, True, 11, 1, "ru"),
+        ("broker_deposit", "Пополнение инвестиционного счета у лицензированного брокера для покупки акций.", 350000, True, 15, 1, "ru"),
+        ("big_purchase", "Оплата строительной бригаде за ремонт дома по подписанной смете.", 700000, True, 13, 1, "ru"),
+        ("night_travel", "Бронь хостела и трансфера ночью по прилету в другой город.", 50000, True, 1, 1, "ru"),
+        ("family_asked", "Мама позвонила и попросила закинуть ей на лекарства, перевожу.", 60000, False, 17, 1, "ru"),
+        ("lawyer_fee", "Нотариус пен заңгердің мұра құжаттарын рәсімдеу қызметіне төлем.", 170000, True, 12, 1, "kz"),
+        ("state_duty", "Полиция бөлімшесінде жүргізуші куәлігін ауыстыру үшін баж салығын төлеу.", 18000, True, 11, 1, "kz"),
+        ("broker_deposit", "Лицензиясы бар брокердегі инвестициялық шотты акция алу үшін толтыру.", 320000, True, 15, 1, "kz"),
+        ("big_purchase", "Үй жөндеуін жасайтын құрылыс бригадасына смета бойынша төлем.", 680000, True, 13, 1, "kz"),
+        ("night_travel", "Басқа қалаға түнде ұшып барған соң жатақхана мен трансферге төлем.", 48000, True, 2, 1, "kz"),
+        ("family_asked", "Әпкем қоңырау шалып, дәріге ақша сұрады, соны аударып жатырмын.", 55000, False, 16, 1, "kz"),
+    ]
+
     @classmethod
     def generate_benchmark_suite(
         cls,
@@ -333,6 +422,85 @@ class AdversarialRobot:
                 split="test"
             ))
             current_id += 1
+
+        # 4a. Replace the tail of the train-SCAM block (indices train_scam_count-N .. train_scam_count-1)
+        # with advance-fee scams; again ids and the random stream stay untouched.
+        fee = cls.ADVANCE_FEE_TRAIN
+        fee_first = train_scam_count - len(fee)
+        for offset, (cat, text, amt, hour, freq, lang) in enumerate(fee):
+            old = scenarios[fee_first + offset]
+            scenarios[fee_first + offset] = AdversarialScenario(
+                id=old.id,
+                is_scam=True,
+                category=cat,
+                language=lang,
+                amount=float(amt),
+                is_new_recipient=True,
+                transfer_hour=hour,
+                frequency_last_hour=freq,
+                answer_text=text,
+                attack_vector=cat,
+                split="train",
+            )
+
+        # 4a2. Friction cases: the block right before the hard-legit tail of the train-legit block.
+        fr_rows = cls.FRICTION_TRAIN
+        fr_first = train_count - len(cls.HARD_LEGIT_TRAIN) - len(fr_rows)
+        for offset, (cat, text, amt, is_new, hour, freq, lang) in enumerate(fr_rows):
+            old = scenarios[fr_first + offset]
+            scenarios[fr_first + offset] = AdversarialScenario(
+                id=old.id,
+                is_scam=False,
+                category=cat,
+                language=lang,
+                amount=float(amt),
+                is_new_recipient=is_new,
+                transfer_hour=hour,
+                frequency_last_hour=freq,
+                answer_text=text,
+                attack_vector="benign_friction",
+                split="train",
+            )
+
+        # 4b. Same trick for TRAIN: replace the tail of the train-legit block (indices
+        # train_count-N .. train_count-1) with hard train cases. Ids and the stream stay intact.
+        hard_train = cls.HARD_LEGIT_TRAIN
+        train_first = train_count - len(hard_train)
+        for offset, (cat, text, amt, is_new, hour, freq, lang) in enumerate(hard_train):
+            old = scenarios[train_first + offset]
+            scenarios[train_first + offset] = AdversarialScenario(
+                id=old.id,
+                is_scam=False,
+                category=cat,
+                language=lang,
+                amount=float(amt),
+                is_new_recipient=is_new,
+                transfer_hour=hour,
+                frequency_last_hour=freq,
+                answer_text=text,
+                attack_vector="benign_hard",
+                split="train",
+            )
+
+        # 5. Replace the tail of the test-legit block with hard cases. The random stream above
+        # is consumed exactly as before, so every other scenario (and all train ids) is unchanged.
+        hard = cls.HARD_LEGIT_TEST
+        first_replaced = len(scenarios) - len(hard)
+        for offset, (cat, text, amt, is_new, hour, freq, lang) in enumerate(hard):
+            old = scenarios[first_replaced + offset]
+            scenarios[first_replaced + offset] = AdversarialScenario(
+                id=old.id,
+                is_scam=False,
+                category=cat,
+                language=lang,
+                amount=float(amt),
+                is_new_recipient=is_new,
+                transfer_hour=hour,
+                frequency_last_hour=freq,
+                answer_text=text,
+                attack_vector="benign_hard",
+                split="test",
+            )
 
         return scenarios
 

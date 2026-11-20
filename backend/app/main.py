@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
+from .config import parse_cors_origins
 from .db import init_db
 from .api.transfers import router as transfers_router, recover_pending_timeouts, stop_timeout_tasks
 from .api.trusted import router as trusted_router
@@ -43,10 +44,12 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+_cors_origins = parse_cors_origins()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=_cors_origins,
+    # Browsers reject wildcard origins combined with credentials.
+    allow_credentials=_cors_origins != ["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )

@@ -37,7 +37,7 @@ except ImportError:
                 return func
             return decorator
 
-from backend.app.benchmark.evaluator import BenchmarkEvaluator, EvaluationReport
+from backend.app.benchmark.evaluator import HOLDOUT_SPLIT, BenchmarkEvaluator, EvaluationReport
 from backend.app.benchmark.adversarial_robot import AdversarialRobot, generate_and_save_benchmark
 
 logger = logging.getLogger("qaqpan.api.benchmark")
@@ -61,7 +61,7 @@ def get_or_create_dataset(filepath: Optional[str] = None) -> List[Dict[str, Any]
 @router.post("/simulate")
 @router.get("/simulate")
 def run_simulation(
-    split: str = Query("test", description="Dataset split to evaluate: 'test', 'train', or 'full'"),
+    split: str = Query("test", description="Dataset split to evaluate: 'test', 'train', 'holdout', 'holdout2', 'holdout3' (fresh sets, never tuned on) or 'full'"),
     count: int = Query(500, description="Number of scenarios in simulation pool")
 ) -> Dict[str, Any]:  # Any: Serialized benchmark report payload
     """
@@ -70,8 +70,16 @@ def run_simulation(
     """
     try:
         data = get_or_create_dataset()
+        if HOLDOUT_SPLIT.fullmatch(split):
+            holdout_path = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)), f"../benchmark/scenarios_{split}.json"
+            )
+            if not os.path.exists(holdout_path):
+                # Never let get_or_create_dataset synthesise a 500-scenario file under this name.
+                raise ValueError(f"Unknown holdout set '{split}'")
+            data = get_or_create_dataset(holdout_path)
         # Filter by split first to ensure target split elements exist
-        if split in ("train", "test"):
+        if split in ("train", "test") or HOLDOUT_SPLIT.fullmatch(split):
             subset = [s for s in data if s.get("split") == split]
         else:
             subset = data

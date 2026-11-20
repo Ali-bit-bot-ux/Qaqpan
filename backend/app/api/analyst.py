@@ -1,10 +1,15 @@
 from typing import List, Literal, Optional
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 
 from ..db import get_db, TransferRecord, TrapSession, TrapMessage, TrapRecipient
-from ..models.schemas import AnalystFeedResponse, AnalystCard, TransferStatus, RiskTier
+from ..core.events import event_bus
+from ..models.schemas import (
+    AnalystFeedResponse, AnalystCard, AnalystSummary, TransferStatus, RiskTier,
+    BankReviewDecisionRequest, DecisionType, TransferResponse,
+)
+from .transfers import commit_transition
 
 router = APIRouter(prefix="/analyst", tags=["Bank Analyst"])
 
@@ -72,6 +77,17 @@ def _trap_card(db: Session, s: TrapSession) -> AnalystCard:
     )
 
 
+def _summary(db: Session) -> AnalystSummary:
+    """Counts over every transfer record, zero-filled so the UI never needs defaults."""
+    by_tier = {t.value: 0 for t in RiskTier}
+    by_status = {s.value: 0 for s in TransferStatus}
+    for tier, count in db.query(TransferRecord.risk_tier, func.count()).group_by(TransferRecord.risk_tier):
+        by_tier[tier] = by_tier.get(tier, 0) + count
+    for status_value, count in db.query(TransferRecord.status, func.count()).group_by(TransferRecord.status):
+        by_status[status_value] = by_status.get(status_value, 0) + count
+    return AnalystSummary(total_transfers=sum(by_status.values()), by_risk_tier=by_tier, by_status=by_status)
+
+
 @router.get("/feed", response_model=AnalystFeedResponse)
 def get_analyst_feed(
     risk_tier: Optional[RiskTier] = Query(None, description="Filter by risk tier (transfer cards only)"),
@@ -109,4 +125,24 @@ def get_analyst_feed(
     cards.sort(key=lambda c: c.created_at, reverse=True)
     cards = cards[:limit]
 
-    return AnalystFeedResponse(total_count=len(cards), cards=cards)
+    return AnalystFeedResponse(total_count=len(cards), cards=cards, summary=_summary(db))
+
+
+@router.post("/transfers/{transfer_id}/review", response_model=TransferResponse)
+async def decide_manual_review(
+    transfer_id: str,
+    payload: BankReviewDecisionRequest,
+    db: Session = Depends(get_db),
+) -> TransferResponse:
+    """Resolve MANUAL_BANK_REVIEW: APPROVE -> COMPLETED, DECLINE -> BLOCKED."""
+    rec = db.get(TransferRecord, transfer_id)
+    if rec is None:
+        raise HTTPException(status_code=404, detail="Transfer not found")
+    if rec.status != TransferStatus.MANUAL_BANK_REVIEW.value:
+        raise HTTPException(status_code=409, detail="Transfer is not in manual bank review")
+    target = TransferStatus.COMPLETED if payload.decision == DecisionType.APPROVE else TransferStatus.BLOCKED
+    resp = commit_transition(db, rec, target)
+    if resp is None:
+        raise HTTPException(status_code=409, detail="Transfer state changed")
+    await event_bus.publish("bank_review_decided", resp.model_dump(mode="json"))
+    return resp

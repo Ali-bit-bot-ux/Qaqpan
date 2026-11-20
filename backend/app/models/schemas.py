@@ -26,12 +26,16 @@ class TransferStatus(str, Enum):
 # --- Transfer Schemas ---
 
 class TransferCreate(BaseModel):
-    client_id: str = Field(..., description="Unique client identifier, e.g. usr_kz_1001")
-    recipient_account: str = Field(..., description="IBAN or Card number, e.g. KZ888561000293847291")
-    recipient_name: str = Field(..., description="Full name of recipient, e.g. Ержан С.")
-    amount: float = Field(..., gt=0, description="Amount in KZT, must be positive")
-    currency: str = Field(default="KZT", description="Currency code (KZT)")
-    language: str = Field(default="ru", description="Client language: 'ru' or 'kz'")
+    client_id: str = Field(..., min_length=1, max_length=64, pattern=r"\S", description="Unique client identifier, e.g. usr_kz_1001")
+    recipient_account: str = Field(..., min_length=1, max_length=64, pattern=r"\S", description="IBAN or Card number, e.g. KZ888561000293847291")
+    recipient_name: str = Field(..., min_length=1, max_length=128, pattern=r"\S", description="Full name of recipient, e.g. Ержан С.")
+    amount: float = Field(..., gt=0, le=1_000_000_000, description="Amount in KZT, positive, at most 1 billion")
+    currency: str = Field(default="KZT", min_length=3, max_length=8, description="Currency code (KZT)")
+    language: Literal["ru", "kz"] = Field(default="ru", description="Client language: 'ru' or 'kz'")
+    trusted_contact_name: Optional[str] = Field(None, min_length=1, max_length=128, pattern=r"\S",
+                                                description="Optional trusted person, e.g. Данияр (Сын)")
+    trusted_contact_phone: Optional[str] = Field(None, min_length=1, max_length=32, pattern=r"\S",
+                                                 description="Optional masked phone of the trusted person")
 
     model_config = ConfigDict(
         json_schema_extra={
@@ -71,6 +75,9 @@ class TransferResponse(BaseModel):
     alert_reason_kz: Optional[str] = None
     cooling_warning_ru: Optional[str] = None
     cooling_warning_kz: Optional[str] = None
+    cooling_seconds_left: Optional[int] = Field(
+        None, description="While COOLING_OFF: seconds until the client may confirm on their own (0 = now)"
+    )
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -123,6 +130,24 @@ class ManualReviewRequest(BaseModel):
     warning_acknowledged: bool = Field(..., strict=True)
 
 
+class BankReviewDecisionRequest(BaseModel):
+    """Bank employee resolves a transfer held in MANUAL_BANK_REVIEW (auth is deferred)."""
+    model_config = ConfigDict(extra="forbid")
+    decision: DecisionType
+    comment: Optional[str] = Field(None, max_length=500)
+
+
+class TransferListResponse(BaseModel):
+    total_count: int = Field(..., description="All records matching the filters, before the limit")
+    transfers: List["TransferResponse"]
+
+
+class ClientConfirmRequest(BaseModel):
+    """Client insists on their own transfer after the repeated cooling-off warning."""
+    model_config = ConfigDict(extra="forbid")
+    warning_acknowledged: bool = Field(..., strict=True)
+
+
 # --- Bank Analyst Schemas ---
 
 class TrapSessionStatus(str, Enum):
@@ -159,9 +184,17 @@ class AnalystCard(BaseModel):
     session_id: Optional[str] = None
 
 
+class AnalystSummary(BaseModel):
+    """Counts over ALL transfer records (ignores feed filters and limit); zero-filled."""
+    total_transfers: int
+    by_risk_tier: dict[str, int]
+    by_status: dict[str, int]
+
+
 class AnalystFeedResponse(BaseModel):
     total_count: int
     cards: List[AnalystCard]
+    summary: Optional[AnalystSummary] = None
 
 
 # --- Scammer Trap Schemas (bot plays a cautious elderly victim) ---

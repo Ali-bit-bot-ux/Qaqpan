@@ -20,10 +20,10 @@ if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
 try:
-    from backend.app.core.fallback_rules import ScamSignalExtraction
+    from backend.app.core.fallback_rules import ScamSignalExtraction, mentions_family
     from backend.app.core.ai_parser import parse_client_answer
 except ImportError:
-    from fallback_rules import ScamSignalExtraction
+    from fallback_rules import ScamSignalExtraction, mentions_family
     from ai_parser import parse_client_answer
 
 
@@ -92,6 +92,8 @@ class RulesEngine:
     # Scoring weights and thresholds
     THRESHOLD_MEDIUM: float = 30.0
     THRESHOLD_HIGH: float = 70.0
+    # Amount below this share of the client's typical transfer is a "micro-transfer".
+    MICRO_TRANSFER_RATIO: float = 0.1
 
     @classmethod
     def evaluate_initial_transaction(cls, ctx: TransactionContext) -> ScoringResult:
@@ -116,13 +118,18 @@ class RulesEngine:
             score += 20.0
             rules.append("Крупный перевод свыше 500 000 ₸")
 
+        # Micro-transfers carry almost no exposure: a new recipient or the hour alone must not
+        # trigger a question. Burst frequency below still counts, so splitting a theft into
+        # tiny pieces cannot hide it.
+        micro = ratio < cls.MICRO_TRANSFER_RATIO
+
         # 3. New recipient anomaly
-        if ctx.is_new_recipient:
+        if ctx.is_new_recipient and not micro:
             score += 20.0
             rules.append("Перевод новому, неизвестному ранее получателю")
 
         # 4. Night transaction anomaly (23:00 - 06:00)
-        if ctx.transfer_hour >= 23 or ctx.transfer_hour <= 6:
+        if (ctx.transfer_hour >= 23 or ctx.transfer_hour <= 6) and not micro:
             score += 15.0
             rules.append("Нетипичное ночное время проведения операции")
 
@@ -195,6 +202,12 @@ class RulesEngine:
                     "Аударым белгісіз біреулердің телефонмен берген нұсқауы бойынша жасалып жатыр"
                     if is_kz else
                     "Перевод совершается по прямым инструкциям неизвестных лиц по телефону"
+                )
+            if signals.payment_lure:
+                bullets.append(
+                    "Жақыныңыздан бейтаныс адамға алдын ала төлем, салық немесе кепіл ақша сұралған"
+                    if is_kz else
+                    "Просят заранее заплатить незнакомцу: пошлину, налог, залог или взнос (типичная схема обмана)"
                 )
             if signals.urgency_score >= 0.6:
                 bullets.append(
@@ -296,10 +309,24 @@ class RulesEngine:
             score += 35.0
             rules.append("В ответе обнаружено давление силовиков или службы безопасности")
 
-        # 3. Third-party instructions over phone / messenger
-        if signals.third_party_instruction:
+        # 3. Third-party instructions over phone / messenger. A plain request from a close
+        # relative ("Мама попросила") is not a stranger's instruction unless something else
+        # in the text looks like a scam.
+        other_scam_signal = (
+            signals.safe_account_keyword or signals.authority_pressure or signals.payment_lure
+            or signals.emotional_distress or signals.urgency_score >= 0.5
+        )
+        third_party = signals.third_party_instruction and not (
+            mentions_family(answer_text) and not other_scam_signal
+        )
+        if third_party:
             score += 25.0
             rules.append("Клиент действует по указанию неизвестных лиц по телефону")
+
+        # 3b. Advance-fee scheme: fee / tax / deposit / prepayment demanded by a stranger
+        if signals.payment_lure:
+            score += 35.0
+            rules.append("Признаки схемы предоплаты или сбора (пошлина, налог, залог, взнос незнакомцу)")
 
         # 4. Psychological distress / fear
         if signals.emotional_distress:
@@ -316,8 +343,9 @@ class RulesEngine:
         has_any_scam_signal = (
             signals.safe_account_keyword or
             signals.authority_pressure or
-            signals.third_party_instruction or
+            third_party or
             signals.emotional_distress or
+            signals.payment_lure or
             signals.urgency_score >= 0.5
         )
         if not has_any_scam_signal and len(answer_text.strip()) > 3:
@@ -336,9 +364,16 @@ class RulesEngine:
                 + (signals.explanation_summary if signals.explanation_summary else "; ".join(rules))
             )
         elif score >= cls.THRESHOLD_MEDIUM:
-            level = RiskLevel.MEDIUM
-            action = NextAction.ASK_QUESTION
-            summary = f"Повышенный риск ({score:.0f}/100): " + "; ".join(rules)
+            # The question was already asked and the answer did not clear suspicion.
+            # Asking again would let a coached client retry until the story sounds clean,
+            # so the ladder moves on to the trusted person.
+            level = RiskLevel.HIGH
+            action = NextAction.REQUIRE_TRUSTED_APPROVAL
+            rules.append("Ответ не снял подозрений: повторный вопрос не задаётся, нужен близкий")
+            summary = (
+                f"Повышенный риск ({score:.0f}/100), ответ не снял подозрений. "
+                "Требуется подтверждение близкого: " + "; ".join(rules)
+            )
         else:
             level = RiskLevel.LOW
             action = NextAction.ALLOW

@@ -5,7 +5,7 @@ import asyncio
 import logging
 from dataclasses import replace
 from datetime import datetime, timedelta
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, status, Request
 from sqlalchemy.orm import Session
 from sse_starlette.sse import EventSourceResponse
 from starlette.concurrency import run_in_threadpool
@@ -19,7 +19,19 @@ from ..models.schemas import (
     AnswerRequest,
     CancelRequest,
     ManualReviewRequest,
+    ClientConfirmRequest,
+    TransferListResponse,
     TrustedContactInfo
+)
+from statistics import median
+
+from ..config import (
+    ANSWER_TIMEOUT_SECONDS,
+    CLIENT_TYPICAL_AMOUNT,
+    COOLING_PERIOD_SECONDS,
+    TRUSTED_TIMEOUT_SECONDS,
+    TYPICAL_AMOUNT_HISTORY_LIMIT,
+    TYPICAL_AMOUNT_MIN_SAMPLES,
 )
 from ..core.state_machine import TransferStateMachine, InvalidStateTransitionError
 from ..core.events import event_bus
@@ -29,8 +41,6 @@ router = APIRouter(prefix="/transfers", tags=["Transfers (Client)"])
 _timeout_tasks: dict[str, asyncio.Task[None]] = {}
 logger = logging.getLogger("qaqpan.timers")
 
-CLIENT_TYPICAL_AMOUNT = 50000.0
-TRUSTED_TIMEOUT_SECONDS = 30
 QUESTION_RU = "Для чего вы совершаете данный перевод?"
 QUESTION_KZ = "Бұл аударымды не үшін жасап жатырсыз?"
 TRUSTED_CONTACT_NAME = "Айгерим (Дочь)"
@@ -43,6 +53,25 @@ COOLING_WARNING_KZ = (
     "Жақыныңыз жауап бермеді. Аударым орындалған жоқ. Бейтаныс адамдардың нұсқауымен ақша аудармаңыз. "
     "Аударымнан бас тартуға немесе банктің тексеруін сұрауға болады. Тексеру сұрауы аударымды орындамайды."
 )
+
+
+def _typical_amount(db: Session, client_id: str, current_transfer_id: str | None) -> float:
+    """Median of the client's recent completed LOW-risk transfers; default when history is thin.
+
+    HIGH/MEDIUM completions (e.g. a scam the trusted person approved) are ignored so
+    they cannot teach the system that large transfers are normal.
+    """
+    query = db.query(TransferRecord.amount).filter(
+        TransferRecord.client_id == client_id,
+        TransferRecord.status == TransferStatus.COMPLETED.value,
+        TransferRecord.risk_tier == RiskTier.LOW.value,
+    )
+    if current_transfer_id is not None:
+        query = query.filter(TransferRecord.transfer_id != current_transfer_id)
+    amounts = [a for (a,) in query.order_by(TransferRecord.created_at.desc()).limit(TYPICAL_AMOUNT_HISTORY_LIMIT)]
+    if len(amounts) < TYPICAL_AMOUNT_MIN_SAMPLES:
+        return CLIENT_TYPICAL_AMOUNT
+    return float(median(amounts))
 
 
 def _build_context(
@@ -74,7 +103,7 @@ def _build_context(
         is_new_recipient=known_recipient is None,
         transfer_hour=datetime.now().hour,
         frequency_last_hour=recent_count + 1,
-        client_typical_amount=CLIENT_TYPICAL_AMOUNT,
+        client_typical_amount=_typical_amount(db, client_id, current_transfer_id),
         recipient_account=recipient_account,
         client_id=client_id,
     )
@@ -215,6 +244,12 @@ async def stop_timeout_tasks() -> None:
     _timeout_tasks.clear()
 
 
+def cooling_seconds_left(rec: TransferRecord) -> int:
+    """Seconds until cooling-off ends; it started when the record entered COOLING_OFF (updated_at)."""
+    elapsed = (datetime.utcnow() - rec.updated_at).total_seconds()
+    return max(0, int(COOLING_PERIOD_SECONDS - elapsed + 0.999))
+
+
 def record_to_response(rec: TransferRecord) -> TransferResponse:
     trusted = None
     if rec.trusted_contact_name:
@@ -241,6 +276,7 @@ def record_to_response(rec: TransferRecord) -> TransferResponse:
         alert_reason_kz=rec.alert_reason_kz,
         cooling_warning_ru=COOLING_WARNING_RU if rec.status == TransferStatus.COOLING_OFF.value else None,
         cooling_warning_kz=COOLING_WARNING_KZ if rec.status == TransferStatus.COOLING_OFF.value else None,
+        cooling_seconds_left=cooling_seconds_left(rec) if rec.status == TransferStatus.COOLING_OFF.value else None,
         created_at=rec.created_at,
         updated_at=rec.updated_at
     )
@@ -335,8 +371,8 @@ async def create_transfer(
         risk_score=risk_score,
         challenge_question=QUESTION_RU if current_status == TransferStatus.AWAITING_ANSWER else None,
         challenge_question_kz=QUESTION_KZ if current_status == TransferStatus.AWAITING_ANSWER else None,
-        trusted_contact_name=TRUSTED_CONTACT_NAME,
-        trusted_contact_phone=TRUSTED_CONTACT_PHONE,
+        trusted_contact_name=payload.trusted_contact_name or TRUSTED_CONTACT_NAME,
+        trusted_contact_phone=payload.trusted_contact_phone or TRUSTED_CONTACT_PHONE,
         timeout_seconds=timeout_seconds,
         detected_signals=signals,
         alert_reason_ru=alert_ru,
@@ -351,6 +387,26 @@ async def create_transfer(
         _schedule_timeout(transfer_id)
     await event_bus.publish("transfer_created", resp.model_dump(mode="json"))
     return resp
+
+
+@router.get("", response_model=TransferListResponse)
+def list_transfers(
+    client_id: str | None = Query(None, description="Only this client's transfers (history screen)"),
+    transfer_status: TransferStatus | None = Query(
+        None, alias="status", description="Only this status, e.g. TRUSTED_PENDING for the trusted person's inbox"
+    ),
+    limit: int = Query(50, ge=1, le=200),
+    db: Session = Depends(get_db),
+) -> TransferListResponse:
+    """Newest-first list of transfers; total_count is the full match, not the page size."""
+    query = db.query(TransferRecord)
+    if client_id is not None:
+        query = query.filter(TransferRecord.client_id == client_id)
+    if transfer_status is not None:
+        query = query.filter(TransferRecord.status == transfer_status.value)
+    total = query.count()
+    rows = query.order_by(TransferRecord.created_at.desc()).limit(limit).all()
+    return TransferListResponse(total_count=total, transfers=[record_to_response(r) for r in rows])
 
 
 @router.get("/{transfer_id}", response_model=TransferResponse)
@@ -380,6 +436,12 @@ async def submit_client_answer(
             status_code=400,
             detail=f"Transfer is in status {current_status.value}, cannot submit answer"
         )
+
+    if (datetime.utcnow() - rec.updated_at).total_seconds() > ANSWER_TIMEOUT_SECONDS:
+        expired = commit_transition(db, rec, TransferStatus.CANCELLED)
+        if expired is not None:
+            await event_bus.publish("transfer_cancelled", expired.model_dump(mode="json"))
+        raise HTTPException(status_code=409, detail="Answer window expired, transfer cancelled")
 
     expected_updated_at = rec.updated_at
     ctx = _build_context(
@@ -467,6 +529,33 @@ async def request_manual_review(
     db.commit()
     await event_bus.publish("transfer_updated", response.model_dump(mode="json"))
     return response
+
+
+@router.post("/{transfer_id}/confirm", response_model=TransferResponse)
+async def confirm_transfer_by_client(
+    transfer_id: str,
+    payload: ClientConfirmRequest,
+    db: Session = Depends(get_db),
+) -> TransferResponse:
+    """Cooling-off exit: the trusted person was silent, the client confirms after the warning."""
+    if not payload.warning_acknowledged:
+        raise HTTPException(status_code=400, detail="Acknowledge the cooling-off warning first")
+    rec = db.get(TransferRecord, transfer_id)
+    if rec is None:
+        raise HTTPException(status_code=404, detail="Transfer not found")
+    if rec.status != TransferStatus.COOLING_OFF.value:
+        raise HTTPException(status_code=409, detail="Transfer is not in cooling-off")
+    left = cooling_seconds_left(rec)
+    if left > 0:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Cooling-off period not over: {left} seconds left. You can cancel or ask the bank now.",
+        )
+    resp = commit_transition(db, rec, TransferStatus.COMPLETED)
+    if resp is None:
+        raise HTTPException(status_code=409, detail="Transfer state changed")
+    await event_bus.publish("transfer_confirmed_by_client", resp.model_dump(mode="json"))
+    return resp
 
 
 @router.post("/{transfer_id}/cancel", response_model=TransferResponse)

@@ -26,11 +26,13 @@ if project_root not in sys.path:
 try:
     from backend.app.core.fallback_rules import (
         ScamSignalExtraction,
+        detect_payment_lure,
         fallback_parse
     )
 except ImportError:
     from fallback_rules import (
         ScamSignalExtraction,
+        detect_payment_lure,
         fallback_parse
     )
 
@@ -195,7 +197,9 @@ def parse_client_answer(text: str) -> ScamSignalExtraction:
             explanation_summary=str(data.get("explanation_summary", "")),
             language=str(data.get("language", "ru")),
             source="llm",
-            latency_ms=round(elapsed_ms, 2)
+            latency_ms=round(elapsed_ms, 2),
+            # Not in the LLM schema: deterministic regex floor so lures are never lost.
+            payment_lure=detect_payment_lure(text),
         )
     except Exception as exc:
         logger.warning("LLM exception/timeout (%s). Immediate switch to fallback.", exc)
