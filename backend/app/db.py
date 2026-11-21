@@ -58,6 +58,15 @@ class TransferRecord(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
+class TransferEvent(Base):
+    __tablename__ = "transfer_events"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    transfer_id: Mapped[str] = mapped_column(ForeignKey("transfers.transfer_id"), index=True)
+    kind: Mapped[str] = mapped_column(String(32))
+    at: Mapped[datetime] = mapped_column(DateTime)
+
+
 class TrapSession(Base):
     """Scammer-trap dialogue session (bot plays a cautious elderly victim)."""
     __tablename__ = "trap_sessions"

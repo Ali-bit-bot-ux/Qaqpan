@@ -1,21 +1,25 @@
 :root {
   --green-900: #14352b;
-  --bg: #f2f4f3;
+  --bg: #f5f6f6;
   --surface: #fff;
   --gold: #c9a24b;
   --risk-high: #c8372d;
   --risk-med: #b7791f;
   --risk-low: #2f7d5b;
   --text: #16211d;
-  --muted: #66736d;
-  --card-radius: 16px;
-  --control-radius: 10px;
+  --muted: #596760;
+  --card-radius: 10px;
+  --control-radius: 8px;
+  --chip-radius: 6px;
+  --rule: #d9dfdc;
+  --chip-bg: #f5f6f6;
   --action: var(--green-900);
   --ink: var(--text);
   background: var(--bg);
 }
 body {
   font-family: var(--bank-font, system-ui, sans-serif);
+  font-variant-numeric: tabular-nums;
 }
 .portal {
   background: var(--bg);
@@ -65,10 +69,10 @@ body {
 }
 .bank-chip,
 .bank-badge {
-  border-radius: 999px;
-  background: #e7ede9;
-  border: 0;
-  color: var(--green-900);
+  border-radius: var(--chip-radius);
+  background: var(--chip-bg);
+  border: 1px solid var(--rule);
+  color: var(--text);
 }
 .bank-badge {
   display: inline-block;
@@ -144,4 +148,14 @@ time {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+.connection-notice {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border: 1px solid #e8d5aa;
+  border-radius: 10px;
+  background: #fff3da;
+  color: #6b4914;
+  font-size: 14px;
 }

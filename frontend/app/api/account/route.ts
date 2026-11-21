@@ -1,25 +1,28 @@
 import { profile } from "../../../lib/profile-data";
+import { apiOrigin, apiPrefix } from "../../../lib/api-origin.mjs";
 import type { components } from "../../schema";
 export async function GET() {
-  const origin = process.env.QAQPAN_API_ORIGIN || "http://127.0.0.1:8000";
   try {
-    const result = await fetch(
-      origin + "/api/v1/analyst/feed?source=TRANSFER&limit=200",
-      { cache: "no-store" },
-    );
+    const params = new URLSearchParams({
+      client_id: profile.clientId,
+      limit: "200",
+    });
+    const result = await fetch(apiOrigin + apiPrefix + "/transfers?" + params, {
+      cache: "no-store",
+    });
     if (!result.ok) return new Response(null, { status: 502 });
-    const feed: components["schemas"]["AnalystFeedResponse"] =
+    const feed: components["schemas"]["TransferListResponse"] =
       await result.json();
     return Response.json(
-      feed.cards
-        .filter((row) => row.client_id === profile.clientId)
-        .map(({ transfer_id, recipient_name, created_at, amount, status }) => ({
+      feed.transfers.map(
+        ({ transfer_id, recipient_name, created_at, amount, status }) => ({
           transfer_id,
           recipient_name,
           created_at,
           amount,
           status,
-        })),
+        }),
+      ),
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch {

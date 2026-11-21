@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from sse_starlette.sse import EventSourceResponse
 from starlette.concurrency import run_in_threadpool
 
-from ..db import get_db, SessionLocal, TransferRecord, TrapRecipient
+from ..db import get_db, SessionLocal, TransferRecord, TransferEvent, TrapRecipient
 from ..models.schemas import (
     TransferCreate,
     TransferResponse,
@@ -156,6 +156,23 @@ def trusted_deadline(rec: TransferRecord) -> datetime:
     return rec.updated_at + timedelta(seconds=seconds)
 
 
+def log_step(db: Session, rec: TransferRecord, kind: str) -> None:
+    db.add(TransferEvent(transfer_id=rec.transfer_id, kind=kind, at=rec.updated_at))
+
+
+@router.get("/{transfer_id}/history")
+def transfer_history(transfer_id: str, db: Session = Depends(get_db)):
+    rec = db.get(TransferRecord, transfer_id)
+    if rec is None:
+        raise HTTPException(status_code=404, detail="Transfer not found")
+    events = db.query(TransferEvent).filter_by(transfer_id=transfer_id).order_by(TransferEvent.id).all()
+    history = [{"kind": "CREATED", "at": rec.created_at}]
+    history.extend({"kind": event.kind, "at": event.at} for event in events)
+    if not events:
+        history.append({"kind": rec.status, "at": rec.updated_at})
+    return history
+
+
 def commit_transition(
     db: Session,
     rec: TransferRecord,
@@ -187,6 +204,7 @@ def commit_transition(
         db.rollback()
         return None
     db.refresh(rec)
+    log_step(db, rec, "TRUSTED_APPROVED" if current == TransferStatus.TRUSTED_PENDING and target == TransferStatus.COMPLETED else rec.status)
     response = record_to_response(rec)
     db.commit()
     return response
@@ -379,6 +397,8 @@ async def create_transfer(
         alert_reason_kz=alert_kz,
     )
     db.add(rec)
+    db.flush()
+    log_step(db, rec, rec.status)
     db.commit()
     db.refresh(rec)
 
@@ -489,6 +509,8 @@ async def submit_client_answer(
         raise HTTPException(status_code=409, detail="Transfer changed while evaluating the answer")
 
     db.refresh(rec)
+    log_step(db, rec, "ANSWERED")
+    log_step(db, rec, rec.status)
     resp = record_to_response(rec)
     db.commit()
     if new_status == TransferStatus.TRUSTED_PENDING:
@@ -525,6 +547,7 @@ async def request_manual_review(
         db.rollback()
         raise HTTPException(status_code=409, detail="Transfer state changed")
     db.refresh(rec)
+    log_step(db, rec, rec.status)
     response = record_to_response(rec)
     db.commit()
     await event_bus.publish("transfer_updated", response.model_dump(mode="json"))

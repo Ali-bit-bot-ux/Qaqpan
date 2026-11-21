@@ -50,6 +50,10 @@ const fixtures: ReadonlyArray<
   [55, "Kaspi QR", "Kaspi QR", 3200, "qr"],
   [58, "Magnum", "Magnum", 12460, "groceries"],
 ];
+export const seedTransferNames = fixtures
+  .filter((row) => row[4] === "transfer")
+  .flatMap((row) => [row[1], row[2]]);
+
 const pending = new Set<Entry["status"]>([
   "SUBMITTED",
   "EVALUATING",
@@ -58,6 +62,15 @@ const pending = new Set<Entry["status"]>([
   "COOLING_OFF",
   "MANUAL_BANK_REVIEW",
 ]);
+
+function holdsReserve(status: string) {
+  return (
+    status === "AWAITING_ANSWER" ||
+    status === "TRUSTED_PENDING" ||
+    status === "COOLING" ||
+    status.startsWith("WAITING_")
+  );
+}
 
 export function dateValue(value: string) {
   return new Date(/Z$|[+-]\d\d:\d\d$/.test(value) ? value : value + "Z");
@@ -101,7 +114,7 @@ export function accountSnapshot(remote: Entry[], active?: Entry) {
   );
   const reserved = [...real.values()].reduce(
     (sum, row) =>
-      sum + (pending.has(row.status) ? Math.round(row.amount * 100) : 0),
+      sum + (holdsReserve(row.status) ? Math.round(row.amount * 100) : 0),
     0,
   );
   const balance = (openingBalance * 100 - seedNet - spent) / 100;

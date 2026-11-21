@@ -1,4 +1,5 @@
 "use client";
+import { ChevronRight } from "lucide-react";
 
 import { useEffect, useState } from "react";
 import { Bell, Clock3, Phone, ShieldCheck } from "lucide-react";
@@ -6,8 +7,15 @@ import { useQueryClient } from "@tanstack/react-query";
 import { dateValue } from "../lib/account";
 import { useProfile } from "../lib/profile";
 import { useStoredValue } from "../lib/storage";
-import { api, useAction, useData, useText, type Models } from "./shared";
-import { Badge, Button, Card, ErrorState, Money, Skeleton, Timer } from "./ui";
+import {
+  api,
+  ErrorBox,
+  useAction,
+  useData,
+  useText,
+  type Models,
+} from "./shared";
+import { Badge, Button, Card, Money, Skeleton, Timer } from "./ui";
 import TransferHistory from "./TransferHistory";
 
 type Decision = Pick<
@@ -88,6 +96,11 @@ function DecisionHistory({ entries }: { entries: Decision[] }) {
                 <small>{shortName}</small>
               </span>
               <Money amount={entry.amount} />
+              <ChevronRight
+                className="details-chevron"
+                size={16}
+                aria-hidden="true"
+              />
             </summary>
             <TransferHistory id={entry.transfer_id} status={entry.status} />
           </details>
@@ -132,15 +145,7 @@ function Request({
     return () => clearTimeout(timer);
   }, [cache, deadline, path]);
   if (query.isPending) return <Skeleton />;
-  if (!data)
-    return (
-      <ErrorState>
-        {t(
-          "Не удалось открыть запрос. Обновите страницу и попробуйте снова.",
-          "Сұрауды ашу мүмкін болмады. Бетті жаңартып, қайталап көріңіз.",
-        )}
-      </ErrorState>
-    );
+  if (!data) return <ErrorBox error={query.error} />;
 
   const expired =
     data.status === "COOLING_OFF" ||
@@ -214,7 +219,7 @@ function Request({
         <Bell size={18} aria-hidden="true" />
         <strong>{t("Новый запрос от мамы", "Анаңыздан жаңа сұрау")}</strong>
       </div>
-      <article className="trusted-request">
+      <article className="trusted-request" data-level={data.risk_tier}>
         <div className="trusted-request-label">
           <ShieldCheck size={17} aria-hidden="true" />
           {t(
@@ -246,7 +251,14 @@ function Request({
         )}
         {warning && (
           <details className="trusted-warning">
-            <summary>{t("Подробнее", "Толығырақ")}</summary>
+            <summary>
+              {t("Подробнее", "Толығырақ")}
+              <ChevronRight
+                className="details-chevron"
+                size={16}
+                aria-hidden="true"
+              />
+            </summary>
             <p>{warning}</p>
           </details>
         )}
@@ -285,19 +297,7 @@ function Request({
             {t("Отклонить перевод", "Аударымды қабылдамау")}
           </Button>
         </div>
-        {action.error && (
-          <ErrorState>
-            {action.error.message === "409"
-              ? t(
-                  "Запрос уже изменился. Проверьте его состояние.",
-                  "Сұраудың күйі өзгерді. Ағымдағы күйін тексеріңіз.",
-                )
-              : t(
-                  "Не удалось сохранить решение. Попробуйте снова.",
-                  "Шешімді сақтау мүмкін болмады. Қайталап көріңіз.",
-                )}
-          </ErrorState>
-        )}
+        <ErrorBox error={action.error} />
       </article>
     </>
   );
@@ -331,58 +331,64 @@ export default function Trusted() {
   }, [incoming, lastId, saveId]);
   return (
     <div className="trusted-flow">
-      {id && !decided ? (
-        <Request
-          key={id}
-          id={id}
-          answer={incoming?.client_answer}
-          onDecision={(decision) => {
-            const latest = loadDecisions(
-              window.localStorage.getItem("qaqpan-trusted-decisions") ?? "",
-            );
-            saveDecisions(
-              JSON.stringify(
-                [
-                  decision,
-                  ...latest.filter(
-                    (item) => item.transfer_id !== decision.transfer_id,
-                  ),
-                ].slice(0, 20),
-              ),
-            );
-          }}
-        />
-      ) : feed.isPending ? (
-        <Skeleton />
-      ) : feed.isError ? (
-        <ErrorState>
-          {t(
-            "Запросы недоступны. Обновите страницу.",
-            "Сұраулар қолжетімсіз. Бетті жаңартыңыз.",
-          )}
-        </ErrorState>
-      ) : (
-        <Card className="trusted-closed">
-          <Bell aria-hidden="true" />
-          <h2>{t("Новых запросов нет", "Жаңа сұрау жоқ")}</h2>
+      <div className="trusted-primary">
+        {id && !decided ? (
+          <Request
+            key={id}
+            id={id}
+            answer={incoming?.client_answer}
+            onDecision={(decision) => {
+              const latest = loadDecisions(
+                window.localStorage.getItem("qaqpan-trusted-decisions") ?? "",
+              );
+              saveDecisions(
+                JSON.stringify(
+                  [
+                    decision,
+                    ...latest.filter(
+                      (item) => item.transfer_id !== decision.transfer_id,
+                    ),
+                  ].slice(0, 20),
+                ),
+              );
+            }}
+          />
+        ) : feed.isPending ? (
+          <Skeleton />
+        ) : feed.isError ? (
+          <ErrorBox error={feed.error} />
+        ) : (
+          <Card className="trusted-closed">
+            <Bell aria-hidden="true" />
+            <h2>{t("Новых запросов нет", "Жаңа сұрау жоқ")}</h2>
+            <p>
+              {t(
+                "Запрос появится здесь автоматически, если банк попросит вас проверить перевод мамы.",
+                "Банк анаңыздың аударымын тексеруді сұраса, сұрау осы жерде автоматты түрде пайда болады.",
+              )}
+            </p>
+          </Card>
+        )}
+      </div>
+      <aside className="trusted-aside">
+        <details className="trusted-rights" open>
+          <summary>
+            {t("Ваши полномочия", "Сіздің өкілеттігіңіз")}
+            <ChevronRight
+              className="details-chevron"
+              size={16}
+              aria-hidden="true"
+            />
+          </summary>
           <p>
             {t(
-              "Запрос появится здесь автоматически, если банк попросит вас проверить перевод мамы.",
-              "Банк анаңыздың аударымын тексеруді сұраса, сұрау осы жерде автоматты түрде пайда болады.",
+              "Вы решаете только по этому переводу. Мама может отменить его сама.",
+              "Шешімді тек осы аударым бойынша қабылдайсыз. Анаңыз аударымнан өзі бас тарта алады.",
             )}
           </p>
-        </Card>
-      )}
-      <details className="trusted-rights" open>
-        <summary>{t("Ваши полномочия", "Сіздің өкілеттігіңіз")}</summary>
-        <p>
-          {t(
-            "Вы решаете только по этому переводу. Мама может отменить его сама.",
-            "Шешімді тек осы аударым бойынша қабылдайсыз. Анаңыз аударымнан өзі бас тарта алады.",
-          )}
-        </p>
-      </details>
-      <DecisionHistory entries={entries} />
+        </details>
+        <DecisionHistory entries={entries} />
+      </aside>
     </div>
   );
 }

@@ -1,0 +1,472 @@
+.analyst-workspace {
+  display: grid;
+  align-items: start;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.analyst-queue,
+.analyst-center,
+.analyst-case {
+  background: var(--surface);
+  min-width: 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--card-radius);
+}
+.analyst-queue,
+.analyst-case {
+  padding: 14px;
+}
+.analyst-workspace h2 {
+  font-size: 16px;
+  letter-spacing: 0;
+  margin: 0;
+  font-weight: 600;
+}
+.analyst-case h3 {
+  font-size: 14px;
+  margin: 12px 0 5px;
+}
+.analyst-queue h2,
+.analyst-case-head,
+.analyst-counts,
+.analyst-labels,
+.analyst-sla {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.analyst-queue > p,
+.analyst-empty {
+  font-size: 13px;
+  color: var(--muted);
+}
+.analyst-queue ul {
+  list-style: none;
+  margin: 5px 0 0;
+  padding: 0;
+}
+.analyst-queue li {
+  border-top: 1px solid var(--rule);
+}
+.analyst-queue button {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px;
+  width: 100%;
+  text-align: start;
+  padding: 7px 4px;
+  border: 0;
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+}
+.analyst-queue button[aria-pressed="true"] {
+  background: #e8f1eb;
+}
+.analyst-queue-status,
+.analyst-sla {
+  grid-column: 1/-1;
+  color: var(--muted);
+}
+.analyst-counts {
+  flex-wrap: wrap;
+  gap: 0;
+  min-height: 38px;
+  padding: 3px 7px;
+  border-bottom: 1px solid var(--rule);
+}
+.analyst-counts b {
+  margin-left: 3px;
+}
+.analyst-filters {
+  display: grid;
+  gap: 6px;
+  margin: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.analyst-filters label {
+  min-width: 0;
+  font-size: 12px;
+  gap: 3px;
+}
+.analyst-filters select {
+  min-width: 0;
+  min-height: 34px;
+  width: 100%;
+  font-size: 12px;
+  margin: 0;
+  padding: 4px;
+}
+.analyst-live > p {
+  margin: 10px;
+}
+.analyst-table-wrap {
+  min-width: 0;
+  overflow-x: auto;
+}
+.analyst-table {
+  margin: 0;
+  table-layout: fixed;
+  min-width: 580px;
+  font-size: 12px;
+  line-height: 1.25;
+}
+.analyst-table .col-time {
+  width: 8%;
+}
+.analyst-table .col-person {
+  width: 12%;
+}
+.analyst-table .col-amount {
+  width: 12%;
+}
+.analyst-table .col-payee {
+  width: 14%;
+}
+.analyst-table .col-risk {
+  width: 12%;
+}
+.analyst-table .col-state {
+  width: 22%;
+}
+.analyst-table .col-signals {
+  width: 20%;
+}
+.analyst-table th,
+.analyst-table td {
+  text-align: start;
+  height: 40px;
+  padding: 4px 6px;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+.analyst-table thead {
+  background: var(--bg);
+}
+.analyst-table tbody tr {
+  cursor: pointer;
+}
+.analyst-table tbody tr:hover,
+.analyst-table tr[data-selected="true"] {
+  background: #f0f6f1;
+}
+.analyst-table time small {
+  display: block;
+  color: var(--muted);
+}
+.analyst-table .status {
+  font-size: 11px;
+  padding: 2px 3px;
+  line-height: 1.3;
+}
+.analyst-row-button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  min-height: 0;
+  text-align: left;
+  font-size: inherit;
+  margin: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.analyst-risk {
+  display: inline-block;
+  align-self: start;
+  justify-self: start;
+  border-radius: var(--chip-radius);
+  padding: 2px 5px;
+  font-size: 11px;
+  font-weight: 650;
+}
+.analyst-signals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.analyst-signals span {
+  background: var(--chip-bg);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 2px 4px;
+  line-height: 1.3;
+}
+.analyst-signals small {
+  color: var(--muted);
+  font-size: 11px;
+}
+.analyst-case-head {
+  justify-content: space-between;
+}
+.analyst-case-head button {
+  min-height: 32px;
+  display: grid;
+  place-items: center;
+  padding: 4px;
+  border: 0;
+  margin: 0;
+}
+.analyst-case {
+  overflow-wrap: anywhere;
+  font-size: 13px;
+}
+.analyst-case-amount {
+  font-size: 24px;
+}
+.analyst-payee {
+  margin: 0 0 6px;
+}
+.analyst-case .transfer-history li {
+  grid-template-columns: 62px 1fr;
+  gap: 4px;
+  font-size: 12px;
+}
+.analyst-evidence {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.analyst-evidence li {
+  margin-bottom: 7px;
+  display: grid;
+  gap: 2px;
+}
+.analyst-evidence li span,
+.analyst-review small {
+  color: var(--muted);
+}
+.analyst-review {
+  border-top: 1px solid var(--rule);
+  padding-top: 8px;
+}
+.analyst-review label {
+  font-size: 12px;
+}
+.analyst-review textarea {
+  min-height: 60px;
+  font-size: 13px;
+}
+.analyst-review > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 7px 0;
+}
+.analyst-review button {
+  margin: 0;
+  font-size: 12px;
+}
+#analyst-trap {
+  margin-top: 18px;
+}
+@media (min-width: 1100px) {
+  .analyst-workspace {
+    grid-template-columns: minmax(172px, 0.7fr) minmax(0, 4fr) minmax(
+        224px,
+        1.25fr
+      );
+  }
+  .analyst-table {
+    min-width: 0;
+  }
+  .analyst-table-wrap {
+    overflow: visible;
+  }
+}
+@media (max-width: 600px) {
+  .analyst-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.portal-analyst main {
+  padding-top: 24px;
+}
+.portal-analyst main > h1 {
+  font-size: 24px;
+  margin: 0 0 16px;
+}
+.analyst-filters label,
+.analyst-test-filter {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.analyst-filters select {
+  font-weight: 400;
+  color: var(--text);
+}
+.analyst-test-filter {
+  display: inline-flex;
+  margin: 0 10px 4px;
+  gap: 5px;
+  min-height: 30px;
+  align-items: center;
+}
+.analyst-test-filter input {
+  margin: 0;
+}
+.analyst-table th,
+.analyst-workspace :is(.status, .analyst-risk),
+.analyst-queue button,
+.analyst-case .analyst-evidence strong,
+.analyst-review label,
+.analyst-review button {
+  font-weight: 500;
+}
+.analyst-table :is(.bank-money, .analyst-row-button),
+.analyst-queue :is(.bank-money, .analyst-queue-payee),
+.analyst-case :is(.analyst-payee, .analyst-case-amount) {
+  font-weight: 600;
+}
+.analyst-queue-payee {
+  grid-column: 1 / -1;
+  overflow-wrap: anywhere;
+}
+.analyst-table .status {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: top;
+}
+.analyst-case .analyst-labels .status {
+  font: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 5px;
+  border-radius: var(--chip-radius);
+}
+.analyst-case .analyst-labels {
+  flex-wrap: wrap;
+}
+@media (min-width: 1100px) {
+  .portal-analyst main > h1 {
+    line-height: 30px;
+  }
+  .analyst-case:not(.analyst-empty) {
+    position: sticky;
+    top: calc(56px + 24px);
+    margin-top: calc(-30px - 16px);
+    height: calc(100vh - 56px - 24px);
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .analyst-case-head,
+  .analyst-review {
+    flex: none;
+  }
+  .analyst-case-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    padding-inline-end: 3px;
+    overscroll-behavior: contain;
+  }
+  .analyst-review {
+    background: var(--surface);
+    padding-top: 9px;
+  }
+}
+
+.analyst-counts > span {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 2px 9px;
+}
+.analyst-counts > span + span {
+  border-inline-start: 1px solid var(--rule);
+}
+.analyst-counts b {
+  color: var(--text);
+  font-weight: 600;
+}
+.analyst-primary {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.analyst-queue .bank-money {
+  white-space: nowrap;
+}
+.analyst-table .analyst-signals {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1px 3px;
+  align-items: center;
+}
+.analyst-table .analyst-signals span {
+  grid-column: 1;
+  justify-self: start;
+  max-width: 100%;
+  font-size: 11px;
+  line-height: 1;
+  padding-block: 1px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.analyst-table .analyst-signals small {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  white-space: nowrap;
+}
+.analyst-table .analyst-row-button {
+  max-width: 100%;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.analyst-queue > p {
+  border-top: 1px solid var(--rule);
+  padding-top: 10px;
+  margin-bottom: 0;
+}
+.analyst-dataset {
+  display: inline-flex;
+  margin: 10px;
+  padding: 2px;
+  gap: 2px;
+  border: 1px solid var(--rule);
+  border-radius: var(--control-radius);
+  background: var(--bg);
+}
+.analyst-dataset button {
+  min-height: 30px;
+  margin: 0;
+  padding: 4px 10px;
+  border: 0;
+  border-radius: var(--chip-radius);
+  color: var(--muted);
+  background: transparent;
+  font-size: 12px;
+}
+.analyst-dataset button[aria-pressed="true"],
+.analyst-dataset button[aria-pressed="true"]:hover {
+  color: white;
+  background: var(--green-900);
+}
+.analyst-preview-table {
+  min-width: 460px;
+}
+.analyst-preview-table .bank-badge {
+  font-size: 11px;
+  padding: 2px 5px;
+}
+.analyst-preview-table tbody tr {
+  cursor: default;
+}
+@media (max-width: 550px) {
+  .analyst-preview-table {
+    table-layout: auto;
+  }
+  .analyst-preview-table td {
+    overflow-wrap: normal;
+  }
+  .analyst-preview-table :is(.bank-money, .analyst-risk) {
+    white-space: nowrap;
+  }
+}
