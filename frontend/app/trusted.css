@@ -20,16 +20,17 @@
   gap: 8px;
   padding: 9px 12px;
   margin-bottom: 10px;
-  border: 1px solid #cbded2;
+  border: 1px solid var(--rule);
   color: var(--green-900);
-  background: #e5efe8;
-  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 2px 8px #14352b10;
+  border-radius: var(--card-radius);
   font-size: 14px;
 }
 .trusted-request {
   margin: 0;
   padding: 16px;
-  border: 1px solid #dde5df;
+  border: 1px solid var(--rule);
   border-radius: var(--card-radius);
   background: var(--surface);
 }
@@ -41,7 +42,7 @@
   font-size: 12px;
 }
 .trusted-request-label svg {
-  color: var(--gold);
+  color: var(--risk-low);
 }
 .trusted-request .trusted-amount {
   font-size: 36px;
@@ -62,7 +63,7 @@
   margin: 8px 0;
   border: 0;
   padding: 8px 10px;
-  border-radius: 10px;
+  border-radius: var(--card-radius);
   background: #f0f4f1;
   font-size: 14px;
   overflow-wrap: anywhere;
@@ -77,8 +78,7 @@
   margin-top: 8px;
 }
 .trusted-reasons .bank-badge {
-  color: #6e4814;
-  background: #fff1d8;
+  color: var(--text);
 }
 .trusted-warning {
   border: 0;
@@ -148,7 +148,7 @@
 }
 .trusted-ledger h2,
 .trusted-closed h2 {
-  font-size: 18px;
+  font-size: 16px;
   margin: 6px 0;
 }
 .trusted-ledger > p {
@@ -179,4 +179,20 @@
 }
 .trusted-closed > svg {
   color: var(--risk-low);
+}
+
+.trusted-request {
+  border-inline-start: 3px solid var(--request-risk, var(--muted));
+}
+.trusted-request[data-level="LOW"] {
+  --request-risk: var(--risk-low);
+}
+.trusted-request[data-level="MEDIUM"] {
+  --request-risk: var(--risk-med);
+}
+.trusted-request:is([data-level="HIGH"], [data-level="CRITICAL"]) {
+  --request-risk: var(--risk-high);
+}
+.trusted-countdown .bank-timer circle:last-child {
+  stroke: var(--request-risk, var(--risk-low));
 }

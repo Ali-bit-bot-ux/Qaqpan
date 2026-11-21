@@ -19,7 +19,7 @@
 .portal-client h2 {
   font-size: 16px;
   margin: 0 0 14px;
-  letter-spacing: -0.015em;
+  letter-spacing: 0;
 }
 .client-columns {
   display: grid;
@@ -31,9 +31,9 @@
   min-width: 0;
 }
 .balance-panel {
-  background: var(--green-900);
-  color: white;
-  border: none;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--rule);
   padding: 18px;
   border-radius: var(--card-radius);
 }
@@ -49,11 +49,11 @@
 }
 .balance-top {
   font-size: 14px;
-  color: #e2ede7;
+  color: var(--muted);
 }
 .balance-top svg,
 .protection-heading svg {
-  color: var(--gold);
+  color: var(--risk-low);
   flex: none;
 }
 .balance-amount {
@@ -66,22 +66,22 @@
 }
 .balance-reserve {
   font-size: 12px;
-  color: #e2ede7;
+  color: var(--muted);
 }
 .balance-reserve strong {
   white-space: nowrap;
 }
 .balance-card {
   justify-content: start;
-  border-top: 1px solid #517468;
+  border-top: 1px solid var(--rule);
   padding-top: 6px;
   margin-top: 13px;
   font-size: 12px;
-  color: #e2ede7;
+  color: var(--muted);
 }
 .balance-card b {
   margin-left: 4px;
-  color: white;
+  color: var(--text);
 }
 .balance-card button,
 .bank-back {
@@ -91,10 +91,10 @@
 }
 .balance-card button {
   margin-left: auto;
-  color: white;
+  color: var(--text);
 }
 .balance-card button:hover:enabled {
-  background: #36594e;
+  background: #f1f5f2;
 }
 .client-actions {
   display: grid;
@@ -108,7 +108,7 @@
   padding: 9px 2px;
   gap: 3px;
   font-size: 12px;
-  border-radius: 10px;
+  border-radius: var(--control-radius);
   background: transparent;
 }
 .client-actions .bank-chip svg {
@@ -148,7 +148,7 @@
 .client-subpanel,
 .protection-summary,
 .client-transfer-panel {
-  border: 1px solid #dde5df;
+  border: 1px solid var(--rule);
   padding: 16px;
 }
 .client-primary section + section {
@@ -182,7 +182,7 @@
 .bank-operation {
   margin: 0;
   padding: 0;
-  border-top: 1px solid #e7ede9;
+  border-top: 1px solid var(--rule);
 }
 .bank-operation summary {
   min-height: 62px;
@@ -203,7 +203,7 @@
   height: 32px;
   border-radius: 50%;
   color: var(--green-900);
-  background: #e7ede9;
+  background: var(--rule);
 }
 .operation-label {
   display: grid;
@@ -267,13 +267,14 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  background: #eaf2ed;
+  background: var(--bg);
+  border: 1px solid var(--rule);
   padding: 12px;
-  border-radius: 10px;
+  border-radius: var(--control-radius);
   margin-block: 14px;
 }
 .client-status > svg {
-  color: var(--gold);
+  color: var(--risk-low);
   flex: none;
 }
 .client-status p {
@@ -285,11 +286,11 @@
   padding: 0;
 }
 .client-status[data-status="BLOCKED"] {
-  background: #ffefeb;
+  border-inline-start: 3px solid var(--risk-high);
 }
 .client-status[data-status="COOLING_OFF"],
 .client-status[data-status="AWAITING_ANSWER"] {
-  background: #fff3de;
+  border-inline-start: 3px solid var(--risk-med);
 }
 .transfer-total {
   display: grid;
@@ -326,7 +327,7 @@
   border-top: 1px solid #e7ede9;
   padding-top: 4px;
 }
-@media (min-width: 740px) {
+@media (min-width: 769px) {
   .portal-client main {
     padding: 32px 22px 56px;
   }
@@ -339,10 +340,7 @@
     padding: 24px;
   }
 }
-@media (max-width: 739px) {
-  .client-home .client-primary {
-    display: contents;
-  }
+@media (max-width: 768px) {
   .client-home .client-columns {
     gap: 14px;
   }
@@ -351,8 +349,14 @@
   .client-home .client-subpanel {
     margin: 0;
   }
+  .client-home :is(.client-primary, .client-aside) {
+    display: contents;
+  }
   .client-home .client-statement {
     order: 1;
+  }
+  .client-home .client-security {
+    order: 2;
   }
 }
 .portal-client h1 {
@@ -362,11 +366,53 @@
   width: 100%;
   min-height: 66px;
   background: var(--surface);
-  border: 1px solid #dde5df;
+  border: 1px solid var(--rule);
   align-content: center;
 }
 .bank-receipt dd small {
   display: block;
   margin-top: 3px;
   color: var(--muted);
+}
+
+.client-aside {
+  display: grid;
+  gap: 14px;
+}
+.balance-card > span {
+  min-width: 0;
+}
+.balance-number {
+  white-space: nowrap;
+  display: inline-block;
+}
+.balance-card button {
+  flex: none;
+  display: grid;
+  place-items: center;
+}
+.client-actions {
+  gap: 8px;
+}
+.client-actions .bank-chip:disabled {
+  opacity: 1;
+  color: var(--muted);
+  background: var(--bg);
+}
+.client-recipients {
+  padding: 4px 0;
+}
+.protection-heading > svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+@media (max-width: 768px) {
+  .balance-card > span {
+    display: grid;
+    gap: 1px;
+  }
+  .balance-card b {
+    margin-inline-start: 0;
+  }
 }

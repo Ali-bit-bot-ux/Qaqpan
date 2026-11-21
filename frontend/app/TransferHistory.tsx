@@ -1,4 +1,5 @@
 "use client";
+import { ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api, ErrorBox, useText } from "./shared";
@@ -59,12 +60,23 @@ export default function TransferHistory({
       open={open}
       onToggle={(e) => setOpen(e.currentTarget.open)}
     >
-      <summary>{t("Ход перевода", "Аударым барысы")}</summary>
+      <summary>
+        {t("Ход перевода", "Аударым барысы")}
+        <ChevronRight
+          className="details-chevron"
+          size={16}
+          aria-hidden="true"
+        />
+      </summary>
       {open && (
         <>
           {query.isLoading && <p>…</p>}
           <ol>
-            {query.data?.map((step, i) => {
+            {query.data?.map((step, i, steps) => {
+              const bankDeclined =
+                step.kind === "BLOCKED" &&
+                steps[i - 1]?.kind === "MANUAL_BANK_REVIEW";
+
               const date = new Date(
                 /Z$|[+-]\d\d:\d\d$/.test(step.at) ? step.at : step.at + "Z",
               );
@@ -78,7 +90,14 @@ export default function TransferHistory({
                       minute: "2-digit",
                     })}
                   </time>
-                  {labels[step.kind] ? t(...labels[step.kind]) : step.kind}
+                  {bankDeclined
+                    ? t(
+                        "Банк отклонил. Деньги не отправлены",
+                        "Банк қабылдамады. Ақша жіберілген жоқ",
+                      )
+                    : labels[step.kind]
+                      ? t(...labels[step.kind])
+                      : step.kind}
                 </li>
               );
             })}

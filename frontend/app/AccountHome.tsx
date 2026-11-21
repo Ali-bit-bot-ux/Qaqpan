@@ -1,4 +1,5 @@
 "use client";
+import { ChevronRight } from "lucide-react";
 
 import { useState } from "react";
 import {
@@ -13,6 +14,7 @@ import {
   ReceiptText,
   ScanLine,
   ShieldCheck,
+  Shield,
   ShoppingBasket,
   Wallet,
 } from "lucide-react";
@@ -32,6 +34,11 @@ const icons = {
   transfer: ArrowUpRight,
 };
 const timeZone = "Asia/Almaty";
+const securityCopy = {
+  title: ["Безопасность", "Қауіпсіздік"],
+  device: ["Устройство", "Құрылғы"],
+  currentBrowser: ["Текущий браузер", "Ағымдағы браузер"],
+} as const;
 
 export function Protection({ contact }: { contact: string }) {
   const t = useText();
@@ -82,12 +89,41 @@ function Statement({ entries }: { entries: Entry[] }) {
     minute: "2-digit",
     timeZone,
   });
-  const shown = entries.filter((entry) => !filter || entry.status === filter);
-  const groups = new Map<string, Entry[]>();
-  for (const entry of full ? shown : shown.slice(0, 8)) {
+  const shown: Entry[][] = [];
+  const stopped = new Map<string, Entry[]>();
+  const hasRealExample = entries.some(
+    (entry) => !entry.fixture && entry.amount === 250_000,
+  );
+  let sampleShown = false;
+  for (const entry of entries) {
+    if (filter && entry.status !== filter) continue;
+    if (entry.fixture && entry.amount === 250_000) {
+      if (hasRealExample || sampleShown) continue;
+      sampleShown = true;
+    }
+    if (entry.status === "BLOCKED") {
+      const key = JSON.stringify([
+        entry.recipient_name,
+        entry.amount,
+        entry.fixture,
+      ]);
+      const duplicates = stopped.get(key);
+      if (duplicates) {
+        duplicates.push(entry);
+        continue;
+      }
+      stopped.set(key, [entry]);
+      shown.push(stopped.get(key)!);
+    } else {
+      shown.push([entry]);
+    }
+  }
+  const groups = new Map<string, Entry[][]>();
+  for (const batch of full ? shown : shown.slice(0, 8)) {
+    const [entry] = batch;
     const key = day.format(dateValue(entry.created_at));
     const group = groups.get(key) ?? [];
-    group.push(entry);
+    group.push(batch);
     groups.set(key, group);
   }
   const names = {
@@ -131,13 +167,15 @@ function Statement({ entries }: { entries: Entry[] }) {
       {[...groups].map(([date, rows]) => (
         <div className="statement-day" key={date}>
           <h3>{date}</h3>
-          {rows.map((row) => {
+          {rows.map(([row, ...duplicates]) => {
             const Icon = icons[row.category ?? "transfer"];
             const name = t(
               row.recipient_name,
               row.nameKz ?? row.recipient_name,
             );
-            const debit = row.status === "COMPLETED" && row.amount > 0;
+            const settled = row.status === "COMPLETED";
+            const stopped = row.status === "BLOCKED";
+            const cancelled = row.status === "CANCELLED";
             return (
               <details key={row.transfer_id} className="bank-operation">
                 <summary>
@@ -145,61 +183,99 @@ function Statement({ entries }: { entries: Entry[] }) {
                     <Icon size={18} aria-hidden="true" />
                   </span>
                   <span className="operation-label">
-                    <strong>{name}</strong>
+                    <strong>
+                      {name}
+                      {duplicates.length > 0 && (
+                        <small className="operation-count">
+                          {" "}
+                          ×{duplicates.length + 1}
+                        </small>
+                      )}
+                    </strong>
                     <small>
                       {row.fixture ? (
-                        names[row.category ?? "transfer"] +
-                        " / " +
-                        t("Учебные данные", "Оқу деректері")
+                        names[row.category ?? "transfer"]
                       ) : (
-                        <Status value={row.status} />
+                        <span
+                          className={settled ? undefined : "operation-pending"}
+                        >
+                          {stopped
+                            ? t("Остановлен", "Тоқтатылды")
+                            : cancelled
+                              ? t("Отменён", "Бас тартылды")
+                              : settled
+                                ? t("Выполнен", "Орындалды")
+                                : t("В ожидании", "Күтуде")}
+                        </span>
                       )}
                     </small>
                   </span>
                   <span
-                    className={row.amount < 0 ? "operation-credit" : undefined}
+                    className={
+                      !settled
+                        ? "operation-unsettled"
+                        : row.amount < 0
+                          ? "operation-credit"
+                          : undefined
+                    }
                   >
-                    {row.amount < 0 ? "+" : debit ? "−" : ""}
+                    {settled ? (row.amount < 0 ? "+" : "−") : ""}
                     <Money amount={Math.abs(row.amount)} />
                   </span>
+                  <ChevronRight
+                    className="details-chevron"
+                    size={16}
+                    aria-hidden="true"
+                  />
                 </summary>
-                <dl className="bank-receipt">
-                  <div>
-                    <dt>
-                      {row.amount < 0
-                        ? t("Источник", "Дереккөз")
-                        : t("Получатель", "Алушы")}
-                    </dt>
-                    <dd>{name}</dd>
+                {[row, ...duplicates].map((current) => (
+                  <div className="operation-receipt" key={current.transfer_id}>
+                    <dl className="bank-receipt">
+                      <div>
+                        <dt>
+                          {current.amount < 0
+                            ? t("Источник", "Дереккөз")
+                            : t("Получатель", "Алушы")}
+                        </dt>
+                        <dd>{name}</dd>
+                      </div>
+                      <div>
+                        <dt>{t("Сумма", "Сома")}</dt>
+                        <dd>
+                          <Money amount={Math.abs(current.amount)} />
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>{t("Время", "Уақыт")}</dt>
+                        <dd>
+                          {(duplicates.length
+                            ? day.format(dateValue(current.created_at)) + ", "
+                            : "") + clock.format(dateValue(current.created_at))}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>{t("Номер операции", "Операция нөмірі")}</dt>
+                        <dd>{current.transfer_id}</dd>
+                      </div>
+                      <div>
+                        <dt>{t("Итог", "Нәтиже")}</dt>
+                        <dd>
+                          {current.fixture ? (
+                            t("Проведено", "Орындалды")
+                          ) : (
+                            <Status value={current.status} />
+                          )}
+                        </dd>
+                      </div>
+                    </dl>
+                    {!current.fixture && (
+                      <TransferHistory
+                        id={current.transfer_id}
+                        status={current.status}
+                      />
+                    )}
                   </div>
-                  <div>
-                    <dt>{t("Сумма", "Сома")}</dt>
-                    <dd>
-                      <Money amount={Math.abs(row.amount)} />
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>{t("Время", "Уақыт")}</dt>
-                    <dd>{clock.format(dateValue(row.created_at))}</dd>
-                  </div>
-                  <div>
-                    <dt>{t("Номер операции", "Операция нөмірі")}</dt>
-                    <dd>{row.transfer_id}</dd>
-                  </div>
-                  <div>
-                    <dt>{t("Итог", "Нәтиже")}</dt>
-                    <dd>
-                      {row.fixture ? (
-                        t("Проведено", "Орындалды")
-                      ) : (
-                        <Status value={row.status} />
-                      )}
-                    </dd>
-                  </div>
-                </dl>
-                {!row.fixture && (
-                  <TransferHistory id={row.transfer_id} status={row.status} />
-                )}
+                ))}
               </details>
             );
           })}
@@ -229,9 +305,7 @@ export default function AccountHome({
   const profile = useProfile();
   const { snapshot, history } = account;
   const [showNumber, setShowNumber] = useState(false);
-  const [panel, selectPanel] = useState<
-    "overview" | "cards" | "payments" | "history"
-  >("overview");
+  const [panel, selectPanel] = useState<"overview" | "history">("overview");
   const [time] = useState(Date.now);
   const hour = Number(
     new Intl.DateTimeFormat("en-GB", {
@@ -261,7 +335,13 @@ export default function AccountHome({
               <ShieldCheck aria-hidden="true" />
             </div>
             <strong className="balance-amount" data-testid="available-amount">
-              {snapshot ? <Money amount={snapshot.available} /> : "—"}
+              {snapshot ? (
+                <Money amount={snapshot.available} />
+              ) : history.isPending ? (
+                <Skeleton />
+              ) : (
+                "—"
+              )}
             </strong>
             <div className="balance-reserve">
               <span>
@@ -275,17 +355,18 @@ export default function AccountHome({
               <CreditCard size={20} aria-hidden="true" />
               <span>
                 {t("Дебетовая карта", "Дебеттік карта")}{" "}
-                <b>{showNumber ? "•••• " + profile.lastFour : "•••• ••••"}</b>
+                <b className="balance-number">
+                  {showNumber
+                    ? "5169 0000 0000 " + profile.lastFour
+                    : "•• " + profile.lastFour}
+                </b>
               </span>
               <button
                 type="button"
                 aria-label={
                   showNumber
                     ? t("Скрыть номер карты", "Карта нөмірін жасыру")
-                    : t(
-                        "Показать последние цифры карты",
-                        "Картаның соңғы цифрларын көрсету",
-                      )
+                    : t("Показать номер карты", "Карта нөмірін көрсету")
                 }
                 onClick={() => setShowNumber(!showNumber)}
               >
@@ -302,23 +383,15 @@ export default function AccountHome({
               <ArrowLeftRight aria-hidden="true" />
               {t("Перевод", "Аударым")}
             </Chip>
-            <Chip
-              aria-pressed={panel === "payments"}
-              onClick={() =>
-                selectPanel(panel === "payments" ? "overview" : "payments")
-              }
-            >
+            <Chip disabled>
               <ReceiptText aria-hidden="true" />
               {t("Платежи", "Төлемдер")}
+              <small>{t("Скоро", "Жақында")}</small>
             </Chip>
-            <Chip
-              aria-pressed={panel === "cards"}
-              onClick={() =>
-                selectPanel(panel === "cards" ? "overview" : "cards")
-              }
-            >
+            <Chip disabled>
               <CreditCard aria-hidden="true" />
               {t("Карты", "Карталар")}
+              <small>{t("Скоро", "Жақында")}</small>
             </Chip>
             <Chip
               aria-pressed={panel === "history"}
@@ -330,38 +403,6 @@ export default function AccountHome({
               {t("История", "Тарих")}
             </Chip>
           </div>
-          {panel === "payments" && (
-            <Card className="client-subpanel">
-              <h2>{t("Платежи", "Төлемдер")}</h2>
-              <p>
-                {t(
-                  "Для учебного платежа выберите получателя и укажите сумму.",
-                  "Оқу төлемі үшін алушыны таңдап, соманы көрсетіңіз.",
-                )}
-              </p>
-              <div className="client-chips">
-                {[
-                  ["Алматы Су", "KZ000000000000000201"],
-                  ["Beeline", "KZ000000000000000202"],
-                  ["Kazakhtelecom", "KZ000000000000000203"],
-                ].map(([name, number]) => (
-                  <Chip key={number} onClick={() => onTransfer(name, number)}>
-                    {name}
-                  </Chip>
-                ))}
-              </div>
-            </Card>
-          )}
-          {panel === "cards" && (
-            <Card className="client-subpanel">
-              <h2>{t("Дебетовая карта", "Дебеттік карта")}</h2>
-              <p>{profile.cardholder} / KZT</p>
-              <p>
-                {t("Баланс карты", "Карта балансы")}{" "}
-                <b>{snapshot ? <Money amount={snapshot.balance} /> : "—"}</b>
-              </p>
-            </Card>
-          )}
           {panel === "overview" && (
             <div className="client-recipients">
               <h2>{t("Сохранённые получатели", "Сақталған алушылар")}</h2>
@@ -395,7 +436,21 @@ export default function AccountHome({
             {snapshot && <Statement entries={snapshot.entries} />}
           </Card>
         </div>
-        <Protection contact={trustedName} />
+        <aside className="client-aside">
+          <Protection contact={trustedName} />
+          <Card className="protection-summary client-security">
+            <div className="protection-heading">
+              <Shield aria-hidden="true" />
+              <h2>{t(...securityCopy.title)}</h2>
+            </div>
+            <dl>
+              <div>
+                <dt>{t(...securityCopy.device)}</dt>
+                <dd>{t(...securityCopy.currentBrowser)}</dd>
+              </div>
+            </dl>
+          </Card>
+        </aside>
       </div>
     </div>
   );

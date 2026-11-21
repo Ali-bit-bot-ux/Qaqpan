@@ -1,11 +1,14 @@
+import { apiOrigin, apiPrefix } from "./lib/api-origin.mjs";
+
 export default {
+  devIndicators: false,
+  experimental: { agentUpgrade: "security" },
   async rewrites() {
     return [
+      { source: "/api/schema", destination: apiOrigin + "/openapi.json" },
       {
-        source: "/api/v1/:path*",
-        destination:
-          (process.env.QAQPAN_API_ORIGIN || "http://127.0.0.1:8000") +
-          "/api/v1/:path*",
+        source: apiPrefix + "/:path*",
+        destination: apiOrigin + apiPrefix + "/:path*",
       },
     ];
   },

@@ -1,6 +1,8 @@
+import AppProvider from "./AppProvider";
 import localFont from "next/font/local";
 import "./style.css";
 import "./bank.css";
+import "./presentation.css";
 
 const inter = localFont({
   src: "./fonts/InterVariable.woff2",
@@ -12,7 +14,9 @@ export const metadata = { title: "Қақпан · Защита переводо�
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru" className={inter.variable}>
-      <body>{children}</body>
+      <body>
+        <AppProvider>{children}</AppProvider>
+      </body>
     </html>
   );
 }

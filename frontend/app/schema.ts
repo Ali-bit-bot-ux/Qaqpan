@@ -4,6 +4,23 @@
  */
 
 export interface paths {
+    "/api/v1/transfers/{transfer_id}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Transfer History */
+        get: operations["transfer_history_api_v1_transfers__transfer_id__history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/transfers": {
         parameters: {
             query?: never;
@@ -11,7 +28,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * List Transfers
+         * @description Newest-first list of transfers; total_count is the full match, not the page size.
+         */
+        get: operations["list_transfers_api_v1_transfers_get"];
         put?: never;
         /** Create Transfer */
         post: operations["create_transfer_api_v1_transfers_post"];
@@ -66,6 +87,26 @@ export interface paths {
         put?: never;
         /** Request Manual Review */
         post: operations["request_manual_review_api_v1_transfers__transfer_id__manual_review_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/transfers/{transfer_id}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Confirm Transfer By Client
+         * @description Cooling-off exit: the trusted person was silent, the client confirms after the warning.
+         */
+        post: operations["confirm_transfer_by_client_api_v1_transfers__transfer_id__confirm_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -151,6 +192,26 @@ export interface paths {
         get: operations["get_analyst_feed_api_v1_analyst_feed_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analyst/transfers/{transfer_id}/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Decide Manual Review
+         * @description Resolve MANUAL_BANK_REVIEW: APPROVE -> COMPLETED, DECLINE -> BLOCKED.
+         */
+        post: operations["decide_manual_review_api_v1_analyst_transfers__transfer_id__review_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -379,6 +440,23 @@ export interface components {
             total_count: number;
             /** Cards */
             cards: components["schemas"]["AnalystCard"][];
+            summary?: components["schemas"]["AnalystSummary"] | null;
+        };
+        /**
+         * AnalystSummary
+         * @description Counts over ALL transfer records (ignores feed filters and limit); zero-filled.
+         */
+        AnalystSummary: {
+            /** Total Transfers */
+            total_transfers: number;
+            /** By Risk Tier */
+            by_risk_tier: {
+                [key: string]: number;
+            };
+            /** By Status */
+            by_status: {
+                [key: string]: number;
+            };
         };
         /**
          * AnswerRequest
@@ -393,6 +471,15 @@ export interface components {
              */
             answer_text: string;
         };
+        /**
+         * BankReviewDecisionRequest
+         * @description Bank employee resolves a transfer held in MANUAL_BANK_REVIEW (auth is deferred).
+         */
+        BankReviewDecisionRequest: {
+            decision: components["schemas"]["DecisionType"];
+            /** Comment */
+            comment?: string | null;
+        };
         /** CancelRequest */
         CancelRequest: {
             /**
@@ -401,6 +488,14 @@ export interface components {
              * @default Отменено клиентом
              */
             reason: string | null;
+        };
+        /**
+         * ClientConfirmRequest
+         * @description Client insists on their own transfer after the repeated cooling-off warning.
+         */
+        ClientConfirmRequest: {
+            /** Warning Acknowledged */
+            warning_acknowledged: boolean;
         };
         /**
          * DecisionType
@@ -466,7 +561,7 @@ export interface components {
             recipient_name: string;
             /**
              * Amount
-             * @description Amount in KZT, must be positive
+             * @description Amount in KZT, positive, at most 1 billion
              */
             amount: number;
             /**
@@ -479,8 +574,29 @@ export interface components {
              * Language
              * @description Client language: 'ru' or 'kz'
              * @default ru
+             * @enum {string}
              */
-            language: string;
+            language: "ru" | "kz";
+            /**
+             * Trusted Contact Name
+             * @description Optional trusted person, e.g. Данияр (Сын)
+             */
+            trusted_contact_name?: string | null;
+            /**
+             * Trusted Contact Phone
+             * @description Optional masked phone of the trusted person
+             */
+            trusted_contact_phone?: string | null;
+        };
+        /** TransferListResponse */
+        TransferListResponse: {
+            /**
+             * Total Count
+             * @description All records matching the filters, before the limit
+             */
+            total_count: number;
+            /** Transfers */
+            transfers: components["schemas"]["TransferResponse"][];
         };
         /** TransferResponse */
         TransferResponse: {
@@ -520,6 +636,11 @@ export interface components {
             cooling_warning_ru?: string | null;
             /** Cooling Warning Kz */
             cooling_warning_kz?: string | null;
+            /**
+             * Cooling Seconds Left
+             * @description While COOLING_OFF: seconds until the client may confirm on their own (0 = now)
+             */
+            cooling_seconds_left?: number | null;
             /**
              * Created At
              * Format: date-time
@@ -730,6 +851,72 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    transfer_history_api_v1_transfers__transfer_id__history_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                transfer_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_transfers_api_v1_transfers_get: {
+        parameters: {
+            query?: {
+                /** @description Only this client's transfers (history screen) */
+                client_id?: string | null;
+                /** @description Only this status, e.g. TRUSTED_PENDING for the trusted person's inbox */
+                status?: components["schemas"]["TransferStatus"] | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransferListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     create_transfer_api_v1_transfers_post: {
         parameters: {
             query?: never;
@@ -841,6 +1028,41 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["ManualReviewRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransferResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    confirm_transfer_by_client_api_v1_transfers__transfer_id__confirm_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                transfer_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClientConfirmRequest"];
             };
         };
         responses: {
@@ -1022,10 +1244,45 @@ export interface operations {
             };
         };
     };
+    decide_manual_review_api_v1_analyst_transfers__transfer_id__review_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                transfer_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BankReviewDecisionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransferResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     run_simulation_api_v1_benchmark_simulate_get: {
         parameters: {
             query?: {
-                /** @description Dataset split to evaluate: 'test', 'train', or 'full' */
+                /** @description Dataset split to evaluate: 'test', 'train', 'holdout', 'holdout2', 'holdout3' (fresh sets, never tuned on) or 'full' */
                 split?: string;
                 /** @description Number of scenarios in simulation pool */
                 count?: number;
@@ -1061,7 +1318,7 @@ export interface operations {
     run_simulation_api_v1_benchmark_simulate_post: {
         parameters: {
             query?: {
-                /** @description Dataset split to evaluate: 'test', 'train', or 'full' */
+                /** @description Dataset split to evaluate: 'test', 'train', 'holdout', 'holdout2', 'holdout3' (fresh sets, never tuned on) or 'full' */
                 split?: string;
                 /** @description Number of scenarios in simulation pool */
                 count?: number;

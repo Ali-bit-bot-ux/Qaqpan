@@ -1,10 +1,15 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 import { dateValue } from "../lib/account";
-import { ApiError, capabilities, type Transfer } from "../lib/api";
+import {
+  ApiError,
+  capabilities,
+  useBackendCapabilities,
+  type Transfer,
+} from "../lib/api";
 import {
   formatAmount,
   formatRecipient,
@@ -16,9 +21,10 @@ import AccountHome, { Protection } from "./AccountHome";
 import TransferHistory from "./TransferHistory";
 import {
   api,
+  Clock,
   money,
   Status,
-  Sync,
+  ErrorBox,
   useAction,
   useData,
   useSaved,
@@ -38,43 +44,9 @@ import {
 const blank = { name: "", account: "", amount: "" };
 const terminalStates = new Set(["COMPLETED", "BLOCKED", "CANCELLED"]);
 
-function ClientError({ error }: { error: Error | null }) {
-  const t = useText();
-  if (!error) return null;
-  const messages: Record<number, string> = {
-    400: t(
-      "Проверьте данные формы и попробуйте ещё раз.",
-      "Нысан деректерін тексеріп, қайталап көріңіз.",
-    ),
-    404: t(
-      "Перевод не найден. Вернитесь к своим счетам.",
-      "Аударым табылмады. Шоттарыңызға оралыңыз.",
-    ),
-    409: t(
-      "Статус перевода изменился. Проверьте актуальные данные.",
-      "Аударым күйі өзгерді. Ағымдағы деректерді тексеріңіз.",
-    ),
-    422: t(
-      "Проверьте выделенные поля и отправьте форму снова.",
-      "Белгіленген өрістерді тексеріп, нысанды қайта жіберіңіз.",
-    ),
-  };
-  const message =
-    error instanceof ApiError && error.expiredAnswer
-      ? t(
-          "Время вышло, деньги остались на счёте.",
-          "Уақыт аяқталды, ақша шотта қалды.",
-        )
-      : (messages[Number(error.message)] ??
-        t(
-          "Не удалось связаться с банком. Повторите попытку.",
-          "Банкпен байланысу мүмкін болмады. Қайталап көріңіз.",
-        ));
-  return <ErrorState>{message}</ErrorState>;
-}
-
 export default function Client() {
   const t = useText();
+  const backend = useBackendCapabilities();
   const cache = useQueryClient();
   const [id, save] = useSaved("qaqpan-transfer");
   const query = useData<Transfer>(id ? "/transfers/" + id : "");
@@ -157,14 +129,38 @@ export default function Client() {
   const reviewState =
     status === "COOLING_OFF" ||
     (status === "TRUSTED_PENDING" && capabilities.verifyWhileWaiting);
+  const coolingLeft =
+    transfer && status === "COOLING_OFF"
+      ? capabilities.coolingTimer(transfer)
+      : null;
+  const { refetch, dataUpdatedAt } = query;
+  useEffect(() => {
+    if (coolingLeft === null || coolingLeft <= 0) return;
+    const timeout = setTimeout(
+      () => {
+        void refetch();
+      },
+      Math.max(0, dataUpdatedAt + coolingLeft * 1000 - Date.now()),
+    );
+    return () => clearTimeout(timeout);
+  }, [coolingLeft, dataUpdatedAt, refetch]);
   const update = (path: string, payload: object) =>
     action.mutate(async () => {
-      apply(await api<Transfer>("/transfers/" + id + path, payload));
+      try {
+        apply(await api<Transfer>("/transfers/" + id + path, payload));
+      } catch (error) {
+        if (
+          path === "/answer" &&
+          error instanceof ApiError &&
+          error.status === 409
+        )
+          void refetch();
+        throw error;
+      }
       setRead(false);
     });
   return (
     <>
-      {id && !terminal && <Sync />}
       {home ? (
         <>
           {id && !terminal && query.error?.message !== "404" && (
@@ -355,7 +351,7 @@ export default function Client() {
                             )}
                       </ErrorState>
                     )}
-                    <ClientError error={action.error} />
+                    <ErrorBox error={action.error} />
                     {step === 2 &&
                       action.error instanceof ApiError &&
                       [400, 422].includes(action.error.status) && (
@@ -438,8 +434,8 @@ export default function Client() {
                       {status === "BLOCKED" && (
                         <p>
                           {t(
-                            `${trustedName} отклонила перевод. Деньги остались на счёте.`,
-                            `${trustedName} аударымды қабылдамады. Ақша шотта қалды.`,
+                            `Перевод отклонён. Деньги остались на счёте.`,
+                            `Аударым қабылданбады. Ақша шотта қалды.`,
                           )}{" "}
                           {transfer.updated_at && (
                             <time>
@@ -519,10 +515,16 @@ export default function Client() {
                             "Ақша әлі жіберілген жоқ.",
                         )}
                       </p>
-                      {capabilities.coolingTimer(transfer) !== null && (
+                      {coolingLeft !== null && (
                         <p>
-                          {t("Осталось секунд", "Қалған секунд")}{" "}
-                          <b>{capabilities.coolingTimer(transfer)}</b>
+                          {t(
+                            "До самостоятельного подтверждения",
+                            "Өзіңіз растауға дейін",
+                          )}{" "}
+                          <Clock
+                            updated={new Date(dataUpdatedAt).toISOString()}
+                            seconds={coolingLeft}
+                          />
                         </p>
                       )}
                       <label>
@@ -543,9 +545,24 @@ export default function Client() {
                       >
                         {t("Запросить проверку банка", "Банк тексерісін сұрау")}
                       </Button>
+                      {status === "COOLING_OFF" &&
+                        backend.continueAfterCooling &&
+                        coolingLeft !== null && (
+                          <Button
+                            data-variant="quiet"
+                            disabled={
+                              !read || coolingLeft > 0 || action.isPending
+                            }
+                            onClick={() =>
+                              update("/confirm", { warning_acknowledged: true })
+                            }
+                          >
+                            {t("Всё равно перевести", "Бәрібір аудару")}
+                          </Button>
+                        )}
                     </div>
                   )}
-                  <ClientError error={action.error || query.error} />
+                  <ErrorBox error={action.error || query.error} />
                   <div className="bank-form-actions">
                     {terminal ? (
                       <Button onClick={() => openTransfer()}>
@@ -570,7 +587,7 @@ export default function Client() {
                 <Skeleton />
               ) : (
                 <>
-                  <ClientError error={query.error} />
+                  <ErrorBox error={query.error} />
                   {query.error?.message !== "404" && (
                     <Button onClick={() => void query.refetch()}>
                       {t("Проверить снова", "Қайта тексеру")}

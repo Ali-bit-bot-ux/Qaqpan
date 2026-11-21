@@ -1,10 +1,12 @@
 "use client";
 
+import { useFallbackPolling } from "../app/AppProvider";
 import { useQuery } from "@tanstack/react-query";
 import { accountSnapshot, type Entry } from "./account";
 import type { Transfer } from "./api";
 
 export function useAccount(active?: Transfer) {
+  const fallback = useFallbackPolling();
   const history = useQuery<Entry[]>({
     queryKey: ["account-history"],
     queryFn: async () => {
@@ -12,7 +14,7 @@ export function useAccount(active?: Transfer) {
       if (!response.ok) throw new Error(String(response.status));
       return response.json();
     },
-    refetchInterval: 15_000,
+    ...fallback,
     retry: false,
   });
   const current = active?.created_at
