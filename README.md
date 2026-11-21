@@ -13,7 +13,20 @@
 
 | Клиент | Доверенное лицо | Аналитик |
 | --- | --- | --- |
-| [Экран клиента](docs/screenshots/client-1440.png) | [Активный запрос](docs/screenshots/trusted-1440.png) | [Мониторинг и симулятор](docs/screenshots/analyst-1440.png) |
+| [![Экран клиента](docs/screenshots/client-1440.png)](docs/screenshots/client-1440.png) | [![Активный запрос](docs/screenshots/trusted-1440.png)](docs/screenshots/trusted-1440.png) | [![Мониторинг и симулятор](docs/screenshots/analyst-1440.png)](docs/screenshots/analyst-1440.png) |
+
+## Результат на синтетических данных
+
+Отдельная выборка `holdout3` не использовалась при настройке правил.
+
+| | Простой лимит 500 000 ₸ | Qaqpan |
+| --- | --- | --- |
+| Остановлено сценариев | 20 % | 64 % |
+| Ложные тревоги | 4,44 % | 4,44 % |
+
+Данные синтетические, модель учебная, цифры не переносятся на реальный банк.
+
+[Презентация Qaqpan](https://drive.google.com/drive/folders/1-0w36mG3sEH-IbE6MhXsFq7L_KcSXZMB?usp=sharing)
 
 ## Запуск
 
